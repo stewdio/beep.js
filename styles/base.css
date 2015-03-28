@@ -1,0 +1,408 @@
+@charset "utf-8";
+
+
+
+
+    /*************/
+   /*           */
+  /*   Fonts   */
+ /*           */
+/*************/
+
+
+/*
+
+	Yes, the following font file names and formats MUST BE CONTAINED IN QUOTES
+	otherwise Firefox will refuse to load them. Chrome? Safari? Opera? Totally fine.
+	Firefox loading backround-images using url() and no quotes? Totally fine.
+	It’s literally just the @font-face rules that Firefox needs quotes for. 
+
+*/
+
+
+/*  Ginger Thin (as LIGHTER)  */
+
+@font-face {
+
+	font-family: Ginger;
+	font-weight: 100;
+	font-style:  normal;
+	src: url( '../media/fonts/ginger-thin.eot' );
+	src: url( '../media/fonts/ginger-thin.eot?#iefix' ) format( 'embedded-opentype' ),
+		 url( '../media/fonts/ginger-thin.woff' ) format( 'woff' ),
+		 url( '../media/fonts/ginger-thin.ttf'  ) format( 'truetype' ),
+		 url( '../media/fonts/ginger-thin.svg#f37_ginger_thin' ) format( 'svg' );
+}
+
+
+/*  Ginger Light (as NORMAL)  */
+
+@font-face {
+
+	font-family: Ginger;
+	font-weight: normal;
+	font-style:  normal;
+	src: url( '../media/fonts/ginger-light.eot' );
+	src: url( '../media/fonts/ginger-light.eot?#iefix' ) format( 'embedded-opentype' ),
+		 url( '../media/fonts/ginger-light.woff' ) format( 'woff' ),
+		 url( '../media/fonts/ginger-light.ttf'  ) format( 'truetype' ),
+		 url( '../media/fonts/ginger-light.svg#f37_ginger_light' ) format( 'svg' );
+}
+
+
+/*  Ginger Bold (as BOLD)  */
+
+@font-face {
+
+	font-family: Ginger;
+	font-weight: bold;
+	font-style:  normal;
+	src: url( '../media/fonts/ginger-bold.eot' );
+	src: url( '../media/fonts/ginger-bold.eot?#iefix' ) format( 'embedded-opentype' ),
+		 url( '../media/fonts/ginger-bold.woff' ) format( 'woff' ),
+		 url( '../media/fonts/ginger-bold.ttf'  ) format( 'truetype' ),
+		 url( '../media/fonts/ginger-bold.svg#f37_ginger_bold' ) format( 'svg' );
+}
+
+
+
+
+    /***************/
+   /*             */
+  /*   General   */
+ /*             */
+/***************/
+
+
+@media all and ( min-aspect-ratio: 4/3 ){
+
+	html, body { font-size: 1.3333vh; }
+}
+@media all and ( max-aspect-ratio: 4/3 ){
+
+	html, body { font-size: 1vw; }
+}
+html, body {
+
+	width:  100%;
+	height: 100%;
+}
+body {
+
+	margin:  0;
+	border:  0;
+	padding: 0;
+	background-color: #111;
+	color: #666;
+	font-family: Ginger, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	overflow: hidden;
+	text-align: center;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+a {
+	color: #999;
+	text-decoration: none;
+}
+a:hover {
+
+	color: #FFF;
+}
+
+
+
+
+h1 {
+	
+	width: 100%;
+	padding: 8rem 0 9rem 0;
+	text-align: center;
+	color: #FFF;
+	font-weight: 100;
+	font-size:   4rem;
+	line-height: 4rem;
+	letter-spacing: -0.05rem;
+	/*text-shadow: 0px 0px 0.5rem rgba( 255, 255, 255, 0.5 );*/
+}
+.clear {
+
+	clear: both;
+}
+.instrument {
+
+	position: relative;
+}
+.instrument.mini {
+
+	padding-top: 5rem;
+}
+
+
+
+
+    /****************/
+   /*              */
+  /*   Triggers   */
+ /*              */
+/****************/
+
+
+.trigger {
+
+	z-index: 10;
+	position: relative;
+	top: 0;
+	display: inline-block;
+	margin: 0 1px 0 1px;
+	/*box-shadow: 0 0.2vw 0.5vw rgba( 0, 0, 0, 0.2 );*/
+	border-bottom-left-radius:  0.5rem;
+	border-bottom-right-radius: 0.5rem;
+	width:   6rem;
+	height: 24rem;
+	background-color: #999;
+	text-align: center;
+	font-size:   2rem;
+	line-height: 3rem;
+	cursor: pointer;
+	transition-property: background-color;
+	transition-duration: 0.3s;
+	transition-timing-function: linear;
+}
+.trigger.engaged {
+
+	z-index: 11;
+	/*box-shadow: 0 0 6vw #FFF;*/
+	background-color: #FFF;
+	transition-property: background-color;
+	transition-duration: 0.0s;
+	transition-timing-function: linear;
+}
+.mini .trigger {
+
+	width:   3rem;
+	height: 12rem;
+	font-size:   1.0rem;
+	line-height: 1.5rem;
+}
+
+
+
+
+.trigger.unnatural {
+
+	z-index: 20;
+	top: -10rem;
+	width:   4rem;
+	height: 14rem;
+	background-color: #000;
+	color: #999;
+}
+.trigger.unnatural + .trigger.natural {
+
+	margin-left: -2rem;
+}
+.trigger.natural + .trigger.unnatural {
+
+	margin-left: -2rem;
+}
+.trigger.unnatural.engaged {
+
+	z-index: 21;
+	/*box-shadow: 0 0 6vw #FFF;*/
+	background-color: #FFF;
+}
+.mini .trigger.unnatural {
+
+	top:   -5rem;
+	width:  2rem;
+	height: 7rem;
+}
+.mini .trigger.unnatural + .trigger.natural {
+
+	margin-left: -1rem;
+}
+.mini .trigger.natural + .trigger.unnatural {
+
+	margin-left: -1rem;
+}
+
+
+
+
+.trigger .note-name {
+
+	position: absolute;
+	top: -5rem;
+	width: 100%;
+	text-align: center;
+	color: transparent;
+	font-size: 1.5rem;
+	font-weight: 100;
+	transition-property: color;
+	transition-duration: 0.3s;
+	transition-timing-function: linear;
+}
+.trigger .note-name strong {
+
+	font-size: 3rem;
+	font-weight: normal;
+}
+.trigger.engaged .note-name {
+
+	color: #FFF;
+	transition-property: color;
+	transition-duration: 0.0s;
+	transition-timing-function: linear;
+}
+.trigger.unnatural .note-name {
+
+	top: -9rem;
+}
+.mini .trigger .note-name {
+
+	top:      -2.50rem;
+	font-size: 0.75rem;
+}
+.mini .trigger .note-name strong {
+
+	font-size: 1.5rem;
+}
+.mini .trigger.unnatural .note-name {
+
+	top: -4.5rem;
+}
+
+
+
+
+.trigger .chars-list {
+
+	position: absolute;
+	bottom: 2rem;
+	width: 100%;
+	text-align: center;
+	color: #FFF;
+	font-size: 2rem;
+}
+.trigger.unnatural .chars-list {
+
+	color: #FFF;
+}
+.trigger.engaged .chars-list {
+
+	color: transparent;
+}
+.mini .trigger .chars-list {
+
+	bottom:    1rem;
+	font-size: 1rem;	
+}
+
+
+
+
+.score-play-pause {
+
+	position: relative;
+	top: 4rem;
+	display: inline-block;
+	border-radius: 4rem;
+	width:  4rem;	
+	height: 4rem;
+	background-image: url( ../media/play.svg );
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	-webkit-animation: pulse 2s ease-in-out infinite;
+	-moz-animation:    pulse 2s ease-in-out infinite;
+	-o-animation:      pulse 2s ease-in-out infinite;
+	animation:         pulse 2s ease-in-out infinite;
+}
+@-webkit-keyframes pulse {
+
+	0%   { opacity: 1.0; }
+	50%  { opacity: 0.3; }
+	100% { opacity: 1.0; }
+}
+@-o-keyframes pulse {
+
+	0%   { opacity: 1.0; }
+	50%  { opacity: 0.3; }
+	100% { opacity: 1.0; }
+}
+@keyframes pulse {
+
+	0%   { opacity: 1.0; }
+	50%  { opacity: 0.3; }
+	100% { opacity: 1.0; }
+}
+.score-play-pause.is-playing {
+
+	background-image: url( ../media/pause.svg );
+	opacity: 0.5;
+	-webkit-animation: none;
+	-moz-animation:    none;
+	-o-animation:      none;
+	animation:         none;
+}
+.score-play-pause:hover {
+
+	background-image: url( ../media/play-hover.svg );
+	opacity: 1;
+	-webkit-animation: none;
+	-moz-animation:    none;
+	-o-animation:      none;
+	animation:         none;
+}
+.score-play-pause.is-playing:hover {
+
+	background-image: url( ../media/pause-hover.svg );
+}
+#play-pause-container .score-play-pause {
+
+	top:  0.8rem;
+	left: 0.8rem;
+}
+
+
+
+
+footer {
+
+	position: absolute;
+	bottom:  2rem;
+	left:    0;
+	width: 100%;
+	text-align: center;
+	font-size:   1.2rem;
+	line-height: 3rem;
+}
+.button {
+
+	position: relative;
+	display: inline-block;
+	width:  4rem;	
+	height: 4rem;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	opacity: 0.2;
+	cursor: pointer;
+}
+.button:hover {
+
+	opacity: 1;
+}
+.button + .button {
+
+	margin-left: 0.2rem;
+}
+#github   { background-image: url( ../media/github.svg ); }
+#twitter  { background-image: url( ../media/twitter.svg ); }
+#facebook { background-image: url( ../media/facebook.svg ); }
+
+
+

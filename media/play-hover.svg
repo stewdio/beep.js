@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+	<g id="play-hover">
+		<path display="inline" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="20" stroke-miterlimit="10" d="M570,300
+			c0,149.117-120.883,270-270,270S30,449.117,30,300S150.883,30,300,30S570,150.883,570,300z M435.591,300L225,183.005v233.99
+			L435.591,300z"/>
+	</g>
+</svg>
