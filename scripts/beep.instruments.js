@@ -269,6 +269,7 @@ BEEP.Instrument.prototype.buildStandard = function(){
 
 	this.scoreLoadDoReMi()
 	//this.scoreLoadHSB()
+	this.scoreLoadFromHash()
 	return this
 }
 BEEP.Instrument.prototype.buildCloseEncounters = function(){
@@ -436,6 +437,27 @@ BEEP.Instrument.prototype.unbuild = function(){
 ///////////////
 
 
+BEEP.Instrument.prototype.scoreLoadFromHash = function(){
+
+	if( document.location.hash !== '' ){
+
+		var 
+		beat  = 0, i,
+		score = document.location.hash.substr( 1 ).split( ',' ).map( function( element ){
+
+			var value
+
+			try {
+
+				value = eval( element )
+			}
+			catch( error ){}
+			return value
+		})
+		this.scoreUnload()
+		this.scoreLoad( score )
+	}
+}
 BEEP.Instrument.prototype.scoreLoad = function( score ){
 
 	var beat = 0, i
