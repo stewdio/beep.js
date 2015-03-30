@@ -115,7 +115,7 @@ Providing none will yield a `Voice` with a default `Note` of 440Hz:
 ```javascript
 v = new BEEP.Voice()//  We’re running with defaults.
 v.play()//  Listen to that pure 440Hz Concert A.
-v.stop()//  Ok, we’ve had enough.
+v.pause()//  Ok, we’ve had enough.
 ```
 
 __Note arguments__  
@@ -134,7 +134,7 @@ an `Instrument` and passing its `AudioContext` to each `Voice`.
 
 __Only fix what’s Baroque__  
 I guess all the above is pretty cool, but having to type `v.play()` and 
-`v.stop()` everytime I want to `Voice` a `Note` is kind of a drag. And that’s 
+`v.pause()` everytime I want to `Voice` a `Note` is kind of a drag. And that’s 
 where `Trigger` come in.
 
 
