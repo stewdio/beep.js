@@ -5,7 +5,7 @@
 
 	synth = new Instrument()
 	synth.play( '3C' ).play( '4G' ).play( '5C' )
-	synth.stop()
+	synth.pause()
 
 	synth.unbuild().buildCloseEncounters()
 
@@ -205,18 +205,20 @@ BEEP.Instrument.prototype.play = function( trigger ){
 	if( trigger instanceof BEEP.Trigger ) trigger.engage( 'code' )
 	return this
 }
-BEEP.Instrument.prototype.stop = function( trigger ){
+BEEP.Instrument.prototype.pause = function( trigger ){
 
 	var that = this
 
 	if( typeof trigger === 'string' && this.triggers[ trigger ]) trigger = this.triggers[ trigger ]
-	if( trigger instanceof BEEP.Trigger ) trigger.disengage()//stop()
+	if( trigger instanceof BEEP.Trigger ) trigger.disengage()
 	if( trigger === undefined ) Object.keys( this.triggers ).forEach( function( trigger ){
 
 		that.triggers[ trigger ].disengage()//  Kill eveything now regardless of who started it!
 	})
 	return this
 }
+
+
 
 
 
@@ -469,7 +471,7 @@ BEEP.Instrument.prototype.scorePlayLoop = function(){
 	while( this.scoreRemaining.length && this.beats >= this.scoreRemaining[ 0 ][ 0 ] ){
 
 		if( this.scoreRemaining[ 0 ][ 2 ]) this.play( this.scoreRemaining[ 0 ][ 1 ] )
-		else this.stop( this.scoreRemaining[ 0 ][ 1 ] )
+		else this.pause( this.scoreRemaining[ 0 ][ 1 ] )
 		this.scoreCompleted.push( this.scoreRemaining.shift() )
 	}
 	this.beats += this.bpm / 60 / delta * this.oneBeat
@@ -499,7 +501,7 @@ BEEP.Instrument.prototype.scorePlay = function(){
 BEEP.Instrument.prototype.scoreStop = function(){
 
 	this.scoreIsPlaying = false
-	this.stop()
+	this.pause()
 	this.domScorePlayPause.classList.remove( 'is-playing' )
 	return this
 }

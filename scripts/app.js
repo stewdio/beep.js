@@ -5,22 +5,18 @@
 document.addEventListener( 'DOMContentLoaded', function(){
 
 
-	//  This is it -- making an Instrument is this easy!
-	//  That’s because of our “batteries includied” approach.
+	//  Why not play this in distraction-free mode, eh?
 
-	window.synth = new BEEP.Instrument( 'synth' )
+	function goFullscreen(){
 
+		var el = document.getElementById( 'fullscreen-container' )
 
-	//  The	trick now is customization.
-	//  Go forth and customize!
-	//  Overwrite the instance methods!
-	//  Overwrite the prototypes!
-
-
-
-
-
-
+		if( el.requestFullscreen ) el.requestFullscreen()
+		else if( el.msRequestFullscreen ) el.msRequestFullscreen()
+		else if( el.mozRequestFullScreen ) el.mozRequestFullScreen()
+		else if( el.webkitRequestFullscreen ) el.webkitRequestFullscreen()
+	}
+	document.getElementById( 'fullscreen' ).addEventListener( 'click', goFullscreen )
 
 
 	//  Everyone’s doing this right?

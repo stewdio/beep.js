@@ -87,6 +87,14 @@ html, body {
 	width:  100%;
 	height: 100%;
 }
+g#play-hover {
+
+	display: none;
+}
+body #play-hover {
+
+	fill: #FF0;
+}
 body {
 
 	margin:  0;
@@ -194,6 +202,8 @@ h1 {
 
 .trigger.unnatural {
 
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	z-index: 20;
 	top: -10rem;
 	width:   4rem;
@@ -305,15 +315,105 @@ h1 {
 
 
 
+/*   Rainbow Roll curated colors  */
+
+/*  A♭  */.trigger.rainbow.name-index-0  { background-color: hsl( 215, 50%, 15% ) !important; }
+/*  A   */.trigger.rainbow.name-index-1  { background-color: hsl( 230, 50%, 15% ) !important; }
+/*  B♭  */.trigger.rainbow.name-index-2  { background-color: hsl( 265, 50%, 10% ) !important; }
+/*  B   */.trigger.rainbow.name-index-3  { background-color: hsl( 300, 50%, 10% ) !important; }
+/*  C   */.trigger.rainbow.name-index-4  { background-color: hsl(   0, 50%, 15% ) !important; }
+/*  C♯  */.trigger.rainbow.name-index-5  { background-color: hsl(  15, 50%, 15% ) !important; }
+/*  D   */.trigger.rainbow.name-index-6  { background-color: hsl(  30, 50%, 15% ) !important; }
+/*  E♭  */.trigger.rainbow.name-index-7  { background-color: hsl(  45, 50%, 15% ) !important; }
+/*  E   */.trigger.rainbow.name-index-8  { background-color: hsl(  50, 50%, 15% ) !important; }
+/*  F   */.trigger.rainbow.name-index-9  { background-color: hsl( 125, 50%, 10% ) !important; }
+/*  F♯  */.trigger.rainbow.name-index-10 { background-color: hsl( 160, 50%, 15% ) !important; }
+/*  G   */.trigger.rainbow.name-index-11 { background-color: hsl( 200, 50%, 10% ) !important; }
+
+/*  A♭  */.trigger.engaged.rainbow.name-index-0  { background-color: hsl( 215, 100%, 50% ) !important; }
+/*  A   */.trigger.engaged.rainbow.name-index-1  { background-color: hsl( 230, 100%, 50% ) !important; }
+/*  B♭  */.trigger.engaged.rainbow.name-index-2  { background-color: hsl( 265, 100%, 45% ) !important; }
+/*  B   */.trigger.engaged.rainbow.name-index-3  { background-color: hsl( 300, 100%, 40% ) !important; }
+/*  C   */.trigger.engaged.rainbow.name-index-4  { background-color: hsl(   0, 100%, 50% ) !important; }
+/*  C♯  */.trigger.engaged.rainbow.name-index-5  { background-color: hsl(  15, 100%, 50% ) !important; }
+/*  D   */.trigger.engaged.rainbow.name-index-6  { background-color: hsl(  30, 100%, 50% ) !important; }
+/*  E♭  */.trigger.engaged.rainbow.name-index-7  { background-color: hsl(  45, 100%, 50% ) !important; }
+/*  E   */.trigger.engaged.rainbow.name-index-8  { background-color: hsl(  50, 100%, 50% ) !important; }
+/*  F   */.trigger.engaged.rainbow.name-index-9  { background-color: hsl( 125, 100%, 40% ) !important; }
+/*  F♯  */.trigger.engaged.rainbow.name-index-10 { background-color: hsl( 160, 100%, 50% ) !important; }
+/*  G   */.trigger.engaged.rainbow.name-index-11 { background-color: hsl( 200, 100%, 40% ) !important; }
+
+
+/*   Rainbow Roll “true HSL”  */
+
+.trigger.rainbow.unnatural {
+
+	border: 2px solid #111;
+	border-top: none;
+}
+
+/*  A♭  */.trigger.rainbow.name-index-0  { background-color: hsl( 247, 100%, 15% ) !important; }
+/*  A   */.trigger.rainbow.name-index-1  { background-color: hsl( 270, 100%, 15% ) !important; }
+/*  B♭  */.trigger.rainbow.name-index-2  { background-color: hsl( 292, 100%, 15% ) !important; }
+/*  B   */.trigger.rainbow.name-index-3  { background-color: hsl( 315, 100%, 15% ) !important; }
+/*  C   */.trigger.rainbow.name-index-4  { background-color: hsl(   0, 100%, 15% ) !important; }
+/*  C♯  */.trigger.rainbow.name-index-5  { background-color: hsl(  23, 100%, 15% ) !important; }
+/*  D   */.trigger.rainbow.name-index-6  { background-color: hsl(  45, 100%, 15% ) !important; }
+/*  E♭  */.trigger.rainbow.name-index-7  { background-color: hsl(  67, 100%, 15% ) !important; }
+/*  E   */.trigger.rainbow.name-index-8  { background-color: hsl(  90, 100%, 15% ) !important; }
+/*  F   */.trigger.rainbow.name-index-9  { background-color: hsl( 180, 100%, 15% ) !important; }
+/*  F♯  */.trigger.rainbow.name-index-10 { background-color: hsl( 203, 100%, 15% ) !important; }
+/*  G   */.trigger.rainbow.name-index-11 { background-color: hsl( 225, 100%, 15% ) !important; }
+
+/*  A♭  */.trigger.engaged.rainbow.name-index-0  { background-color: hsl( 247, 100%, 50% ) !important; }
+/*  A   */.trigger.engaged.rainbow.name-index-1  { background-color: hsl( 270, 100%, 50% ) !important; }
+/*  B♭  */.trigger.engaged.rainbow.name-index-2  { background-color: hsl( 292, 100%, 50% ) !important; }
+/*  B   */.trigger.engaged.rainbow.name-index-3  { background-color: hsl( 315, 100%, 50% ) !important; }
+/*  C   */.trigger.engaged.rainbow.name-index-4  { background-color: hsl(   0, 100%, 50% ) !important; }
+/*  C♯  */.trigger.engaged.rainbow.name-index-5  { background-color: hsl(  23, 100%, 50% ) !important; }
+/*  D   */.trigger.engaged.rainbow.name-index-6  { background-color: hsl(  45, 100%, 50% ) !important; }
+/*  E♭  */.trigger.engaged.rainbow.name-index-7  { background-color: hsl(  67, 100%, 50% ) !important; }
+/*  E   */.trigger.engaged.rainbow.name-index-8  { background-color: hsl(  90, 100%, 50% ) !important; }
+/*  F   */.trigger.engaged.rainbow.name-index-9  { background-color: hsl( 180, 100%, 50% ) !important; }
+/*  F♯  */.trigger.engaged.rainbow.name-index-10 { background-color: hsl( 203, 100%, 50% ) !important; }
+/*  G   */.trigger.engaged.rainbow.name-index-11 { background-color: hsl( 225, 100%, 50% ) !important; }
+
+/*  A♭  */.trigger.engaged.rainbow.name-index-0  .note-name { color: hsl( 247, 100%, 50% ); }
+/*  A   */.trigger.engaged.rainbow.name-index-1  .note-name { color: hsl( 270, 100%, 50% ); }
+/*  B♭  */.trigger.engaged.rainbow.name-index-2  .note-name { color: hsl( 292, 100%, 50% ); }
+/*  B   */.trigger.engaged.rainbow.name-index-3  .note-name { color: hsl( 315, 100%, 50% ); }
+/*  C   */.trigger.engaged.rainbow.name-index-4  .note-name { color: hsl(   0, 100%, 50% ); }
+/*  C♯  */.trigger.engaged.rainbow.name-index-5  .note-name { color: hsl(  23, 100%, 50% ); }
+/*  D   */.trigger.engaged.rainbow.name-index-6  .note-name { color: hsl(  45, 100%, 50% ); }
+/*  E♭  */.trigger.engaged.rainbow.name-index-7  .note-name { color: hsl(  67, 100%, 50% ); }
+/*  E   */.trigger.engaged.rainbow.name-index-8  .note-name { color: hsl(  90, 100%, 50% ); }
+/*  F   */.trigger.engaged.rainbow.name-index-9  .note-name { color: hsl( 180, 100%, 50% ); }
+/*  F♯  */.trigger.engaged.rainbow.name-index-10 .note-name { color: hsl( 203, 100%, 50% ); }
+/*  G   */.trigger.engaged.rainbow.name-index-11 .note-name { color: hsl( 225, 100%, 50% ); }
+
+
+
+
+.button {
+
+	border-radius: 4rem;
+	width:  4rem;
+	height: 4rem;
+	background-size: 100% 100%;
+}
+
+
+
+
 .score-play-pause {
 
 	position: relative;
 	top: 4rem;
 	display: inline-block;
 	border-radius: 4rem;
-	width:  4rem;	
+	width:  4rem;
 	height: 4rem;
-	background-image: url( ../media/play.svg );
+	background-image: url( ../media/buttons/play.svg );
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	cursor: pointer;
@@ -342,7 +442,7 @@ h1 {
 }
 .score-play-pause.is-playing {
 
-	background-image: url( ../media/pause.svg );
+	background-image: url( ../media/buttons/pause.svg );
 	opacity: 0.5;
 	-webkit-animation: none;
 	-moz-animation:    none;
@@ -351,7 +451,7 @@ h1 {
 }
 .score-play-pause:hover {
 
-	background-image: url( ../media/play-hover.svg );
+	background-image: url( ../media/buttons/play-hover.svg );
 	opacity: 1;
 	-webkit-animation: none;
 	-moz-animation:    none;
@@ -360,12 +460,39 @@ h1 {
 }
 .score-play-pause.is-playing:hover {
 
-	background-image: url( ../media/pause-hover.svg );
+	background-image: url( ../media/buttons/pause-hover.svg );
 }
 #play-pause-container .score-play-pause {
 
 	top:  0.8rem;
 	left: 0.8rem;
+}
+
+
+
+
+#fullscreen {
+
+	position: absolute;
+	top:   2rem;
+	right: 2rem;
+	background-image: url( ../media/buttons/fullscreen.svg );
+}
+#fullscreen:hover {
+
+	background-image: url( ../media/buttons/fullscreen-hover.svg );
+}
+#fullscreen-container {
+
+	background-color: #111;
+}
+:-webkit-full-screen {
+
+    position: fixed;
+    top: 0;
+    width:  100%;
+    height: 100%;
+    background: none;
 }
 
 
@@ -400,9 +527,23 @@ footer {
 
 	margin-left: 0.2rem;
 }
-#github   { background-image: url( ../media/github.svg ); }
-#twitter  { background-image: url( ../media/twitter.svg ); }
-#facebook { background-image: url( ../media/facebook.svg ); }
+#github   { background-image: url( ../media/buttons/github.svg ); }
+#twitter  { background-image: url( ../media/buttons/twitter.svg ); }
+#facebook { background-image: url( ../media/buttons/facebook.svg ); }
+
+
+
+
+#cache {
+
+	width:  0;
+	height: 0;
+	overflow: hidden;
+}
+
+
+
+
 
 
 

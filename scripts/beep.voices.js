@@ -16,7 +16,7 @@
 
 	    var v = new Voice()
 	    v.play()
-	    v.stop()
+	    v.pause()
 
 	The intended use here is to create a Voice, optionally passing it
 	a Note to begin with, and then alter its Note dynamically in a loop.
@@ -168,7 +168,7 @@ BEEP.Voice.prototype.play = function( params ){
 //  they are not reusable.
 //  Instead we just turn its amplitude back down.
 
-BEEP.Voice.prototype.stop = function(){
+BEEP.Voice.prototype.pause = function(){
 
 	this.gainNode.gain.value = 0
 	return this

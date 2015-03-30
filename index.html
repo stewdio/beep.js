@@ -10,7 +10,7 @@
 		<meta property="og:title"       content="Beep.js">
 		<meta property="og:description" content="Beep is a JavaScript framework for building browser-based synthesizers.">
 		<meta property="og:url"         content="http://beepjs.com">
-		<meta property="og:image"       content="http://beepjs.com/media/beepjs-poster.png">
+		<meta property="og:image"       content="http://beepjs.com/media/beep-poster.png">
 		<title>Beep.js</title>
 		<link rel="icon" type="image/png" href="media/favicon-064.png">
 		<link rel="apple-touch-icon" href="media/favicon-144.png">
@@ -21,26 +21,36 @@
 		<script charset="utf-8" src="scripts/beep.triggers.js"></script>
 		<script charset="utf-8" src="scripts/beep.instruments.js"></script>
 		<script charset="utf-8" src="scripts/analytics.js"></script>
+		<script charset="utf-8" src="scripts/app.js"></script>
 		<script charset="utf-8" src="scripts/example.js"></script>
 	</head>
-	<body>
-		<h1>beep<span id="play-pause-container"></span></h1>
-		<div id="synth"></div>
-		<!--
+	<body>		
+		<div id="fullscreen-container">
+			<h1>beep<span id="play-pause-container"></span></h1>
+			<div id="synth"></div>
+			<!--
 
 
-			Were you looking for the source code?
+				Were you looking for the source code?
 
-			https://github.com/stewdio/beep
+				https://github.com/stewdio/beep
 
 
-		-->
-		<footer>			
+			-->
+		</div>
+		<div class="button" id="fullscreen"></div>
+		<footer>
 			<div class="button" id="github"></div>
 			<div class="button" id="twitter"></div>
 			<div class="button" id="facebook"></div>
 			<br>
 			Build your own? <a target="_blank" href="https://github.com/stewdio/beep.js" title="Beep.js on GitHub">Get the code</a>.
 		</footer>
+		<div id="cache">
+			<img src="media/buttons/play-hover.svg">
+			<img src="media/buttons/pause.svg">
+			<img src="media/buttons/pause-hover.svg">
+			<img src="media/buttons/fullscreen-hover.svg">
+		</div>
 	</body>
 </html>

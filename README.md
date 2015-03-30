@@ -3,7 +3,7 @@
 Beep.js
 ==============================================================================
 
-![Beep.js](https://github.com/stewdio/beep.js/raw/master/media/beepjs-poster.png "Beep.js")
+![Beep.js](https://github.com/stewdio/beep.js/raw/master/media/beep-poster.png "Beep.js")
 
 __TL;DR__  
 Create a synthesizer with one line of code: `synth = new BEEP.Instrument()`

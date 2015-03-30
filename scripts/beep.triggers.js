@@ -67,6 +67,10 @@ BEEP.Trigger = function( a, b ){
 	if( this.note.isSharp || this.note.isFlat ) 
 		this.domContainer.classList.add( 'unnatural' )
 	else this.domContainer.classList.add( 'natural' )
+
+
+	this.domContainer.classList.add( 'name-index-'+ this.note.nameIndex )
+	//this.domContainer.classList.add( 'rainbow' )
 	this.domContainer.setAttribute( 'id', 'trigger-'+ this.id )	
 	if( this.instrument && this.instrument.domTriggers ) this.instrument.domTriggers.appendChild( this.domContainer )
 	else document.body.appendChild( this.domContainer )
@@ -226,7 +230,7 @@ BEEP.Trigger.prototype.destroyVoices = function(){
 
 	while( i -- ){
 
-		if( this.voices[ i ] !== undefined && typeof this.voices[ i ].stop === 'function' ) this.voices[ i ].stop()
+		if( this.voices[ i ] !== undefined && typeof this.voices[ i ].pause === 'function' ) this.voices[ i ].pause()
 		delete this.voices[ i ]
 	}
 	this.voices  = []
@@ -240,9 +244,9 @@ BEEP.Trigger.prototype.play = function(){
 
 	this.voices.forEach( function( voice ){ voice.play() })
 }
-BEEP.Trigger.prototype.stop = function(){
+BEEP.Trigger.prototype.pause = function(){
 
-	this.voices.forEach( function( voice ){ voice.stop() })
+	this.voices.forEach( function( voice ){ voice.pause() })
 }
 
 
@@ -268,7 +272,7 @@ BEEP.Trigger.prototype.disengage = function( eventType ){
 	if( this.engaged === true && ( this.eventType === eventType || this.eventType === 'code' )){
 	
 		this.engaged = false		
-		this.stop()
+		this.pause()
 		this.domContainer.classList.remove( 'engaged' )
 	}
 	return this
@@ -283,7 +287,7 @@ BEEP.Trigger.prototype.disengage = function( eventType ){
 
 BEEP.Trigger.prototype.destroy = function(){
 
-	this.stop()
+	this.pause()
 	this.eventListeners.forEach( function( event ){
 
 		window.removeEventListener( event.type, event.action )

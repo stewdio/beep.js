@@ -1,0 +1,7 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+	<g id="fullscreen-hover">
+		<path fill="#FFFFFF" d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270S449.117,30,300,30z
+			 M440,260h-20v-65.857L194.143,420H260v20H160V340h20v65.857L405.857,180H340v-20h100V260z"/>
+	</g>
+</svg>
