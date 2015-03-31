@@ -441,9 +441,7 @@ BEEP.Instrument.prototype.scoreLoadFromHash = function(){
 
 	if( document.location.hash !== '' ){
 
-		var 
-		beat  = 0, i,
-		score = document.location.hash.substr( 1 ).split( ',' ).map( function( element ){
+		var score = document.location.hash.substr( 1 ).split( ',' ).map( function( element ){
 
 			var value
 
@@ -460,9 +458,15 @@ BEEP.Instrument.prototype.scoreLoadFromHash = function(){
 }
 BEEP.Instrument.prototype.scoreLoad = function( score ){
 
-	var beat = 0, i
+	var beat = 0, i, note
 
 	for( i = 0; i < score.length; i += 3 ){
+
+
+		//  This bit here means you can call 'Bb'
+		//  and it will still trigger 'B♭', etc!
+
+		note = new BEEP.Note( score[ i+1 ])
 
 
 		//  TO DO FUTURE @@
@@ -472,9 +476,9 @@ BEEP.Instrument.prototype.scoreLoad = function( score ){
 		//  exact same beat. We should nudge the call for engagement one 
 		//  loop into to the future!! 
 
-		beat += score[ i+0 ]
-		this.scoreRemaining.push([ beat,  score[ i+1 ], true  ])
-		this.scoreRemaining.push([ beat + score[ i+2 ], score[ i+1 ], false ])
+		beat += score[ i+0 ] || 0
+		this.scoreRemaining.push([ beat, note.octaveIndex + note.nameSimple, true  ])
+		this.scoreRemaining.push([ beat + score[ i+2 ], note.octaveIndex + note.nameSimple, false ])
 	}
 	this.scoreRemaining.sort( function( a, b ){
 
