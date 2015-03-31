@@ -38,11 +38,11 @@ document.addEventListener( 'DOMContentLoaded', function(){
 		el.addEventListener( 'touchend', go )
 	}
 	makeSocial( 'github',   800, 600, 'https://github.com/stewdio/beep.js' )
-	makeSocial( 'twitter',  500, 300, 'https://twitter.com/share?text='+ escape( 'Browser Synth by @stewd_io:' ) +'&url=' + escape( 'http://stewd.io/beep' ))
-	makeSocial( 'facebook', 400, 300, 'https://www.facebook.com/sharer/sharer.php?u='+ escape( 'http://stewd.io/beep' ))
-	// makeSocial( 'gplus',    400, 600, 'https://plus.google.com/share?url='+ escape( 'http://stewd.io/synth' ))
-	// makeSocial( 'tumblr',   400, 400, 'http://www.tumblr.com/share?v=3&u='+ escape( 'http://stewd.io/synth' ) +'&t='+ escape( 'Browser Synth' ))
-	// makeSocial( 'email',    400, 300, 'mailto:?Subject='+ escape( 'Browser Synth' ) +'&Body='+ escape( 'http://stewd.io/synth' ))
+	makeSocial( 'twitter',  500, 300, 'https://twitter.com/share?text='+ escape( 'Beep by @stewd_io is a JavaScript toolkit for making synthesizers:' ) +'&url=' + escape( 'http://beepjs.com' ))
+	makeSocial( 'facebook', 400, 300, 'https://www.facebook.com/sharer/sharer.php?u='+ escape( 'http://beepjs.com' ))
+	// makeSocial( 'gplus',    400, 600, 'https://plus.google.com/share?url='+ escape( 'http://beepjs.com' ))
+	// makeSocial( 'tumblr',   400, 400, 'http://www.tumblr.com/share?v=3&u='+ escape( 'http://beepjs.com' ) +'&t='+ escape( 'Beep.js' ))
+	// makeSocial( 'email',    400, 300, 'mailto:?Subject='+ escape( 'Beep.js' ) +'&Body='+ escape( 'http://beepjs.com' ))
 })
 
 
