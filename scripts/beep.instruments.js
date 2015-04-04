@@ -7,7 +7,8 @@
 	synth.play( '3C' ).play( '4G' ).play( '5C' )
 	synth.pause()
 
-	synth.unbuild().buildCloseEncounters()
+	synth.buildCloseEncounters()
+
 
 */
 
@@ -19,11 +20,22 @@ BEEP.Instrument = function( domContainer ){
 	var that = this
 
 
-	//  Our hardware upper limit is just 6 AudioContexts.
-	//  Seriously, Dawg. Six. Dawg. Daaaaaaawg. Awwwwwg.
-	//  So we’ll make one here and then re-use it a lot.
 
-	this.context = new BEEP.AudioContext()
+
+	Array.prototype.slice.call( arguments ).forEach( function( arg ){
+
+		if( arg instanceof window.Element ) that.domContainer = arg
+		else if( typeof arg === 'string' ) that.domContainer = document.getElementById( arg )
+		else if( arg instanceof Function ) that.createVoices = arg
+	})
+
+
+
+
+
+	//  Let’s hook up to BEEP’s “global” Audio Context.
+
+	this.context = BEEP.audioContext
 
 
 	//  Now that we have an Audio Context we can give our Instrument
@@ -184,13 +196,31 @@ BEEP.Instrument.prototype.newTrigger = function( note, triggerChars ){
 
 	var trigger
 
-	if( note instanceof BEEP.Note === false ) note = new BEEP.Note( note )
+	if( note instanceof BEEP.Note === false ) note = new BEEP.Note( note )	
+	
+
+	//  Here we’re going to assume if we intentionally sent a createVoices()
+	//  function to our Instrument then we’d like all Triggers to use it.
+	//  Otherwise you could quite easily send unique functions for creating
+	//  voices to each individual Trigger, eh?
+
+	if( this.createVoices !== undefined )
+		trigger = new BEEP.Trigger( this, note, this.createVoices )
+	else trigger = new BEEP.Trigger( this, note )
+
+
+	//  What keyboard character or characters should trigger this Trigger?
+
 	if( triggerChars instanceof Array === false ) triggerChars = [ triggerChars ]
-	trigger = new BEEP.Trigger( this, note )
 	triggerChars.forEach( function( triggerChar ){
 
 		if( triggerChar !== undefined ) trigger.addTriggerChar( triggerChar )
-	})	
+	})
+
+
+	//  We’ll go with this format for ID’s:
+	//  Octave # + Note Name (sans any Natural symbols).
+
 	this.triggers[ note.octaveIndex + note.nameSimple ] = trigger
 	return this
 }

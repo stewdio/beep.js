@@ -3,8 +3,7 @@
 
 	TRIGGERS
 
-
-
+	Instantly add interfaces to your Voices with mouse and keyboard events. 
 
 
 */
@@ -12,43 +11,38 @@
 
 
 
-BEEP.Trigger = function( a, b ){
+BEEP.Trigger = function(){
 
 	var that = this
 
 
-	//  Trigger can accept a few different kinds of input.
+	//  Trigger is rather permissive with its parameters.
+	//  You can send it an Instrument, Note, a replacement function
+	//  for its createVoices() method, or something that might
+	//  possibly be a valid Note if you ran it through Note().
+	//  Don’t shoot your eye out, kiddo.
 
-	if( a instanceof BEEP.Instrument ){
+	Array.prototype.slice.call( arguments ).forEach( function( arg ){
 
-		this.instrument = a
-		if( b instanceof BEEP.Note ) this.note = b
-		else if( b !== undefined ) this.note = new BEEP.Note( b )
-	}
-	else if( a instanceof BEEP.Note ){
-
-		this.note = a
-		if( b instanceof BEEP.Instrument ) this.instrument = b
-	}
-	else if( a !== undefined ){
-
-		this.note = new BEEP.Note( a )
-	}
-	else this.note = new BEEP.Note()
+		if( arg instanceof BEEP.Instrument ) that.instrument = arg
+		else if( arg instanceof Function ) that.createVoices = arg
+		else if( arg instanceof BEEP.Note ) that.note = arg
+		else that.note = new BEEP.Note( arg )
+	})
 
 
-	//  Just in case we missed these vitals we should make some defaults
-	//  which makes it easier to get to Hello World, eh?
+	//  Might be a grand idea to have a unique ID in case anyone should
+	//  need that down the road.
 
-	if( this.id === undefined ) this.id = Date.now() +'-'+ Math.round( Math.random() * 10000000000 )
+	this.id = Date.now() +'-'+ Math.round( Math.random() * 10000000000 )
 
 
-	//  If we have an instrument then we want to re-use
-	//  that instrument’s Audio Context.
-	//  Afterall, we’re only allowed six of them.
+	//  If we already have an Instrument then we ought plug into
+	//  its existing Audio Context. Otherwise we’ll aim straight for
+	//  the “global” BEEP one.
 
-	if( this.instrument ) this.context = this.instrument.context
-	else this.context = new BEEP.AudioContext()
+	if( this.instrument ) this.audioContext = this.instrument.audioContext
+	else this.audioContext = BEEP.audioContext
 
 
 	//  Now that we have an Audio Context we should add a buffer of Voices.
@@ -180,45 +174,35 @@ BEEP.Trigger.prototype.addTriggerChar = function( trigger ){
 
 
 
-//  This is the default play() function.
-//  You can easily overwrite this in your own instance of Trigger
-//  to use as many or as few voices as you like
-//  and with whatever behavior you like.
-//  Or even overwrite *all* Triggers at once by overwriting
-//  this prototype itself!
+//  This is the default createVoices() function. You can easily override this 
+//  by sending your own Function to the Trigger constructor, or even sending
+//  your own Function to Instrument, which will in turn pass it on to each
+//  Trigger instance that it builds. 
 // “Down here, it’s our time. It’s our time down here. 
 //  That’s all over the second we ride up Troy’s bucket.”
 
 BEEP.Trigger.prototype.createVoices = function(){
 
-	var
-	note0, voice0,
-	note1, voice1
+
+	//  Let’s call this our “Foundation Voice”
+	//  because it will sing the intended Note.
+
+	this.voices.push( 
+
+		new BEEP.Voice( this.note, this.audioContext )
+		.setOscillatorType( 'square' )
+		.setGainHigh( 0.2 )
+	)
 
 
-	//  For our first Voice we don’t need to alter
-	//  the note at all.
+	//  This Voice will sing 1 octave below the Foundation Voice.
 
-	note0  = this.note
-	voice0 = new BEEP.Voice( note0, this.context )
-	voice0.oscillator.type = 'square'
-	voice0.gainHigh = 0.2
-	this.voices[ 0 ] = voice0
+	this.voices.push( 
 
-
-	//  But for our second Voice we do want to alter
-	//  the note, and we ought to do that before we
-	//  initialize the Voice, otherwise we get some
-	//  nice (but unintended) Nintendo explosion sounds.
-
-	note1  = new BEEP.Note( note0.hertz / 2 )
-	voice1 = new BEEP.Voice( note1, this.context )
-	voice1.oscillator.type = 'sine'
-	voice1.gainHigh = 0.3
-	this.voices[ 1 ] = voice1
-
-
-	return this
+		new BEEP.Voice( this.note.hertz / 2, this.audioContext )
+		.setOscillatorType( 'sine' )
+		.setGainHigh( 0.3 )
+	)
 }
 
 

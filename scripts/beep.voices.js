@@ -14,9 +14,9 @@
 	Sending no arguments to a Voice will give you all default params
 	and results in a playable Concert A:
 
-	    var v = new Voice()
-	    v.play()
-	    v.pause()
+	    var voice = new BEEP.Voice()
+	    voice.play()
+	    voice.pause()
 
 	The intended use here is to create a Voice, optionally passing it
 	a Note to begin with, and then alter its Note dynamically in a loop.
@@ -55,13 +55,13 @@ BEEP.Voice = function( a, b ){
 
 		if( a instanceof BEEP.AudioContext ){
 
-			this.context = a
-			this.destination = a.destination
+			this.audioContext = a
+			this.destination  = a.destination
 		}
 		else if( a instanceof GainNode ){
 
-			this.context = a.context
-			this.destination = a
+			this.audioContext = a.audioContext
+			this.destination  = a
 		}
 		if( b instanceof BEEP.Note ) this.note = b
 		else this.note = new BEEP.Note( b )//  Still ok if b === undefined.
@@ -84,18 +84,18 @@ BEEP.Voice = function( a, b ){
 		else this.note = new BEEP.Note( a )//  Still ok if a === undefined.
 		if(  b instanceof BEEP.AudioContext ){
 
-			this.context = b
-			this.destination = b.destination
+			this.audioContext = b
+			this.destination  = b.destination
 		}
 		else if( b instanceof GainNode ){
 
-			this.context = b.context
-			this.destination = b
+			this.audioContext = b.audioContext
+			this.destination  = b
 		}
 		else {
 
-			this.context = new BEEP.AudioContext()
-			this.destination = this.context.destination
+			this.audioContext = BEEP.audioContext
+			this.destination  = this.audioContext.destination
 		}
 	}
 
@@ -103,7 +103,7 @@ BEEP.Voice = function( a, b ){
 	//  Create a Gain Node
 	//  for turning this voice up and down.
 
-	this.gainNode = this.context.createGain()
+	this.gainNode = this.audioContext.createGain()
 	this.gainNode.gain.value = 0
 	this.gainNode.connect( this.destination )
 	this.gainHigh = this.note.gainHigh !== undefined ? this.note.gainHigh : 1
@@ -112,7 +112,7 @@ BEEP.Voice = function( a, b ){
 	//  Create an Oscillator
 	//  for generating the sound.
 
-	this.oscillator = this.context.createOscillator()
+	this.oscillator = this.audioContext.createOscillator()
 	this.oscillator.connect( this.gainNode )
 	this.oscillator.type = 'sine'
 	this.oscillator.frequency.value = this.note.hertz
@@ -181,6 +181,48 @@ BEEP.Voice.prototype.destroy = function(){
 
 	this.oscillator.noteOff( this.oscillator.currentTime )// Stop oscillator after 0 seconds.
 	this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
+	return this
+}
+
+
+
+
+//  Some convenience getters and setters.
+//
+//  Q: OMG, why? It’s not like we’re protecting private variables.
+//     You can already directly access these properties!
+//  A: Sure, sure. But by creating setters that return “this”
+//     you can easily do function-chaining and never have to create
+//     and set temporary variables, like this:
+//
+//     voices.push( 
+//
+// 	       new BEEP.Voice( this.note.hertz * 3 / 2, this.audioContext )
+// 	       .setOscillatorType( 'triangle' )
+// 	       .setGainHigh( 0.3 )
+//     )
+//
+//     As for the getters, it just felt rude to create the setters
+//    (thereby leading the expectation that getters would also exist)
+//     without actually having getters.
+
+
+BEEP.Voice.prototype.getGainHigh = function(){
+
+	return this.gainHigh
+}
+BEEP.Voice.prototype.setGainHigh = function( normalizedNumber ){
+
+	this.gainHigh = normalizedNumber
+	return this
+}
+BEEP.Voice.prototype.getOscillatorType = function(){
+
+	return this.oscillator.type
+}
+BEEP.Voice.prototype.setOscillatorType = function( string ){
+
+	this.oscillator.type = string
 	return this
 }
 

@@ -113,9 +113,9 @@ initialized with a `Note` and maybe pass it an `AudioContext` to pipe the
 sound out to. Just as with `Note` the arguments for `Voice` are all optional.
 Providing none will yield a `Voice` with a default `Note` of 440Hz:
 ```javascript
-v = new BEEP.Voice()//  We’re running with defaults.
-v.play()//  Listen to that pure 440Hz Concert A.
-v.pause()//  Ok, we’ve had enough.
+voice = new BEEP.Voice()//  We’re running with defaults.
+voice.play()//  Listen to that pure 440Hz Concert A.
+voice.pause()//  Ok, we’ve had enough.
 ```
 
 __Note arguments__  
@@ -133,9 +133,9 @@ works (batteries-included, eh?) but there are hardware limits on the number of
 an `Instrument` and passing its `AudioContext` to each `Voice`.
 
 __Only fix what’s Baroque__  
-I guess all the above is pretty cool, but having to type `v.play()` and 
-`v.pause()` everytime I want to `Voice` a `Note` is kind of a drag. And that’s 
-where `Trigger` come in.
+I guess all the above is pretty cool, but having to type `voice.play()` and 
+`voice.pause()` everytime I want to voice a `Note` is kind of a drag. And 
+that’s where `Trigger` comes in.
 
 
 Triggers
@@ -163,7 +163,58 @@ Customizing your instance’s `createVoices()` method is the name of the game!
 __Audio arguments__  
 Just like `Voice`, `Trigger` is happy to ingest an `AudioContext` or 
 `GainNode` argument but will make do without one if it has to. See the above 
-`Voice` blurb for more details.
+`Voice` blurb for more details. Additionally you can pass it a Function…
+
+__Customizing Trigger’s createVoices() method__  
+Upon initialization each instance of Trigger calls its `createVoices()` 
+method. If you’re the type of gal that likes to annihilate mosquitos using 
+atom bombs then you can just overwrite `BEEP.Trigger.prototype.createVoices`.
+Otherwise, why not pass a custom function during initialization like so:
+```javascript
+var synth = new BEEP.Instrument( 'synth', function(){
+
+
+    //  Let’s call this our “Foundation Voice”
+    //  because it will sing the intended Note.
+
+    this.voices.push( 
+
+        new BEEP.Voice( this.note, this.audioContext )
+        .setOscillatorType( 'sine' )
+        .setGainHigh( 0.4 )
+    )
+
+
+    //  This Voice will sing a Perfect 5th above the Foundation Voice.
+
+    this.voices.push( 
+
+        new BEEP.Voice( this.note.hertz * 3 / 2, this.audioContext )
+        .setOscillatorType( 'triangle' )
+        .setGainHigh( 0.1 )
+    )
+
+
+    //  This Voice will sing 2 octaves above the Foundation Voice.
+
+    this.voices.push( 
+
+        new BEEP.Voice( this.note.hertz * 4, this.audioContext )
+        .setOscillatorType( 'sawtooth' )
+        .setGainHigh( 0.01 )
+    )
+
+
+    //  This Voice will sing 1 octave below the Foundation Voice.
+
+    this.voices.push( 
+
+        new BEEP.Voice( this.note.hertz / 2, this.audioContext )
+        .setOscillatorType( 'square' )
+        .setGainHigh( 0.01 )
+    )
+})
+```
 
 __Many Triggers__  
 Throw a few of these together and you have a mini-keyboard. What famous 
@@ -210,6 +261,11 @@ BEEP.Instrument.prototype.buildCloseEncounters = function(){
 The `newTrigger()` convenience method creates a new `Trigger`, passes it the 
 existing `AudioContext`, and adds keyboard Event Listeners. Oh, my!
 
+__Customizing Trigger’s createVoices() method—Redux__  
+You can also pass a custom `createVoices()` method to `Instrument` and it will
+in turn pass that function to each `Trigger` instance that it creates. See the
+main `Trigger` description above for details!
+
 
 Scores
 ------------------------------------------------------------------------------
@@ -243,11 +299,11 @@ melody = [
 Further
 ------------------------------------------------------------------------------
 In the future it might make more sense to separate Score into its own Class. 
-The naming conventions could use some tightening. And there is definitely a 
+Beep’s naming conventions could use some tightening. And there is definitely a 
 need for more explanation (and a demo) related to the difference between 
 __[Just intonation](http://en.wikipedia.org/wiki/Just_intonation)__ and 
 __[Equal temperament](http://en.wikipedia.org/wiki/Equal_temperament)__.
-It’s early days.
+And so much more to come. It’s early days.
 
 
 
