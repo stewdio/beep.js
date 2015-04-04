@@ -209,7 +209,7 @@ BEEP.Note.validateWestern = function( params ){
 	
 
 	//  We now have the majority of the Note ready for use.
-	//  Everything except for ... the FERQUENCY of the note!
+	//  Everything except for ... the FREQUENCY of the Note!
 	//  That will be decided based on the tuning method.
 
 	return params

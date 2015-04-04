@@ -40,7 +40,6 @@
 //  so we’d like to connect this Voice to an existing one if 
 //  possible. But if need be we can create a new one here.
 
-
 BEEP.Voice = function( a, b ){
 
 
@@ -146,7 +145,7 @@ BEEP.Voice.prototype.play = function( params ){
 
 	//  Let’s create that Note.
 	//  The params will specify a frequency assignment method to use
-	//  otherwise Note() will pick a default().
+	//  otherwise Note() will pick a default.
 
 	if( params !== undefined ) this.note = new BEEP.Note( params )
 	this.oscillator.frequency.value = this.note.hertz
@@ -164,9 +163,9 @@ BEEP.Voice.prototype.play = function( params ){
 }
 
 
-//  We can’t full on stop a Note because that would destroy it;
-//  they are not reusable.
-//  Instead we just turn its amplitude back down.
+//  We don’t want to stop() an oscillator because that would destroy it:
+//  They are not reusable.
+//  Instead we just turn its amplitude down so we can’t hear it.
 
 BEEP.Voice.prototype.pause = function(){
 
@@ -175,13 +174,13 @@ BEEP.Voice.prototype.pause = function(){
 }
 
 
-//  Or you know what? We could just kill it.
+//  Or you know what? Maybe we do want to just kill it.
 //  Like sawing off the branch you’re sitting on.
 
 BEEP.Voice.prototype.destroy = function(){
 
-	this.oscillator.noteOff( this.oscillator.currentTime )// Stop oscillator after 0 seconds
-	this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector
+	this.oscillator.noteOff( this.oscillator.currentTime )// Stop oscillator after 0 seconds.
+	this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
 	return this
 }
 
