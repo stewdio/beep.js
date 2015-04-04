@@ -171,7 +171,7 @@ method. If you’re the type of gal that likes to annihilate mosquitos using
 atom bombs then you can just overwrite `BEEP.Trigger.prototype.createVoices`.
 Otherwise, why not pass a custom function during initialization like so:
 ```javascript
-var synth = new BEEP.Instrument( 'synth', function(){
+var trigger = new BEEP.Trigger( '2Eb', function(){
 
 
     //  Let’s call this our “Foundation Voice”

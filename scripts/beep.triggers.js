@@ -45,6 +45,12 @@ BEEP.Trigger = function(){
 	else this.audioContext = BEEP.audioContext
 
 
+	//  What if we didn’t receive anything useful as a Note?
+	//  We’ll just run with defaults.
+
+	if( this.note === undefined ) this.note = new BEEP.Note()
+
+
 	//  Now that we have an Audio Context we should add a buffer of Voices.
 	//  Also good to know if our Trigger is engaged or not!
 	
