@@ -134,7 +134,7 @@ BEEP.Instrument = function( domContainer ){
 				
 				var 
 				trigger = that.triggers[ triggerKey ],
-				rect = trigger.domContainer.getBoundingClientRect()
+				rect = trigger.domTrigger.getBoundingClientRect()
 
 				if( rect.left   < touch.pageX &&
 					touch.pageX < rect.right   &&

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>Beep.js</title>
+		
 		<meta charset="utf-8">
 		<meta name="viewport"    content="width=600">
 		<meta name="description" content="Beep is a JavaScript framework for building browser-based synthesizers.">
@@ -20,9 +22,7 @@
 		<meta property="og:description" content="Beep is a JavaScript framework for building browser-based synthesizers.">
 		<meta property="og:url"         content="http://beepjs.com">
 		<meta property="og:image"       content="http://beepjs.com/media/beep-poster.png">
-		
-		<title>Beep.js</title>
-		
+				
 		<link rel="canonical" href="http://beepjs.com/">
 		<link rel="icon" type="image/png" href="media/favicon-064.png">
 		<link rel="apple-touch-icon" href="media/favicon-144.png">
@@ -64,6 +64,56 @@
 			<img src="media/buttons/pause.svg">
 			<img src="media/buttons/pause-hover.svg">
 			<img src="media/buttons/fullscreen-hover.svg">
+		</div>	
+		<div id="editor-container">
+			<textarea id="editor">var synth = new BEEP.Instrument( 'synth', function(){
+
+
+//  Let’s call this our “Foundation Voice”
+//  because it will sing the intended Note.
+
+this.voices.push( 
+
+	new BEEP.Voice( this.note, this.audioContext )
+	.setOscillatorType( 'sine' )
+	.setGainHigh( 0.4 )
+)
+
+
+//  This Voice will sing a Perfect 5th above the Foundation Voice.
+
+this.voices.push( 
+
+	new BEEP.Voice( this.note.hertz * 3 / 2, this.audioContext )
+	.setOscillatorType( 'triangle' )
+	.setGainHigh( 0.1 )
+)
+
+
+//  This Voice will sing 2 octaves above the Foundation Voice.
+
+this.voices.push( 
+
+	new BEEP.Voice( this.note.hertz * 4, this.audioContext )
+	.setOscillatorType( 'sawtooth' )
+	.setGainHigh( 0.01 )
+)
+
+
+//  This Voice will sing 1 octave below the Foundation Voice.
+
+this.voices.push( 
+
+	new BEEP.Voice( this.note.hertz / 2, this.audioContext )
+	.setOscillatorType( 'square' )
+	.setGainHigh( 0.01 )
+)
+})
+synth.buildCRainbow()</textarea>
+		</div>
+		<div id="editor-buttons">
+			<div id="editor-reload" class="button"><div class="inner icon-reload"></div></div>
+			<div id="editor-close" class="button"><div class="inner icon-x"></div></div>
 		</div>
 	</body>
 </html>

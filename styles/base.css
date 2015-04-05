@@ -396,6 +396,41 @@ h1 {
 
 
 
+#editor-container {
+
+	position: absolute;
+	z-index: 30;
+	top:     0;
+	left:  100vw;
+	width: 100vw;
+	box-shadow: 0 0 1rem rgba( 0, 0, 0, 0.5 );
+	overflow: hidden;
+	transition-property: left, width;
+	transition-duration: 0.4s;
+	transition-timing-function: ease-in;
+}
+#editor-container.show {
+
+	left:  50vw;
+	width: 50vw;
+	transition-property: left, width;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-out;
+}
+#editor {
+
+	width:   50vw;
+	height: 100vh;
+	border: none;
+	background-color: #333;
+	padding: 2rem;
+	color: #999;
+	outline: none;	
+}
+
+
+
+
 .button {
 
 	border-radius: 4rem;
