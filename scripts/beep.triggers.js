@@ -59,43 +59,73 @@ BEEP.Trigger = function(){
 	this.createVoices()
 
 
-	//  Would be good to have an interface, eh?
-	//  Something you could keypress or mouseover or touch?
+	//  This container visually houses the note name
+	//  and the visible trigger below it.
 
 	this.domContainer = document.createElement( 'div' )
-	this.domContainer.classList.add( 'trigger' )
+	this.domContainer.classList.add( 'trigger-container' )
 	if( this.note.isSharp || this.note.isFlat ) 
 		this.domContainer.classList.add( 'unnatural' )
 	else this.domContainer.classList.add( 'natural' )
 
 
+	//  This is pretty useful for CSS tricks tied to note names (sans octave)
+	//  like say... A RAINBOW ROLL !
+
 	this.domContainer.classList.add( 'name-index-'+ this.note.nameIndex )
-	//this.domContainer.classList.add( 'rainbow' )
+
+
+	//  Who knows, this might be useful in the future.
+
 	this.domContainer.setAttribute( 'id', 'trigger-'+ this.id )	
-	if( this.instrument && this.instrument.domTriggers ) this.instrument.domTriggers.appendChild( this.domContainer )
-	else document.body.appendChild( this.domContainer )
+
+
+	//  Every note has a name.
+	//  This note’s name is Robert Paulson. 
+	//  HIS NAME IS ROBERT PAULSON.
 
 	this.domNoteName = document.createElement( 'div' )
 	this.domNoteName.classList.add( 'note-name' )
 	this.domNoteName.innerHTML = '<strong>'+ this.note.nameSimple +'</strong>'+ this.note.octaveIndex
 	this.domContainer.appendChild( this.domNoteName )
 
+
+	//  This is the actual visible trigger,
+	//  the primary visual element of a keyboard interface.
+	//  And the target of our mouse / touch events.
+
+	this.domTrigger = document.createElement( 'div' )
+	this.domTrigger.classList.add( 'trigger' )
+	this.domContainer.appendChild( this.domTrigger )
+
+
+	//  This will house a list of all keyboard inputs
+	//  that trigger this, uh ... Trigger.
+
 	this.domCharsList = document.createElement( 'div' )
 	this.domCharsList.classList.add( 'chars-list' )
-	this.domContainer.appendChild( this.domCharsList )
+	this.domTrigger.appendChild( this.domCharsList )
+
+
+	//  We’re either attaching all this DOM baggage to
+	//  a proper Instrument DOM elment 
+	//  or straight to the Document Body element!
+
+	if( this.instrument && this.instrument.domTriggers ) this.instrument.domTriggers.appendChild( this.domContainer )
+	else document.body.appendChild( this.domContainer )
 
 
 	//  Add some mouse and touch events.
 
 	this.eventListeners = []
-	this.domContainer.addEventListener( 'mouseenter', function(){ that.engage( 'mouseenter' )})
-	this.domContainer.addEventListener( 'mouseleave', function(){ that.disengage( 'mouseenter' )})
-	this.domContainer.addEventListener( 'touchstart', function( event ){
+	this.domTrigger.addEventListener( 'mouseenter', function(){ that.engage( 'mouseenter' )})
+	this.domTrigger.addEventListener( 'mouseleave', function(){ that.disengage( 'mouseenter' )})
+	this.domTrigger.addEventListener( 'touchstart', function( event ){
 
 		that.engage( 'touched' )
 		event.preventDefault()
 	})
-	this.domContainer.addEventListener( 'touchend', function( event ){
+	this.domTrigger.addEventListener( 'touchend', function( event ){
 
 		that.disengage( 'touched' )
 		event.preventDefault()

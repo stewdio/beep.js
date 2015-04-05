@@ -61,7 +61,8 @@ document.addEventListener( 'DOMContentLoaded', function(){
 			.setOscillatorType( 'square' )
 			.setGainHigh( 0.01 )
 		)
-	})*/
+	})
+	synth.buildCRainbow()*/
 
 	
 

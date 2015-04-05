@@ -87,14 +87,6 @@ html, body {
 	width:  100%;
 	height: 100%;
 }
-g#play-hover {
-
-	display: none;
-}
-body #play-hover {
-
-	fill: #FF0;
-}
 body {
 
 	margin:  0;
@@ -127,14 +119,13 @@ a:hover {
 h1 {
 	
 	width: 100%;
-	padding: 8rem 0 9rem 0;
+	padding: 6rem 0 0 0;
 	text-align: center;
 	color: #FFF;
 	font-weight: 100;
 	font-size:   4rem;
 	line-height: 4rem;
 	letter-spacing: -0.05rem;
-	/*text-shadow: 0px 0px 0.5rem rgba( 255, 255, 255, 0.5 );*/
 }
 .clear {
 
@@ -143,111 +134,46 @@ h1 {
 .instrument {
 
 	position: relative;
+	white-space: nowrap;
 }
 .instrument.mini {
 
-	padding-top: 5rem;
+	padding-top: 8rem;
 }
 
 
 
 
-    /****************/
-   /*              */
-  /*   Triggers   */
- /*              */
-/****************/
+    /************************/
+   /*                      */
+  /*   Triggers NATURAL   */
+ /*                      */
+/************************/
 
 
-.trigger {
-
+.trigger-container {
+	
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	z-index: 10;
 	position: relative;
-	top: 0;
 	display: inline-block;
 	margin: 0 1px 0 1px;
-	/*box-shadow: 0 0.2vw 0.5vw rgba( 0, 0, 0, 0.2 );*/
-	border-bottom-left-radius:  0.5rem;
-	border-bottom-right-radius: 0.5rem;
-	width:   6rem;
-	height: 24rem;
-	background-color: #999;
+	width:  6rem;
+	height: 0;/*  Will equal 33rem  */
 	text-align: center;
 	font-size:   2rem;
 	line-height: 3rem;
-	cursor: pointer;
-	transition-property: background-color;
-	transition-duration: 0.3s;
-	transition-timing-function: linear;
 }
-.trigger.engaged {
+.trigger-container.engaged {
 
 	z-index: 11;
-	/*box-shadow: 0 0 6vw #FFF;*/
-	background-color: #FFF;
-	transition-property: background-color;
-	transition-duration: 0.0s;
-	transition-timing-function: linear;
 }
-.mini .trigger {
-
-	width:   3rem;
-	height: 12rem;
-	font-size:   1.0rem;
-	line-height: 1.5rem;
-}
-
-
-
-
-.trigger.unnatural {
-
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	z-index: 20;
-	top: -10rem;
-	width:   4rem;
-	height: 14rem;
-	background-color: #000;
-	color: #999;
-}
-.trigger.unnatural + .trigger.natural {
-
-	margin-left: -2rem;
-}
-.trigger.natural + .trigger.unnatural {
-
-	margin-left: -2rem;
-}
-.trigger.unnatural.engaged {
-
-	z-index: 21;
-	/*box-shadow: 0 0 6vw #FFF;*/
-	background-color: #FFF;
-}
-.mini .trigger.unnatural {
-
-	top:   -5rem;
-	width:  2rem;
-	height: 7rem;
-}
-.mini .trigger.unnatural + .trigger.natural {
-
-	margin-left: -1rem;
-}
-.mini .trigger.natural + .trigger.unnatural {
-
-	margin-left: -1rem;
-}
-
-
-
-
-.trigger .note-name {
+.trigger-container .note-name {
 
 	position: absolute;
-	top: -5rem;
-	width: 100%;
+	top:   4rem;
+	width: 6rem;
 	text-align: center;
 	color: transparent;
 	font-size: 1.5rem;
@@ -256,40 +182,43 @@ h1 {
 	transition-duration: 0.3s;
 	transition-timing-function: linear;
 }
-.trigger .note-name strong {
+.trigger-container .note-name strong {
 
 	font-size: 3rem;
 	font-weight: normal;
 }
-.trigger.engaged .note-name {
+.trigger-container.engaged .note-name {
 
 	color: #FFF;
 	transition-property: color;
 	transition-duration: 0.0s;
 	transition-timing-function: linear;
 }
-.trigger.unnatural .note-name {
+.trigger-container .trigger {
 
-	top: -9rem;
+	z-index: 10;
+	position: absolute;
+	top: 9rem;
+	border-bottom-left-radius:  0.5rem;
+	border-bottom-right-radius: 0.5rem;
+	width:   6rem;
+	height: 24rem;
+	background-color: #999;
+	font-size:   2rem;
+	line-height: 3rem;
+	cursor: pointer;
+	transition-property: background-color;
+	transition-duration: 0.3s;
+	transition-timing-function: linear;
 }
-.mini .trigger .note-name {
+.trigger-container.engaged .trigger {
 
-	top:      -2.50rem;
-	font-size: 0.75rem;
+	background-color: #FFF;
+	transition-property: background-color;
+	transition-duration: 0.0s;
+	transition-timing-function: linear;
 }
-.mini .trigger .note-name strong {
-
-	font-size: 1.5rem;
-}
-.mini .trigger.unnatural .note-name {
-
-	top: -4.5rem;
-}
-
-
-
-
-.trigger .chars-list {
+.trigger-container .chars-list {
 
 	position: absolute;
 	bottom: 2rem;
@@ -298,15 +227,108 @@ h1 {
 	color: #FFF;
 	font-size: 2rem;
 }
-.trigger.unnatural .chars-list {
-
-	color: #FFF;
-}
-.trigger.engaged .chars-list {
+.trigger-container.engaged .chars-list {
 
 	color: transparent;
 }
-.mini .trigger .chars-list {
+
+
+
+
+    /**************************/
+   /*                        */
+  /*   Triggers UNNATURAL   */
+ /*                        */
+/**************************/
+
+
+.trigger-container.unnatural {
+
+	z-index: 20;
+	width: 4rem;
+}
+.trigger-container.unnatural + .trigger-container.natural {
+
+	margin-left: -2rem;
+}
+.trigger-container.natural + .trigger-container.unnatural {
+
+	margin-left: -2rem;
+}
+.trigger-container.unnatural .note-name {
+
+	top:   0;
+	width: 4rem;
+}
+.trigger-container.unnatural .trigger {
+
+	width:   4rem;
+	height: 14rem;
+	background-color: #000;
+	color: #999;
+}
+.trigger-container.unnatural.engaged .trigger {
+
+	z-index: 21;
+	background-color: #FFF;
+}
+.trigger-container.unnatural .chars-list {
+
+	color: #FFF;
+}
+
+
+
+
+    /*********************/
+   /*                   */
+  /*   Triggers MINI   */
+ /*                   */
+/*********************/
+
+
+.mini .trigger-container {
+	
+	width: 3rem;
+}
+.mini .trigger-container .trigger {
+
+	top:     6rem;
+	width:   3rem;
+	height: 12rem;
+	font-size:   1.0rem;
+	line-height: 1.5rem;
+}
+.mini .trigger-container.unnatural + ( .mini .trigger-container.natural ){
+
+	margin-left: -1rem;
+}
+.mini .trigger-container.natural + .trigger-container.unnatural {
+
+	margin-left: -1rem;
+}
+.mini .trigger-container .note-name {
+
+	top:   2rem;
+	width: 3rem;
+	font-size: 0.75rem;
+}
+.mini .trigger-container .note-name strong {
+
+	font-size: 1.5rem;
+}
+.mini .trigger-container.unnatural .note-name {
+
+	top: 0;
+	width: 1.5rem;
+}
+.mini .trigger-container.unnatural .trigger {
+
+	/*top:   -5rem;*/
+	width:  2rem;
+	height: 7rem;
+}
+.mini .trigger-container .chars-list {
 
 	bottom:    1rem;
 	font-size: 1rem;	
@@ -315,81 +337,61 @@ h1 {
 
 
 
-/*   Rainbow Roll curated colors  */
-
-/*  A♭  */.trigger.rainbow.name-index-0  { background-color: hsl( 215, 50%, 15% ) !important; }
-/*  A   */.trigger.rainbow.name-index-1  { background-color: hsl( 230, 50%, 15% ) !important; }
-/*  B♭  */.trigger.rainbow.name-index-2  { background-color: hsl( 265, 50%, 10% ) !important; }
-/*  B   */.trigger.rainbow.name-index-3  { background-color: hsl( 300, 50%, 10% ) !important; }
-/*  C   */.trigger.rainbow.name-index-4  { background-color: hsl(   0, 50%, 15% ) !important; }
-/*  C♯  */.trigger.rainbow.name-index-5  { background-color: hsl(  15, 50%, 15% ) !important; }
-/*  D   */.trigger.rainbow.name-index-6  { background-color: hsl(  30, 50%, 15% ) !important; }
-/*  E♭  */.trigger.rainbow.name-index-7  { background-color: hsl(  45, 50%, 15% ) !important; }
-/*  E   */.trigger.rainbow.name-index-8  { background-color: hsl(  50, 50%, 15% ) !important; }
-/*  F   */.trigger.rainbow.name-index-9  { background-color: hsl( 125, 50%, 10% ) !important; }
-/*  F♯  */.trigger.rainbow.name-index-10 { background-color: hsl( 160, 50%, 15% ) !important; }
-/*  G   */.trigger.rainbow.name-index-11 { background-color: hsl( 200, 50%, 10% ) !important; }
-
-/*  A♭  */.trigger.engaged.rainbow.name-index-0  { background-color: hsl( 215, 100%, 50% ) !important; }
-/*  A   */.trigger.engaged.rainbow.name-index-1  { background-color: hsl( 230, 100%, 50% ) !important; }
-/*  B♭  */.trigger.engaged.rainbow.name-index-2  { background-color: hsl( 265, 100%, 45% ) !important; }
-/*  B   */.trigger.engaged.rainbow.name-index-3  { background-color: hsl( 300, 100%, 40% ) !important; }
-/*  C   */.trigger.engaged.rainbow.name-index-4  { background-color: hsl(   0, 100%, 50% ) !important; }
-/*  C♯  */.trigger.engaged.rainbow.name-index-5  { background-color: hsl(  15, 100%, 50% ) !important; }
-/*  D   */.trigger.engaged.rainbow.name-index-6  { background-color: hsl(  30, 100%, 50% ) !important; }
-/*  E♭  */.trigger.engaged.rainbow.name-index-7  { background-color: hsl(  45, 100%, 50% ) !important; }
-/*  E   */.trigger.engaged.rainbow.name-index-8  { background-color: hsl(  50, 100%, 50% ) !important; }
-/*  F   */.trigger.engaged.rainbow.name-index-9  { background-color: hsl( 125, 100%, 40% ) !important; }
-/*  F♯  */.trigger.engaged.rainbow.name-index-10 { background-color: hsl( 160, 100%, 50% ) !important; }
-/*  G   */.trigger.engaged.rainbow.name-index-11 { background-color: hsl( 200, 100%, 40% ) !important; }
+    /************************/
+   /*                      */
+  /*   Triggers RAINBOW   */
+ /*                      */
+/************************/
 
 
-/*   Rainbow Roll “true HSL”  */
-
-.trigger.rainbow.unnatural {
+.rainbow .trigger-container.unnatural .trigger {
 
 	border: 2px solid #111;
 	border-top: none;
 }
 
-/*  A♭  */.trigger.rainbow.name-index-0  { background-color: hsl( 247, 100%, 15% ) !important; }
-/*  A   */.trigger.rainbow.name-index-1  { background-color: hsl( 270, 100%, 15% ) !important; }
-/*  B♭  */.trigger.rainbow.name-index-2  { background-color: hsl( 292, 100%, 15% ) !important; }
-/*  B   */.trigger.rainbow.name-index-3  { background-color: hsl( 315, 100%, 15% ) !important; }
-/*  C   */.trigger.rainbow.name-index-4  { background-color: hsl(   0, 100%, 15% ) !important; }
-/*  C♯  */.trigger.rainbow.name-index-5  { background-color: hsl(  23, 100%, 15% ) !important; }
-/*  D   */.trigger.rainbow.name-index-6  { background-color: hsl(  45, 100%, 15% ) !important; }
-/*  E♭  */.trigger.rainbow.name-index-7  { background-color: hsl(  67, 100%, 15% ) !important; }
-/*  E   */.trigger.rainbow.name-index-8  { background-color: hsl(  90, 100%, 15% ) !important; }
-/*  F   */.trigger.rainbow.name-index-9  { background-color: hsl( 180, 100%, 15% ) !important; }
-/*  F♯  */.trigger.rainbow.name-index-10 { background-color: hsl( 203, 100%, 15% ) !important; }
-/*  G   */.trigger.rainbow.name-index-11 { background-color: hsl( 225, 100%, 15% ) !important; }
+/*  A♭  */.rainbow .name-index-0  .trigger { background-color: hsl( 247, 100%, 15% ); }
+/*  A   */.rainbow .name-index-1  .trigger { background-color: hsl( 270, 100%, 15% ); }
+/*  B♭  */.rainbow .name-index-2  .trigger { background-color: hsl( 292, 100%, 15% ); }
+/*  B   */.rainbow .name-index-3  .trigger { background-color: hsl( 315, 100%, 15% ); }
+/*  C   */.rainbow .name-index-4  .trigger { background-color: hsl(   0, 100%, 15% ); }
+/*  C♯  */.rainbow .name-index-5  .trigger { background-color: hsl(  23, 100%, 15% ); }
+/*  D   */.rainbow .name-index-6  .trigger { background-color: hsl(  45, 100%, 15% ); }
+/*  E♭  */.rainbow .name-index-7  .trigger { background-color: hsl(  67, 100%, 15% ); }
+/*  E   */.rainbow .name-index-8  .trigger { background-color: hsl(  90, 100%, 15% ); }
+/*  F   */.rainbow .name-index-9  .trigger { background-color: hsl( 180, 100%, 15% ); }
+/*  F♯  */.rainbow .name-index-10 .trigger { background-color: hsl( 203, 100%, 15% ); }
+/*  G   */.rainbow .name-index-11 .trigger { background-color: hsl( 225, 100%, 15% ); }
 
-/*  A♭  */.trigger.engaged.rainbow.name-index-0  { background-color: hsl( 247, 100%, 50% ) !important; }
-/*  A   */.trigger.engaged.rainbow.name-index-1  { background-color: hsl( 270, 100%, 50% ) !important; }
-/*  B♭  */.trigger.engaged.rainbow.name-index-2  { background-color: hsl( 292, 100%, 50% ) !important; }
-/*  B   */.trigger.engaged.rainbow.name-index-3  { background-color: hsl( 315, 100%, 50% ) !important; }
-/*  C   */.trigger.engaged.rainbow.name-index-4  { background-color: hsl(   0, 100%, 50% ) !important; }
-/*  C♯  */.trigger.engaged.rainbow.name-index-5  { background-color: hsl(  23, 100%, 50% ) !important; }
-/*  D   */.trigger.engaged.rainbow.name-index-6  { background-color: hsl(  45, 100%, 50% ) !important; }
-/*  E♭  */.trigger.engaged.rainbow.name-index-7  { background-color: hsl(  67, 100%, 50% ) !important; }
-/*  E   */.trigger.engaged.rainbow.name-index-8  { background-color: hsl(  90, 100%, 50% ) !important; }
-/*  F   */.trigger.engaged.rainbow.name-index-9  { background-color: hsl( 180, 100%, 50% ) !important; }
-/*  F♯  */.trigger.engaged.rainbow.name-index-10 { background-color: hsl( 203, 100%, 50% ) !important; }
-/*  G   */.trigger.engaged.rainbow.name-index-11 { background-color: hsl( 225, 100%, 50% ) !important; }
+/*  A♭  */.rainbow .engaged.name-index-0  .trigger { background-color: hsl( 247, 100%, 50% ); }
+/*  A   */.rainbow .engaged.name-index-1  .trigger { background-color: hsl( 270, 100%, 50% ); }
+/*  B♭  */.rainbow .engaged.name-index-2  .trigger { background-color: hsl( 292, 100%, 50% ); }
+/*  B   */.rainbow .engaged.name-index-3  .trigger { background-color: hsl( 315, 100%, 50% ); }
+/*  C   */.rainbow .engaged.name-index-4  .trigger { background-color: hsl(   0, 100%, 50% ); }
+/*  C♯  */.rainbow .engaged.name-index-5  .trigger { background-color: hsl(  23, 100%, 50% ); }
+/*  D   */.rainbow .engaged.name-index-6  .trigger { background-color: hsl(  45, 100%, 50% ); }
+/*  E♭  */.rainbow .engaged.name-index-7  .trigger { background-color: hsl(  67, 100%, 50% ); }
+/*  E   */.rainbow .engaged.name-index-8  .trigger { background-color: hsl(  90, 100%, 50% ); }
+/*  F   */.rainbow .engaged.name-index-9  .trigger { background-color: hsl( 180, 100%, 50% ); }
+/*  F♯  */.rainbow .engaged.name-index-10 .trigger { background-color: hsl( 203, 100%, 50% ); }
+/*  G   */.rainbow .engaged.name-index-11 .trigger { background-color: hsl( 225, 100%, 50% ); }
 
-/*  A♭  */.trigger.engaged.rainbow.name-index-0  .note-name { color: hsl( 247, 100%, 50% ); }
-/*  A   */.trigger.engaged.rainbow.name-index-1  .note-name { color: hsl( 270, 100%, 50% ); }
-/*  B♭  */.trigger.engaged.rainbow.name-index-2  .note-name { color: hsl( 292, 100%, 50% ); }
-/*  B   */.trigger.engaged.rainbow.name-index-3  .note-name { color: hsl( 315, 100%, 50% ); }
-/*  C   */.trigger.engaged.rainbow.name-index-4  .note-name { color: hsl(   0, 100%, 50% ); }
-/*  C♯  */.trigger.engaged.rainbow.name-index-5  .note-name { color: hsl(  23, 100%, 50% ); }
-/*  D   */.trigger.engaged.rainbow.name-index-6  .note-name { color: hsl(  45, 100%, 50% ); }
-/*  E♭  */.trigger.engaged.rainbow.name-index-7  .note-name { color: hsl(  67, 100%, 50% ); }
-/*  E   */.trigger.engaged.rainbow.name-index-8  .note-name { color: hsl(  90, 100%, 50% ); }
-/*  F   */.trigger.engaged.rainbow.name-index-9  .note-name { color: hsl( 180, 100%, 50% ); }
-/*  F♯  */.trigger.engaged.rainbow.name-index-10 .note-name { color: hsl( 203, 100%, 50% ); }
-/*  G   */.trigger.engaged.rainbow.name-index-11 .note-name { color: hsl( 225, 100%, 50% ); }
+/*  A♭  */.rainbow .engaged.name-index-0  .note-name { color: hsl( 247, 100%, 50% ); }
+/*  A   */.rainbow .engaged.name-index-1  .note-name { color: hsl( 270, 100%, 50% ); }
+/*  B♭  */.rainbow .engaged.name-index-2  .note-name { color: hsl( 292, 100%, 50% ); }
+/*  B   */.rainbow .engaged.name-index-3  .note-name { color: hsl( 315, 100%, 50% ); }
+/*  C   */.rainbow .engaged.name-index-4  .note-name { color: hsl(   0, 100%, 50% ); }
+/*  C♯  */.rainbow .engaged.name-index-5  .note-name { color: hsl(  23, 100%, 50% ); }
+/*  D   */.rainbow .engaged.name-index-6  .note-name { color: hsl(  45, 100%, 50% ); }
+/*  E♭  */.rainbow .engaged.name-index-7  .note-name { color: hsl(  67, 100%, 50% ); }
+/*  E   */.rainbow .engaged.name-index-8  .note-name { color: hsl(  90, 100%, 50% ); }
+/*  F   */.rainbow .engaged.name-index-9  .note-name { color: hsl( 180, 100%, 50% ); }
+/*  F♯  */.rainbow .engaged.name-index-10 .note-name { color: hsl( 203, 100%, 50% ); }
+/*  G   */.rainbow .engaged.name-index-11 .note-name { color: hsl( 225, 100%, 50% ); }
+
+
+
+
 
 
 

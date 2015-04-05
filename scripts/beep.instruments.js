@@ -298,7 +298,6 @@ BEEP.Instrument.prototype.buildStandard = function(){
 	//  so it’s dead easy to demonstrate how this works.
 
 	this.scoreLoadDoReMi()
-	//this.scoreLoadHSB()
 	this.scoreLoadFromHash()
 	return this
 }
@@ -388,6 +387,14 @@ BEEP.Instrument.prototype.buildC = function(){
 	.domContainer.classList.add( 'mini' )
 	return this
 }
+BEEP.Instrument.prototype.buildCRainbow = function(){
+
+	this.buildC()
+	this.domContainer.classList.add( 'rainbow' )
+	this.scoreLoadDoReMi()
+	this.scoreLoadFromHash()
+	return this
+}
 BEEP.Instrument.prototype.buildCJust = function(){
 
 	this.unbuild()
@@ -454,6 +461,7 @@ BEEP.Instrument.prototype.unbuild = function(){
 		delete that.triggers[ trigger ]
 	})
 	this.domContainer.classList.remove( 'mini' )
+	this.domContainer.classList.remove( 'rainbow' )
 	return this
 }
 
