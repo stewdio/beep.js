@@ -157,10 +157,10 @@ BEEP.Voice.prototype.play = function( params ){
 
 	if( params !== undefined ) this.note = new BEEP.Note( params )
 	this.oscillator.frequency.value = this.note.hertz
-	this.gainNode.gain.value = this.gainHigh || params.gainHigh || 1
+	var gainValue = this.gainHigh || params.gainHigh || 1
 
 
- 	this.adsr(this.gainNode.gain,this.attack,this.decay,this.sustain,this.release);
+ 	this.adsr(this.gainNode.gain,this.attack,this.decay,this.sustain,this.release,gainValue,gainValue*this.decayFraction);
 
 	//  Oh, iOS. This “wait to play” shtick is for you.
 
@@ -172,14 +172,14 @@ BEEP.Voice.prototype.play = function( params ){
 	return this
 }
 
-BEEP.Voice.prototype.adsr = function (property,attackTime,decayTime,sustainTime,releaseTime) {
+BEEP.Voice.prototype.adsr = function (property,attackTime,decayTime,sustainTime,releaseTime,attackHigh,decayValue) {
 
 	// Apply ADSR envelope 
 	now = this.audioContext.currentTime;
     property.cancelScheduledValues(now);
     property.setValueAtTime(0, now);
-    property.linearRampToValueAtTime(1, now + attackTime);
-    property.linearRampToValueAtTime(this.decayFraction * this.gainHigh , now + attackTime + decayTime);
+    property.linearRampToValueAtTime(attackHigh, now + attackTime);
+    property.linearRampToValueAtTime(decayValue , now + attackTime + decayTime);
     property.linearRampToValueAtTime(0, now + attackTime + releaseTime + sustainTime + decayTime);
 }
 
