@@ -117,19 +117,15 @@ BEEP.Voice = function( a, b ){
 	this.oscillator.type = 'sine'
 	this.oscillator.frequency.value = this.note.hertz
 
-
-
-	
 	// A simple attack release implementation. Modify to take Decay and sustain into account.
+	// Not sure how duration works. Isnt just sum of Attack Decay Sustain and Release ?
 
-	this.attack   = 0
-	this.release  = 0.5;
-
-	//  Right now these do nothing; just here as a stand-in for the future.
-
-	this.duration = Infinity
-	this.decay    = 0
-	this.sustain  = 0
+	this.attack   		= 0
+	this.release  		= 0.5;
+	this.duration 		= Infinity
+	this.decay    		= 0.1
+	this.decayFraction  = 0.6;
+	this.sustain  		= 0.1;
 
 
 	//  Because of “iOS reasons” we cannot begin playing a sound
@@ -183,7 +179,8 @@ BEEP.Voice.prototype.adsr = function (property,attackTime,releaseTime) {
     property.cancelScheduledValues(now);
     property.setValueAtTime(0, now);
     property.linearRampToValueAtTime(1, now + this.attack);
-    property.linearRampToValueAtTime(0, now + this.attack + this.release);
+    property.linearRampToValueAtTime(this.decayFraction * 0.6, now + this.attack + this.decay);
+    property.linearRampToValueAtTime(0, now + this.attack + this.release + this.sustain + this.decay);
 }
 
 
@@ -257,6 +254,28 @@ BEEP.Voice.prototype.getAttack = function(){
 BEEP.Voice.prototype.setAttack = function( attack ){
 
 	this.attack = attack;
+	return this
+}
+
+BEEP.Voice.prototype.getDecay = function(){
+
+	return this.decay;
+}
+
+BEEP.Voice.prototype.setDecay = function( decay ){
+
+	this.decay = decay;
+	return this
+}
+
+BEEP.Voice.prototype.getSustain = function(){
+
+	return this.sustain;
+}
+
+BEEP.Voice.prototype.setSustain = function( sustain ){
+
+	this.sustain = sustain;
 	return this
 }
 
