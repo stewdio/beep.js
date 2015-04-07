@@ -160,7 +160,7 @@ BEEP.Voice.prototype.play = function( params ){
 	this.gainNode.gain.value = this.gainHigh || params.gainHigh || 1
 
 
- 	this.adsr(this.gainNode.gain,0.2,0.8);
+ 	this.adsr(this.gainNode.gain,this.attack,this.decay,this.sustain,this.release);
 
 	//  Oh, iOS. This “wait to play” shtick is for you.
 
@@ -172,15 +172,15 @@ BEEP.Voice.prototype.play = function( params ){
 	return this
 }
 
-BEEP.Voice.prototype.adsr = function (property,attackTime,releaseTime) {
+BEEP.Voice.prototype.adsr = function (property,attackTime,decayTime,sustainTime,releaseTime) {
 
 	// Apply ADSR envelope 
 	now = this.audioContext.currentTime;
     property.cancelScheduledValues(now);
     property.setValueAtTime(0, now);
-    property.linearRampToValueAtTime(1, now + this.attack);
-    property.linearRampToValueAtTime(this.decayFraction * 0.6, now + this.attack + this.decay);
-    property.linearRampToValueAtTime(0, now + this.attack + this.release + this.sustain + this.decay);
+    property.linearRampToValueAtTime(1, now + attackTime);
+    property.linearRampToValueAtTime(this.decayFraction * this.gainHigh , now + attackTime + decayTime);
+    property.linearRampToValueAtTime(0, now + attackTime + releaseTime + sustainTime + decayTime);
 }
 
 
