@@ -16,7 +16,22 @@ document.addEventListener( 'DOMContentLoaded', function(){
 		else if( el.mozRequestFullScreen ) el.mozRequestFullScreen()
 		else if( el.webkitRequestFullscreen ) el.webkitRequestFullscreen()
 	}
-	document.getElementById( 'fullscreen' ).addEventListener( 'click', goFullscreen )
+	document.getElementById( 'fullscreen-toggle' ).addEventListener( 'click', goFullscreen )
+
+
+	//  Coming soon...
+	/*
+	document.getElementById( 'editor-toggle' ).addEventListener( 'click', function(){
+
+		var 
+		el = document.getElementById( 'editor-container' ),
+		isShowing = el.classList.contains( 'show' )
+
+		if( isShowing ) el.classList.remove( 'show' )
+		else el.classList.add( 'show' )
+	})
+	document.getElementById( 'editor-eval' ).addEventListener( 'click', BEEP.reset.bind( BEEP ))
+	*/
 
 
 	//  Everyone’s doing this right?

@@ -132,6 +132,12 @@ BEEP.Voice = function( a, b ){
 	//  on the first use of this Voice instance.
 
 	this.isPlaying = false
+
+
+	//  Push a reference of this instance into BEEP’s library
+	//  so we can access and/or destroy it later.
+
+	BEEP.voices.push( this )
 }
 
 
@@ -179,7 +185,7 @@ BEEP.Voice.prototype.pause = function(){
 
 BEEP.Voice.prototype.destroy = function(){
 
-	this.oscillator.noteOff( this.oscillator.currentTime )// Stop oscillator after 0 seconds.
+	if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
 	this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
 	return this
 }

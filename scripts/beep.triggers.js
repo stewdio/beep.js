@@ -130,6 +130,12 @@ BEEP.Trigger = function(){
 		that.disengage( 'touched' )
 		event.preventDefault()
 	})
+
+
+	//  Push a reference of this instance into BEEP’s library
+	//  so we can access and/or destroy it later.
+
+	BEEP.triggers.push( this )
 }
 
 

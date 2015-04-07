@@ -6,7 +6,6 @@
 	Not sounds or oscillators, but mathematical models
 	resolving to frequencies in Hertz. Here are some examples:
 
-
 	new Note( '3eb' )
 	new Note.EDO12( '3eb' )
 	
@@ -240,7 +239,7 @@ BEEP.Note.EDO12 = function( params ){
 
 //  The most mathematically beautiful tuning,
 //  makes for sonically gorgeous experiences
-//  ... until you change keys! 
+//  ... Until you change keys!
 
 BEEP.Note.JustIntonation = function( params, key ){
 
@@ -248,40 +247,42 @@ BEEP.Note.JustIntonation = function( params, key ){
 	that = this,
 	relationshipIndex
 
-	params = Note.validateWestern( params )
+	params = BEEP.Note.validateWestern( params )
 	params.tuning = 'JustIntonation'
 	params.key = new BEEP.Note.EDO12( key )
 
 
+	//  This is Ptolemy’s “Intense Diatonic Scale” which is based on 
+	//  Pythagorean tuning. It is but one example of Just Intonation.
+	//  http://en.wikipedia.org/wiki/Ptolemy%27s_intense_diatonic_scale
 	//  http://en.wikipedia.org/wiki/Pythagorean_tuning
-	//  http://en.wikipedia.org/wiki/Quarter-comma_meantone
+	//  http://en.wikipedia.org/wiki/List_of_pitch_intervals
 	//  http://www.chrysalis-foundation.org/just_intonation.htm 
-	//  1/1, 16/15, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 16/9, 15/8, 2/1
 
 	relationshipIndex = ( params.nameIndex - params.key.nameIndex ) % 12
 	if( relationshipIndex < 0 ) relationshipIndex += 12
 	params.hertz = [
 
-		params.key.hertz,
-		params.key.hertz * 16 / 15,
-		params.key.hertz *  9 /  8,
-		params.key.hertz *  6 /  5,
-		params.key.hertz *  5 /  4,
-		params.key.hertz *  4 /  3,
-		params.key.hertz * 45 / 32,
-		params.key.hertz *  3 /  2,//  Perfect Fifth
-		params.key.hertz *  8 /  5,
-		params.key.hertz *  5 /  3,
-		params.key.hertz * 16 /  9,
-		params.key.hertz * 15 /  8,
-		params.key.hertz *  2
+		params.key.hertz,          //  Do  UNISON
+		params.key.hertz * 16 / 15,//      minor     2nd
+		params.key.hertz *  9 /  8,//  Re  MAJOR     2nd
+		params.key.hertz *  6 /  5,//      minor     3rd
+		params.key.hertz *  5 /  4,//  Mi  MAJOR     3rd
+		params.key.hertz *  4 /  3,//  Fa  PERFECT   4th
+		params.key.hertz * 45 / 32,//      augmented 4th
+		params.key.hertz *  3 /  2,//  So  PERFECT   5th
+		params.key.hertz *  8 /  5,//      minor     6th
+		params.key.hertz *  5 /  3,//  La  MAJOR     6th
+		params.key.hertz * 16 /  9,//      minor     7th (HD, baby!)
+		params.key.hertz * 15 /  8,//  Ti  MAJOR     7th
+		params.key.hertz *  2      //  Do  OCTAVE
 	
 	][ relationshipIndex ]
 
 
 	//  If the key’s octave and our desired note’s octave were equal
-	//  then we’d be done. Otherwise ...
-	//  We’ve got to bump up or down our note by whole octaves!
+	//  then we’d be done. Otherwise we’ve got to bump up or down our 
+	//  note by whole octaves.
 	
 	params.hertz = params.hertz * Math.pow( 2, params.octaveIndex - params.key.octaveIndex )
 	return new BEEP.Note( params )

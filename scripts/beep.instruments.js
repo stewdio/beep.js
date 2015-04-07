@@ -15,22 +15,16 @@
 
 
 
-BEEP.Instrument = function( domContainer ){
+BEEP.Instrument = function(){
 
 	var that = this
-
-
-
 
 	Array.prototype.slice.call( arguments ).forEach( function( arg ){
 
 		if( arg instanceof window.Element ) that.domContainer = arg
-		else if( typeof arg === 'string' ) that.domContainer = document.getElementById( arg )
-		else if( arg instanceof Function ) that.createVoices = arg
+		else if( typeof arg === 'string'  ) that.domContainer = document.getElementById( arg )
+		else if( arg instanceof Function  ) that.createVoices = arg
 	})
-
-
-
 
 
 	//  Let’s hook up to BEEP’s “global” Audio Context.
@@ -51,17 +45,12 @@ BEEP.Instrument = function( domContainer ){
 	//  or a String representing a DOM Element’s ID.
 	//  Otherwise we need to build a DOM Element and attach it.
 
-	if( domContainer ){
-
-		if( typeof domContainer === 'string' ) this.domContainer = document.getElementById( domContainer )
-		else this.domContainer = domContainer
-	}
-	else {
-
-		this.domContainer = document.createElement( 'div' )		
-		document.body.appendChild( this.domContainer )
-	}
+	if( this.domContainer === undefined ) this.domContainer = document.createElement( 'div' )
 	this.domContainer.classList.add( 'instrument' )
+	
+
+	if( BEEP.domContainer ) BEEP.domContainer.appendChild( this.domContainer )
+	else document.body.appendChild( this.domContainer )	
 
 
 	//  What’s an Instrument without an interface?
@@ -175,6 +164,19 @@ BEEP.Instrument = function( domContainer ){
 	//  because it requires all of the above to be in place first.
 
 	this.build()
+
+
+
+	//  Push a reference of this instance into BEEP’s library
+	//  so we can access and/or destroy it later.
+
+	BEEP.instruments.push( this )
+}
+BEEP.Instrument.prototype.destroy = function(){
+
+
+	//  kill all event listeners!
+	//  kill all DOM elements!
 }
 
 
