@@ -233,7 +233,7 @@ BEEP.Trigger.prototype.createVoices = function(){
 
 		new BEEP.Voice( this.note, this.audioContext )
 		.setOscillatorType( 'square' )
-		.setGainHigh( 0.2 )
+		.setGainHigh( 0.2 ).setAttack(0.2).setRelease(0.4)
 	)
 
 
@@ -243,7 +243,7 @@ BEEP.Trigger.prototype.createVoices = function(){
 
 		new BEEP.Voice( this.note.hertz / 2, this.audioContext )
 		.setOscillatorType( 'sine' )
-		.setGainHigh( 0.3 )
+		.setGainHigh( 0.3 ).setAttack(0.2).setRelease(0.4)
 	)
 }
 

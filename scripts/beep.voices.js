@@ -118,10 +118,16 @@ BEEP.Voice = function( a, b ){
 	this.oscillator.frequency.value = this.note.hertz
 
 
+
+	
+	// A simple attack release implementation. Modify to take Decay and sustain into account.
+
+	this.attack   = 0
+	this.release  = 0.5;
+
 	//  Right now these do nothing; just here as a stand-in for the future.
 
 	this.duration = Infinity
-	this.attack   = 0
 	this.decay    = 0
 	this.sustain  = 0
 
@@ -158,6 +164,8 @@ BEEP.Voice.prototype.play = function( params ){
 	this.gainNode.gain.value = this.gainHigh || params.gainHigh || 1
 
 
+ 	this.adsr(this.gainNode.gain,0.2,0.8);
+
 	//  Oh, iOS. This “wait to play” shtick is for you.
 
 	if( this.isPlaying === false ){
@@ -166,6 +174,16 @@ BEEP.Voice.prototype.play = function( params ){
 		this.oscillator.start( 0 )
 	}
 	return this
+}
+
+BEEP.Voice.prototype.adsr = function (property,attackTime,releaseTime) {
+
+	// Apply ADSR envelope 
+	now = this.audioContext.currentTime;
+    property.cancelScheduledValues(now);
+    property.setValueAtTime(0, now);
+    property.linearRampToValueAtTime(1, now + this.attack);
+    property.linearRampToValueAtTime(0, now + this.attack + this.release);
 }
 
 
@@ -232,6 +250,25 @@ BEEP.Voice.prototype.setOscillatorType = function( string ){
 	return this
 }
 
+BEEP.Voice.prototype.getAttack = function(){
+
+	return this.attack;
+}
+BEEP.Voice.prototype.setAttack = function( attack ){
+
+	this.attack = attack;
+	return this
+}
+
+BEEP.Voice.prototype.setRelease = function(release){
+
+	this.release = release;
+	return this;
+}
+
+BEEP.Voice.prototype.getRelease = function(){
+	return this.release;
+}
 
 
 
