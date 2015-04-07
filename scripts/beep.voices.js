@@ -117,13 +117,15 @@ BEEP.Voice = function( a, b ){
 	this.oscillator.type = 'sine'
 	this.oscillator.frequency.value = this.note.hertz
 
+	// A simple attack release implementation. Modify to take Decay and sustain into account.
+	// Not sure how duration works. Isnt just sum of Attack Decay Sustain and Release ?
 
-	//  Right now these do nothing; just here as a stand-in for the future.
-
-	this.duration = Infinity
-	this.attack   = 0
-	this.decay    = 0
-	this.sustain  = 0
+	this.attack   		= 0
+	this.release  		= 0.5;
+	this.duration 		= Infinity
+	this.decay    		= 0.1
+	this.decayFraction  = 0.6;
+	this.sustain  		= 0.1;
 
 
 	//  Because of “iOS reasons” we cannot begin playing a sound
@@ -155,8 +157,10 @@ BEEP.Voice.prototype.play = function( params ){
 
 	if( params !== undefined ) this.note = new BEEP.Note( params )
 	this.oscillator.frequency.value = this.note.hertz
-	this.gainNode.gain.value = this.gainHigh || params.gainHigh || 1
+	var gainValue = this.gainHigh || params.gainHigh || 1
 
+
+ 	this.adsr(this.gainNode.gain,this.attack,this.decay,this.sustain,this.release,gainValue,gainValue*this.decayFraction);
 
 	//  Oh, iOS. This “wait to play” shtick is for you.
 
@@ -166,6 +170,17 @@ BEEP.Voice.prototype.play = function( params ){
 		this.oscillator.start( 0 )
 	}
 	return this
+}
+
+BEEP.Voice.prototype.adsr = function (property,attackTime,decayTime,sustainTime,releaseTime,attackHigh,decayValue) {
+
+	// Apply ADSR envelope 
+	now = this.audioContext.currentTime;
+    property.cancelScheduledValues(now);
+    property.setValueAtTime(0, now);
+    property.linearRampToValueAtTime(attackHigh, now + attackTime);
+    property.linearRampToValueAtTime(decayValue , now + attackTime + decayTime);
+    property.linearRampToValueAtTime(0, now + attackTime + releaseTime + sustainTime + decayTime);
 }
 
 
@@ -232,6 +247,47 @@ BEEP.Voice.prototype.setOscillatorType = function( string ){
 	return this
 }
 
+BEEP.Voice.prototype.getAttack = function(){
+
+	return this.attack;
+}
+BEEP.Voice.prototype.setAttack = function( attack ){
+
+	this.attack = attack;
+	return this
+}
+
+BEEP.Voice.prototype.getDecay = function(){
+
+	return this.decay;
+}
+
+BEEP.Voice.prototype.setDecay = function( decay ){
+
+	this.decay = decay;
+	return this
+}
+
+BEEP.Voice.prototype.getSustain = function(){
+
+	return this.sustain;
+}
+
+BEEP.Voice.prototype.setSustain = function( sustain ){
+
+	this.sustain = sustain;
+	return this
+}
+
+BEEP.Voice.prototype.setRelease = function(release){
+
+	this.release = release;
+	return this;
+}
+
+BEEP.Voice.prototype.getRelease = function(){
+	return this.release;
+}
 
 
 
