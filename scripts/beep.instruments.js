@@ -219,9 +219,9 @@ BEEP.Instrument.prototype.newTrigger = function( note, triggerChars, midiNumber 
 		if( triggerChar !== undefined ) trigger.addTriggerChar( triggerChar )
 	})
 
-  // What midi number should trigger this trigger?
+	// What midi number should trigger this trigger?
 
-  if( midiNumber !== undefined ) trigger.addMidiNumber( midiNumber )
+	if( midiNumber !== undefined ) trigger.addMidiNumber( midiNumber )
 
 	//  We’ll go with this format for ID’s:
 	//  Octave # + Note Name (sans any Natural symbols).

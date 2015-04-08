@@ -222,16 +222,16 @@ BEEP.Trigger.prototype.addMidiNumber = function( trigger ){
 
 	if( typeof trigger === 'string' ){
 
-    if( !isNaN( +trigger ) ) this.midiNumber = +trigger
+	if( !isNaN( +trigger ) ) this.midiNumber = +trigger
 	}
 	else if( typeof trigger === 'number' ){
 
 		this.midiNumber = trigger
 	}
-  if( !this.midiNumber ){
+	if( !this.midiNumber ){
 
-    return console.log('invalid midi trigger value')
-  }
+		return console.log('invalid midi trigger value')
+	}
 
 	return this
 
