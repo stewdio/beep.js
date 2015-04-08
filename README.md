@@ -228,6 +228,15 @@ new BEEP.Trigger('4F').addTriggerChar('3')
 new BEEP.Trigger('3F').addTriggerChar('4')
 new BEEP.Trigger('4C').addTriggerChar('5')
 ```
+
+__MIDI Triggers__
+Want to play your keyboard using a real keyboard? Hookup a midi controller
+via USB, assign your triggers a midi number, and BEEP will trigger your
+trigger for you.
+```javascript
+new BEEP.Trigger('4C').addMidiNumber(60)
+```
+
 What if we had a convenient way to bundle these `Triggers` together? You 
 guessed it: `Instrument` to the rescue.
 
