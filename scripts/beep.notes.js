@@ -38,7 +38,7 @@
 	//			nameIndex: 5,
 	//			octaveIndex: 3,
 	//			pianoKeyIndex: 29,
-	//			tuning: "EDO12",
+	//			tuning: "EDO12"
 	//		},
 	//		letter: "C",
 	//		letterIndex: 2,
