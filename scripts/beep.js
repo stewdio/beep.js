@@ -21,6 +21,7 @@ var BEEP = {
 	voices:      [],
 	triggers:    [],
 	instruments: [],
+	midiInputs:  [],
 
 
 	//  Once the “DOM Content Loaded” event fires we’ll come back
@@ -66,13 +67,58 @@ var BEEP = {
 		}
 	},
 
+	//  Trigger any triggers if midi message applies.
 
-	//  Right now just runs BEEP.eval() but in the near future
-	//  we might have some more tricks up our sleeve...
+	onMidiMessage: function (midiMessageEvent){
+
+		this.triggers.forEach(function (trigger){
+
+			if (trigger.midiNumber !== midiMessageEvent.data[1])
+				return;
+
+			if (midiMessageEvent.data[2] > 0)
+				trigger.play();
+			else
+				trigger.pause();
+		});
+	},
+
+	//  Get an instance of MIDIAccess if it's available.
+
+	initializeMidi: function (callback){
+
+		if (!navigator.requestMIDIAccess)
+			return callback()
+
+		var that = this
+
+		function success (midiAccess){
+
+			midiAccess.inputs.forEach(function (midiInput){ 
+
+				that.midiInputs.push(midiInput)
+			})
+
+			if (midiAccess.inputs.size)
+				that.midiInputs[0].onmidimessage = that.onMidiMessage.bind( that )
+
+			callback()
+		}
+
+		navigator.requestMIDIAccess().then(success, callback)
+	},
+
+
+	//  Run this to setup BEEP
 
 	boot: function(){
 
-		this.eval()
+		var that = this
+
+		this.initializeMidi(function (){
+
+			that.eval()
+		})
 	},
 
 

@@ -162,6 +162,7 @@ BEEP.Trigger.prototype.removeEventListener = function( type, action ){
 
 
 
+
 //  You can add as many or as few trigger characters you like.
 //  Why would you want to add more? 
 //  Try out the default synthesizer and see what happens when
@@ -214,6 +215,27 @@ BEEP.Trigger.prototype.addTriggerChar = function( trigger ){
 }
 
 
+//  You might also want to engage this trigger using MIDI so you can play on an actual keyboard.
+//  Assign the trigger a valid midi number and BEEP will handle the rest.
+
+BEEP.Trigger.prototype.addMidiNumber = function( trigger ){
+
+	if( typeof trigger === 'string' ){
+
+		if( !isNaN( +trigger ) ) this.midiNumber = +trigger
+	}
+	else if( typeof trigger === 'number' ){
+
+		this.midiNumber = trigger
+	}
+	if( !this.midiNumber ){
+
+		return console.log('invalid midi trigger value')
+	}
+
+	return this
+
+}
 
 
 //  This is the default createVoices() function. You can easily override this 

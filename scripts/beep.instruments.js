@@ -194,7 +194,7 @@ BEEP.Instrument.prototype.destroy = function(){
 //  You can of course build your own custom Triggers and 
 //  add them manually, give them a custom ID, and so on.
 
-BEEP.Instrument.prototype.newTrigger = function( note, triggerChars ){
+BEEP.Instrument.prototype.newTrigger = function( note, triggerChars, midiNumber ){
 
 	var trigger
 
@@ -219,6 +219,9 @@ BEEP.Instrument.prototype.newTrigger = function( note, triggerChars ){
 		if( triggerChar !== undefined ) trigger.addTriggerChar( triggerChar )
 	})
 
+	// What midi number should trigger this trigger?
+
+	if( midiNumber !== undefined ) trigger.addMidiNumber( midiNumber )
 
 	//  We’ll go with this format for ID’s:
 	//  Octave # + Note Name (sans any Natural symbols).
@@ -268,31 +271,31 @@ BEEP.Instrument.prototype.pause = function( trigger ){
 BEEP.Instrument.prototype.buildStandard = function(){
 
 	this.unbuild()
-	.newTrigger( '3C' , 'z' )
-	.newTrigger( '3C♯', 's' )
-	.newTrigger( '3D' , 'x' )
-	.newTrigger( '3E♭', 'd' )
-	.newTrigger( '3E' , 'c' )
-	.newTrigger( '3F' , 'v' )
-	.newTrigger( '3F♯', 'g' )
-	.newTrigger( '3G' , 'b' )
-	.newTrigger( '3A♭', 'h' )
-	.newTrigger( '3A' , 'n' )
-	.newTrigger( '3B♭', 'j' )
-	.newTrigger( '3B' , 'm' )
-	.newTrigger( '4C' , [ 'q', '<' ])
-	.newTrigger( '4C♯', '2' )
-	.newTrigger( '4D' , 'w' )
-	.newTrigger( '4E♭', '3' )
-	.newTrigger( '4E' , 'e' )
-	.newTrigger( '4F' , 'r' )
-	.newTrigger( '4F♯', '5' )
-	.newTrigger( '4G' , 't' )
-	.newTrigger( '4A♭', '6' )
-	.newTrigger( '4A' , 'y' )
-	.newTrigger( '4B♭', '7' )
-	.newTrigger( '4B' , 'u' )
-	.newTrigger( '5C' , 'i' )
+	.newTrigger( '3C' , 'z' , 48 )
+	.newTrigger( '3C♯', 's' , 49 )
+	.newTrigger( '3D' , 'x' , 50 )
+	.newTrigger( '3E♭', 'd' , 51 )
+	.newTrigger( '3E' , 'c' , 52 )
+	.newTrigger( '3F' , 'v' , 53 )
+	.newTrigger( '3F♯', 'g' , 54 )
+	.newTrigger( '3G' , 'b' , 55 )
+	.newTrigger( '3A♭', 'h' , 56 )
+	.newTrigger( '3A' , 'n' , 57 )
+	.newTrigger( '3B♭', 'j' , 58 )
+	.newTrigger( '3B' , 'm' , 59 )
+	.newTrigger( '4C' , [ 'q', '<' ] , 60 )
+	.newTrigger( '4C♯', '2' , 61 )
+	.newTrigger( '4D' , 'w' , 62 )
+	.newTrigger( '4E♭', '3' , 63 )
+	.newTrigger( '4E' , 'e' , 64 )
+	.newTrigger( '4F' , 'r' , 65 )
+	.newTrigger( '4F♯', '5' , 66 )
+	.newTrigger( '4G' , 't' , 67 )
+	.newTrigger( '4A♭', '6' , 68 )
+	.newTrigger( '4A' , 'y' , 69 )
+	.newTrigger( '4B♭', '7' , 70 )
+	.newTrigger( '4B' , 'u' , 71 )
+	.newTrigger( '5C' , 'i' , 72 )
 
 
 	//  We’ve loaded a default set of Triggers with this.build()
