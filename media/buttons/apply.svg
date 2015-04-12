@@ -1,0 +1,9 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+	<g id="apply">
+		<circle fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+		<polyline fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="380,200 380,330 200,330 	"/>
+		<polyline fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="263.64,393.64 200,330 263.64,266.36 	
+			"/>
+	</g>
+</svg>

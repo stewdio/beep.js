@@ -6,7 +6,7 @@ Beep.js
 ![Beep.js](https://github.com/stewdio/beep.js/raw/master/media/beep-poster.png "Beep.js")
 
 __TL;DR__  
-Create a synthesizer with one line of code: `synth = new BEEP.Instrument()`
+Create a synthesizer with one line of code: `synth = new Beep.Instrument()`
 Or plink away on the demo synth: [http://beepjs.com](http://beepjs.com). 
 Tap the pulsing Play button for a 
 [jaunty music lesson](http://en.wikipedia.org/wiki/Solf%C3%A8ge).
@@ -14,10 +14,10 @@ Tap the pulsing Play button for a
 
 Hackable
 ------------------------------------------------------------------------------
-Beep is a JavaScript framework for building browser-based synthesizers using 
+Beep is a JavaScript toolkit for building browser-based synthesizers using 
 the WebAudio API. It takes a “batteries included” approach, meaning it boots 
 up ready to give you the audio equivalent of “Hello, World!” without too much 
-fuss. One line like `synth = new BEEP.Instrument()` will build a bundle of 
+fuss. One line like `synth = new Beep.Instrument()` will build a bundle of 
 `Trigger` interfaces, each with its own `Voices` for `Notes`—that is, a piano
 keyboard that you can begin banging on immediately. But what’s a software 
 piano that can’t play itself? Use `synth.scorePlay()` to play the default 
@@ -42,9 +42,9 @@ or __⌥⌘I__, then click on the Console tab.
 
 Notes
 ------------------------------------------------------------------------------
-Creating a new note is easy: `n = new BEEP.Note()`. But unless you’re content 
+Creating a new note is easy: `n = new Beep.Note()`. But unless you’re content 
 with nothing but concert A’s blaring at 440Hz all day, you’re going to want to 
-create other notes like so: `new BEEP.Note('E♭')` or `new BEEP.Note('5E♭')` 
+create other notes like so: `new Beep.Note('E♭')` or `new Beep.Note('5E♭')` 
 for an E♭ that’s in the 5th octave rather than the default 4th octave. So what 
 does that __5E♭__ give you anyway? An object like this:
 ```javascript
@@ -65,17 +65,17 @@ does that __5E♭__ give you anyway? An object like this:
 ```
 
 __Flexible parameters__  
-Sure, you can call `new BEEP.Note('E♭')` and accept the above default 
+Sure, you can call `new Beep.Note('E♭')` and accept the above default 
 parameters that come with it. But you can also send an Object to `Note` 
 instead of a String and set each of those parameters manually! No specific 
 param is required so just send what you need: 
 ```javascript
-new BEEP.Note({ A: 442, name: 'E♭', octaveIndex: 5 })
+new Beep.Note({ A: 442, name: 'E♭', octaveIndex: 5 })
 ```
 
 __By the numbers__  
 Can we just throw all this named-note garbage out the window? Yes. Want the 
-Devil’s note? Try `new BEEP.Note(666)`. What does that give you? 
+Devil’s note? Try `new Beep.Note(666)`. What does that give you? 
 `{ hertz: 666 }` I happen to like named notes though. They provide a pretty 
 nice grid to work with, eh?
 
@@ -86,7 +86,7 @@ lowercase __b__ as a substitue for __♭__ (flat). There’s no need to use __�
 (natural) but it is in the code there should you desire to invoke it.  
   
 __Smart conversion__  
-If you commit a serious blunder like `new BEEP.Note('B♯')` don’t stress, 
+If you commit a serious blunder like `new Beep.Note('B♯')` don’t stress, 
 `Note` will kindly assume you intended `Note('C♮')` instead. 
 ([There is no B♯](http://en.wikipedia.org/wiki/Homer%27s_Barbershop_Quartet).)
 If you happen to be old school German then, yes, you can use __H__ instead of 
@@ -113,16 +113,16 @@ initialized with a `Note` and maybe pass it an `AudioContext` to pipe the
 sound out to. Just as with `Note` the arguments for `Voice` are all optional.
 Providing none will yield a `Voice` with a default `Note` of 440Hz:
 ```javascript
-voice = new BEEP.Voice()//  We’re running with defaults.
+voice = new Beep.Voice()//  We’re running with defaults.
 voice.play()//  Listen to that pure 440Hz Concert A.
 voice.pause()//  Ok, we’ve had enough.
 ```
 
 __Note arguments__  
 `Voice` will pass note-like arguments to `Note`. It doesn’t take an in-state
-Liberal Arts degree to imagine what `new BEEP.Voice('2E♭')` or 
-`new BEEP.Voice({ A: 442, name: 'E♭', octaveIndex: 2 })` might produce then. 
-You could even try `new BEEP.Voice(new BEEP.Note('2E♭'))` if you’re not into 
+Liberal Arts degree to imagine what `new Beep.Voice('2E♭')` or 
+`new Beep.Voice({ A: 442, name: 'E♭', octaveIndex: 2 })` might produce then. 
+You could even try `new Beep.Voice(new Beep.Note('2E♭'))` if you’re not into 
 that whole brevity thing, man.
 
 __Audio arguments__  
@@ -142,14 +142,14 @@ Triggers
 ------------------------------------------------------------------------------
 We can dream up a `Note`, give it a `Voice`, but wouldn’t it be great if we 
 had some visible DOM Elements and Event Listeners working on our behalf? 
-Behold, your default Concert A: `t = new BEEP.Trigger()`. Simply creating
+Behold, your default Concert A: `t = new Beep.Trigger()`. Simply creating
 a new `Trigger` will also construct the DOM bits and listeners for you.
 No further fuss necessary.
 
 __Notes & Voices__  
 As you may have guessed, `Trigger` will create a `Voice` for you and assign it
 a `Note`. Setting this at initialization time is trivial: 
-`new BEEP.Trigger('E♭')`. See the `Voice` description above to get an idea of 
+`new Beep.Trigger('E♭')`. See the `Voice` description above to get an idea of 
 the variation possible here. And it’s likewise trivial to alter the `Note` or 
 `Voice` after creation.
 
@@ -168,10 +168,10 @@ Just like `Voice`, `Trigger` is happy to ingest an `AudioContext` or
 __Customizing Trigger’s createVoices() method__  
 Upon initialization each instance of Trigger calls its `createVoices()` 
 method. If you’re the type of gal that likes to annihilate mosquitos using 
-atom bombs then you can just overwrite `BEEP.Trigger.prototype.createVoices`.
+atom bombs then you can just overwrite `Beep.Trigger.prototype.createVoices`.
 Otherwise, why not pass a custom function during initialization like so:
 ```javascript
-var trigger = new BEEP.Trigger( '2Eb', function(){
+var trigger = new Beep.Trigger( '2Eb', function(){
 
 
     //  Let’s call this our “Foundation Voice”
@@ -179,7 +179,7 @@ var trigger = new BEEP.Trigger( '2Eb', function(){
 
     this.voices.push( 
 
-        new BEEP.Voice( this.note, this.audioContext )
+        new Beep.Voice( this.note, this.audioContext )
         .setOscillatorType( 'sine' )
         .setGainHigh( 0.4 )
     )
@@ -189,7 +189,7 @@ var trigger = new BEEP.Trigger( '2Eb', function(){
 
     this.voices.push( 
 
-        new BEEP.Voice( this.note.hertz * 3 / 2, this.audioContext )
+        new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
         .setOscillatorType( 'triangle' )
         .setGainHigh( 0.1 )
     )
@@ -199,7 +199,7 @@ var trigger = new BEEP.Trigger( '2Eb', function(){
 
     this.voices.push( 
 
-        new BEEP.Voice( this.note.hertz * 4, this.audioContext )
+        new Beep.Voice( this.note.hertz * 4, this.audioContext )
         .setOscillatorType( 'sawtooth' )
         .setGainHigh( 0.01 )
     )
@@ -209,7 +209,7 @@ var trigger = new BEEP.Trigger( '2Eb', function(){
 
     this.voices.push( 
 
-        new BEEP.Voice( this.note.hertz / 2, this.audioContext )
+        new Beep.Voice( this.note.hertz / 2, this.audioContext )
         .setOscillatorType( 'square' )
         .setGainHigh( 0.01 )
     )
@@ -222,11 +222,11 @@ movie theme does this keyboard play? Notice how we can optionally add
 keyboard event listeners to bind characters to `Triggers`? Here we’ve 
 assigned the characters 1–5 to activate the five triggers respectively.
 ```javascript
-new BEEP.Trigger('4G').addTriggerChar('1')
-new BEEP.Trigger('4A').addTriggerChar('2')
-new BEEP.Trigger('4F').addTriggerChar('3')
-new BEEP.Trigger('3F').addTriggerChar('4')
-new BEEP.Trigger('4C').addTriggerChar('5')
+new Beep.Trigger('4G').addTriggerChar('1')
+new Beep.Trigger('4A').addTriggerChar('2')
+new Beep.Trigger('4F').addTriggerChar('3')
+new Beep.Trigger('3F').addTriggerChar('4')
+new Beep.Trigger('4C').addTriggerChar('5')
 ```
 What if we had a convenient way to bundle these `Triggers` together? You 
 guessed it: `Instrument` to the rescue.
@@ -234,7 +234,7 @@ guessed it: `Instrument` to the rescue.
 
 Instruments
 ------------------------------------------------------------------------------
-How simple is this? `synth = new BEEP.Instrument()`. You can pass the 
+How simple is this? `synth = new Beep.Instrument()`. You can pass the 
 constructor either a DOM Element or a String representing the ID of a DOM 
 Element and it will target that for the build. Otherwise it will just create 
 its own. That one command gives you a default keyboard of `Triggers` with 
@@ -247,7 +247,7 @@ this function with your own custom keyboard. (You should do this!) There is a
 corresponding `unbuild()` method for removing all of its `Triggers`. And that 
 movie-theme keyboard from above? It comes built-in as well:
 ```javascript
-BEEP.Instrument.prototype.buildCloseEncounters = function(){
+Beep.Instrument.prototype.buildCloseEncounters = function(){
 
     this.unbuild()
     .newTrigger( '4G', '1' )

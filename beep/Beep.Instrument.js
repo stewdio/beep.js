@@ -15,7 +15,7 @@
 
 
 
-BEEP.Instrument = function(){
+Beep.Instrument = function(){
 
 	var that = this
 
@@ -29,7 +29,7 @@ BEEP.Instrument = function(){
 
 	//  Let’s hook up to BEEP’s “global” Audio Context.
 
-	this.context = BEEP.audioContext
+	this.context = Beep.audioContext
 
 
 	//  Now that we have an Audio Context we can give our Instrument
@@ -49,7 +49,7 @@ BEEP.Instrument = function(){
 	this.domContainer.classList.add( 'instrument' )
 	
 
-	if( BEEP.domContainer ) BEEP.domContainer.appendChild( this.domContainer )
+	if( Beep.domContainer ) Beep.domContainer.appendChild( this.domContainer )
 	else document.body.appendChild( this.domContainer )	
 
 
@@ -85,24 +85,27 @@ BEEP.Instrument = function(){
 
 		var keyCode = event.which || event.keyCode
 
-		if( keyCode === 32 ){
+		if( Beep.isEditing === false ){
+	
+			if( keyCode === 32 ){
 
-			that.scoreToggle()
-			event.preventDefault()
-		}
+				that.scoreToggle()
+				event.preventDefault()
+			}
 
 
-		//  OMFG this is annoying.
-		//  We cannot reliably detect the ESCAPE key here
-		//  because of this problem in Chrome: 
-		//  https://github.com/philc/vimium/issues/499
-		//  Temporarily using SHIFT + ENTER key instead....
+			//  OMFG this is annoying.
+			//  We cannot reliably detect the ESCAPE key here
+			//  because of this problem in Chrome: 
+			//  https://github.com/philc/vimium/issues/499
+			//  Temporarily using SHIFT + ENTER key instead....
 
-		else if( keyCode === 13 && event.shiftKey && that.scoreIsPlaying === false ){
+			else if( keyCode === 13 && event.shiftKey && that.scoreIsPlaying === false ){
 
-			 if( Object.keys( that.triggers ).length ) that.unbuild()
-			 else that.build()
-			 event.preventDefault()
+				 if( Object.keys( that.triggers ).length ) that.unbuild()
+				 else that.build()
+				 event.preventDefault()
+			}
 		}
 	})
 
@@ -166,17 +169,39 @@ BEEP.Instrument = function(){
 	this.build()
 
 
-
 	//  Push a reference of this instance into BEEP’s library
 	//  so we can access and/or destroy it later.
 
-	BEEP.instruments.push( this )
+	Beep.instruments.push( this )
 }
-BEEP.Instrument.prototype.destroy = function(){
 
 
-	//  kill all event listeners!
-	//  kill all DOM elements!
+//  Convenience methods for adding and removing CSS Classes
+//  to this Instrument’s DOM Element. Why? Because by returning
+//  the instance (“this”) we make it chainable!
+
+Beep.Instrument.prototype.addStyleClass = function( className ){
+
+	this.domContainer.classList.add( className )
+	return this
+}
+Beep.Instrument.prototype.removeStyleClass = function( className ){
+
+	this.domContainer.classList.remove( className )
+	return this
+}
+
+
+Beep.Instrument.prototype.destroy = function(){
+
+	this.unbuild()
+	this.gainNode.disconnect()
+
+	//  @@ TO-DO: NEED TO DECOMISSION OUR EVENT LISTENERS TOO??
+
+	this.domScorePlayPause.remove()
+	this.domTriggers.remove()
+	this.domContainer.remove()
 }
 
 
@@ -194,11 +219,11 @@ BEEP.Instrument.prototype.destroy = function(){
 //  You can of course build your own custom Triggers and 
 //  add them manually, give them a custom ID, and so on.
 
-BEEP.Instrument.prototype.newTrigger = function( note, triggerChars ){
+Beep.Instrument.prototype.newTrigger = function( note, triggerChars ){
 
 	var trigger
 
-	if( note instanceof BEEP.Note === false ) note = new BEEP.Note( note )	
+	if( note instanceof Beep.Note === false ) note = new Beep.Note( note )	
 	
 
 	//  Here we’re going to assume if we intentionally sent a createVoices()
@@ -207,8 +232,8 @@ BEEP.Instrument.prototype.newTrigger = function( note, triggerChars ){
 	//  voices to each individual Trigger, eh?
 
 	if( this.createVoices !== undefined )
-		trigger = new BEEP.Trigger( this, note, this.createVoices )
-	else trigger = new BEEP.Trigger( this, note )
+		trigger = new Beep.Trigger( this, note, this.createVoices )
+	else trigger = new Beep.Trigger( this, note )
 
 
 	//  What keyboard character or characters should trigger this Trigger?
@@ -226,7 +251,7 @@ BEEP.Instrument.prototype.newTrigger = function( note, triggerChars ){
 	this.triggers[ note.octaveIndex + note.nameSimple ] = trigger
 	return this
 }
-BEEP.Instrument.prototype.play = function( trigger ){
+Beep.Instrument.prototype.play = function( trigger ){
 
 	var 
 	triggersArray  = Object.keys( this.triggers ),
@@ -234,21 +259,37 @@ BEEP.Instrument.prototype.play = function( trigger ){
 
 	if( trigger === undefined ) trigger = triggersArray[ triggersMiddle ]
 	if( typeof trigger === 'string' && this.triggers[ trigger ]) trigger = this.triggers[ trigger ]
-	if( trigger instanceof BEEP.Trigger ) trigger.engage( 'code' )
+	if( trigger instanceof Beep.Trigger ) trigger.engage( 'code' )
 	return this
 }
-BEEP.Instrument.prototype.pause = function( trigger ){
+Beep.Instrument.prototype.pause = function( trigger ){
 
 	var that = this
 
 	if( typeof trigger === 'string' && this.triggers[ trigger ]) trigger = this.triggers[ trigger ]
-	if( trigger instanceof BEEP.Trigger ) trigger.disengage()
+	if( trigger instanceof Beep.Trigger ) trigger.disengage()
 	if( trigger === undefined ) Object.keys( this.triggers ).forEach( function( trigger ){
 
 		that.triggers[ trigger ].disengage()//  Kill eveything now regardless of who started it!
 	})
 	return this
 }
+Beep.Instrument.prototype.applyVoices = function( createVoices ){
+
+	var that = this
+
+	this.createVoices = createVoices
+	Object.keys( this.triggers ).forEach( function( trigger ){
+
+		trigger = that.triggers[ trigger ]
+		trigger.destroyVoices()
+		trigger.createVoices = createVoices
+		trigger.createVoices()
+	})
+	return this
+}
+
+
 
 
 
@@ -265,7 +306,7 @@ BEEP.Instrument.prototype.pause = function( trigger ){
 //  Build a fleshed-out (full) two octave keyboard.
 //  No frills. Just the goods.
 
-BEEP.Instrument.prototype.buildStandard = function(){
+Beep.Instrument.prototype.buildStandard = function(){
 
 	this.unbuild()
 	.newTrigger( '3C' , 'z' )
@@ -303,7 +344,7 @@ BEEP.Instrument.prototype.buildStandard = function(){
 	this.scoreLoadFromHash()
 	return this
 }
-BEEP.Instrument.prototype.buildCloseEncounters = function(){
+Beep.Instrument.prototype.buildCloseEncounters = function(){
 
 	this.unbuild()
 	.newTrigger( '4G', '1' )
@@ -313,28 +354,28 @@ BEEP.Instrument.prototype.buildCloseEncounters = function(){
 	.newTrigger( '4C', '5' )
 	return this
 }
-BEEP.Instrument.prototype.buildCloseEncountersJust = function(){//@@  EVERYTHING IS ONE OCTAVE LOWER THAN SHOULD BE! ASIDE FROM '4A' !!
+Beep.Instrument.prototype.buildCloseEncountersJust = function(){//@@  EVERYTHING IS ONE OCTAVE LOWER THAN SHOULD BE! ASIDE FROM '4A' !!
 
 	this.unbuild()
-	.newTrigger( new BEEP.Note.JustIntonation( '4G', '4C' ), '1' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4A', '4C' ), '2' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4F', '4C' ), '3' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3F', '4C' ), '4' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4C', '4C' ), '5' )
+	.newTrigger( new Beep.Note.JustIntonation( '4G', '4C' ), '1' )
+	.newTrigger( new Beep.Note.JustIntonation( '4A', '4C' ), '2' )
+	.newTrigger( new Beep.Note.JustIntonation( '4F', '4C' ), '3' )
+	.newTrigger( new Beep.Note.JustIntonation( '3F', '4C' ), '4' )
+	.newTrigger( new Beep.Note.JustIntonation( '4C', '4C' ), '5' )
 	return this
 }
-BEEP.Instrument.prototype.buildJustVsEDO12 = function(){
+Beep.Instrument.prototype.buildJustVsEDO12 = function(){
 
 	this.unbuild()
 	.newTrigger( '4C', '1' )
 	.newTrigger( '4D', '2' )
 	.newTrigger( '4A', '3' )	
-	.newTrigger( new BEEP.Note.JustIntonation( '4C', '4C' ), '7' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4D', '4C' ), '8' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4A', '4C' ), '9' )
+	.newTrigger( new Beep.Note.JustIntonation( '4C', '4C' ), '7' )
+	.newTrigger( new Beep.Note.JustIntonation( '4D', '4C' ), '8' )
+	.newTrigger( new Beep.Note.JustIntonation( '4A', '4C' ), '9' )
 	return this
 }
-BEEP.Instrument.prototype.buildC = function(){
+Beep.Instrument.prototype.buildC = function(){
 
 	this.unbuild()
 	.newTrigger( '3C', 'z' )
@@ -389,7 +430,7 @@ BEEP.Instrument.prototype.buildC = function(){
 	.domContainer.classList.add( 'mini' )
 	return this
 }
-BEEP.Instrument.prototype.buildCRainbow = function(){
+Beep.Instrument.prototype.buildCRainbow = function(){
 
 	this.buildC()
 	this.domContainer.classList.add( 'rainbow' )
@@ -397,63 +438,63 @@ BEEP.Instrument.prototype.buildCRainbow = function(){
 	this.scoreLoadFromHash()
 	return this
 }
-BEEP.Instrument.prototype.buildCJust = function(){
+Beep.Instrument.prototype.buildCJust = function(){
 
 	this.unbuild()
-	.newTrigger( new BEEP.Note.JustIntonation( '3C' , '4C' ), 'z' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3C♯', '4C' ))
-	.newTrigger( new BEEP.Note.JustIntonation( '3D' , '4C' ), 'x' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3E♭', '4C' ))
-	.newTrigger( new BEEP.Note.JustIntonation( '3E' , '4C' ), 'c' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3F' , '4C' ), 'v' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3F♯', '4C' ))
-	.newTrigger( new BEEP.Note.JustIntonation( '3G' , '4C' ), 'b' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3A♭', '4C' ))
-	.newTrigger( new BEEP.Note.JustIntonation( '3A' , '4C' ), 'n' )
-	.newTrigger( new BEEP.Note.JustIntonation( '3B♭', '4C' ))
-	.newTrigger( new BEEP.Note.JustIntonation( '3B' , '4C' ), 'm' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4C' , '4C' ) , [ 'a', '<' ])
-	.newTrigger( new BEEP.Note.JustIntonation( '4C♯', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '4D' , '4C' ), 's' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4E♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '4E' , '4C' ), 'd' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4F' , '4C' ), 'f' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4F♯', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '4G' , '4C' ), 'g' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4A♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '4A' , '4C' ), 'h' )
-	.newTrigger( new BEEP.Note.JustIntonation( '4B♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '4B' , '4C' ), 'j' )
-	.newTrigger( new BEEP.Note.JustIntonation( '5C' , '4C' ), [ 'k', 'q' ])
-	.newTrigger( new BEEP.Note.JustIntonation( '5C♯', '4C' ))
-	.newTrigger( new BEEP.Note.JustIntonation( '5D' , '4C' ), 'w' )
-	.newTrigger( new BEEP.Note.JustIntonation( '5E♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '5E' , '4C' ), 'e' )
-	.newTrigger( new BEEP.Note.JustIntonation( '5F' , '4C' ), 'r' )
-	.newTrigger( new BEEP.Note.JustIntonation( '5F♯', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '5G' , '4C' ), 't' )
-	.newTrigger( new BEEP.Note.JustIntonation( '5A♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '5A' , '4C' ), 'y' )
-	.newTrigger( new BEEP.Note.JustIntonation( '5B♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '5B' , '4C' ), 'u' )
-	.newTrigger( new BEEP.Note.JustIntonation( '6C' , '4C' ), [ 'i', '1' ])
-	.newTrigger( new BEEP.Note.JustIntonation( '6C♯', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '6D' , '4C' ), '2' )
-	.newTrigger( new BEEP.Note.JustIntonation( '6E♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '6E' , '4C' ), '3' )
-	.newTrigger( new BEEP.Note.JustIntonation( '6F' , '4C' ), '4' )
-	.newTrigger( new BEEP.Note.JustIntonation( '6F♯', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '6G' , '4C' ), '5' )
-	.newTrigger( new BEEP.Note.JustIntonation( '6A♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '6A' , '4C' ), '6' )
-	.newTrigger( new BEEP.Note.JustIntonation( '6B♭', '4C' ) )
-	.newTrigger( new BEEP.Note.JustIntonation( '6B' , '4C' ), '7' )
-	.newTrigger( new BEEP.Note.JustIntonation( '7C' , '4C' ), '8' )
+	.newTrigger( new Beep.Note.JustIntonation( '3C' , '4C' ), 'z' )
+	.newTrigger( new Beep.Note.JustIntonation( '3C♯', '4C' ))
+	.newTrigger( new Beep.Note.JustIntonation( '3D' , '4C' ), 'x' )
+	.newTrigger( new Beep.Note.JustIntonation( '3E♭', '4C' ))
+	.newTrigger( new Beep.Note.JustIntonation( '3E' , '4C' ), 'c' )
+	.newTrigger( new Beep.Note.JustIntonation( '3F' , '4C' ), 'v' )
+	.newTrigger( new Beep.Note.JustIntonation( '3F♯', '4C' ))
+	.newTrigger( new Beep.Note.JustIntonation( '3G' , '4C' ), 'b' )
+	.newTrigger( new Beep.Note.JustIntonation( '3A♭', '4C' ))
+	.newTrigger( new Beep.Note.JustIntonation( '3A' , '4C' ), 'n' )
+	.newTrigger( new Beep.Note.JustIntonation( '3B♭', '4C' ))
+	.newTrigger( new Beep.Note.JustIntonation( '3B' , '4C' ), 'm' )
+	.newTrigger( new Beep.Note.JustIntonation( '4C' , '4C' ) , [ 'a', '<' ])
+	.newTrigger( new Beep.Note.JustIntonation( '4C♯', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '4D' , '4C' ), 's' )
+	.newTrigger( new Beep.Note.JustIntonation( '4E♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '4E' , '4C' ), 'd' )
+	.newTrigger( new Beep.Note.JustIntonation( '4F' , '4C' ), 'f' )
+	.newTrigger( new Beep.Note.JustIntonation( '4F♯', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '4G' , '4C' ), 'g' )
+	.newTrigger( new Beep.Note.JustIntonation( '4A♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '4A' , '4C' ), 'h' )
+	.newTrigger( new Beep.Note.JustIntonation( '4B♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '4B' , '4C' ), 'j' )
+	.newTrigger( new Beep.Note.JustIntonation( '5C' , '4C' ), [ 'k', 'q' ])
+	.newTrigger( new Beep.Note.JustIntonation( '5C♯', '4C' ))
+	.newTrigger( new Beep.Note.JustIntonation( '5D' , '4C' ), 'w' )
+	.newTrigger( new Beep.Note.JustIntonation( '5E♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '5E' , '4C' ), 'e' )
+	.newTrigger( new Beep.Note.JustIntonation( '5F' , '4C' ), 'r' )
+	.newTrigger( new Beep.Note.JustIntonation( '5F♯', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '5G' , '4C' ), 't' )
+	.newTrigger( new Beep.Note.JustIntonation( '5A♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '5A' , '4C' ), 'y' )
+	.newTrigger( new Beep.Note.JustIntonation( '5B♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '5B' , '4C' ), 'u' )
+	.newTrigger( new Beep.Note.JustIntonation( '6C' , '4C' ), [ 'i', '1' ])
+	.newTrigger( new Beep.Note.JustIntonation( '6C♯', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '6D' , '4C' ), '2' )
+	.newTrigger( new Beep.Note.JustIntonation( '6E♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '6E' , '4C' ), '3' )
+	.newTrigger( new Beep.Note.JustIntonation( '6F' , '4C' ), '4' )
+	.newTrigger( new Beep.Note.JustIntonation( '6F♯', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '6G' , '4C' ), '5' )
+	.newTrigger( new Beep.Note.JustIntonation( '6A♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '6A' , '4C' ), '6' )
+	.newTrigger( new Beep.Note.JustIntonation( '6B♭', '4C' ) )
+	.newTrigger( new Beep.Note.JustIntonation( '6B' , '4C' ), '7' )
+	.newTrigger( new Beep.Note.JustIntonation( '7C' , '4C' ), '8' )
 	.domContainer.classList.add( 'mini' )
 	return this
 }
-BEEP.Instrument.prototype.build = BEEP.Instrument.prototype.buildStandard
-BEEP.Instrument.prototype.unbuild = function(){
+Beep.Instrument.prototype.build = Beep.Instrument.prototype.buildStandard
+Beep.Instrument.prototype.unbuild = function(){
 
 	var that = this
 
@@ -477,7 +518,7 @@ BEEP.Instrument.prototype.unbuild = function(){
 ///////////////
 
 
-BEEP.Instrument.prototype.scoreLoadFromHash = function(){
+Beep.Instrument.prototype.scoreLoadFromHash = function(){
 
 	if( document.location.hash !== '' ){
 
@@ -496,7 +537,7 @@ BEEP.Instrument.prototype.scoreLoadFromHash = function(){
 		this.scoreLoad( score )
 	}
 }
-BEEP.Instrument.prototype.scoreLoad = function( score ){
+Beep.Instrument.prototype.scoreLoad = function( score ){
 
 	var beat = 0, i, note
 
@@ -506,7 +547,7 @@ BEEP.Instrument.prototype.scoreLoad = function( score ){
 		//  This bit here means you can call 'Bb'
 		//  and it will still trigger 'B♭', etc!
 
-		note = new BEEP.Note( score[ i+1 ])
+		note = new Beep.Note( score[ i+1 ])
 
 
 		//  TO DO FUTURE @@
@@ -526,7 +567,7 @@ BEEP.Instrument.prototype.scoreLoad = function( score ){
 	})
 	return this
 }
-BEEP.Instrument.prototype.scorePlayLoop = function(){
+Beep.Instrument.prototype.scorePlayLoop = function(){
 
 	var 
 	performant = window.performance && window.performance.now,
@@ -554,7 +595,7 @@ BEEP.Instrument.prototype.scorePlayLoop = function(){
 	if( this.scoreIsPlaying ) requestAnimationFrame( this.scorePlayLoop.bind( this ))
 	return this
 }
-BEEP.Instrument.prototype.scorePlay = function(){
+Beep.Instrument.prototype.scorePlay = function(){
 
 	if( Object.keys( this.triggers ).length ){
 	
@@ -564,20 +605,20 @@ BEEP.Instrument.prototype.scorePlay = function(){
 	}
 	return this
 }
-BEEP.Instrument.prototype.scoreStop = function(){
+Beep.Instrument.prototype.scoreStop = function(){
 
 	this.scoreIsPlaying = false
 	this.pause()
 	this.domScorePlayPause.classList.remove( 'is-playing' )
 	return this
 }
-BEEP.Instrument.prototype.scoreToggle = function(){
+Beep.Instrument.prototype.scoreToggle = function(){
 
 	if( this.scoreIsPlaying ) this.scoreStop()
 	else this.scorePlay()
 	return this
 }
-BEEP.Instrument.prototype.scoreUnload = function(){
+Beep.Instrument.prototype.scoreUnload = function(){
 
 	this.scoreStop()
 	this.scoreCompleted = []
@@ -591,14 +632,14 @@ BEEP.Instrument.prototype.scoreUnload = function(){
 
 //  http://en.wikipedia.org/wiki/Solf%C3%A8ge
 
-BEEP.Instrument.prototype.scoreLoadDoReMi = function(){
+Beep.Instrument.prototype.scoreLoadDoReMi = function(){
 
 	var
 	melody = [
 
 		36/4, '4C',  6/4,//  Do[e]
 		 6/4, '4D',  2/4,//  a
-		 2/4, '4E',  5/4,//  deer		
+		 2/4, '4E',  5/4,//  deer
 		 6/4, '4C',  2/4,//  A
 		 2/4, '4E',  4/4,//  fe
 		 4/4, '4C',  3/4,//  male
@@ -801,7 +842,7 @@ BEEP.Instrument.prototype.scoreLoadDoReMi = function(){
 	this.scoreLoad( melody )
 	this.scoreLoad( harmony )
 }
-BEEP.Instrument.prototype.scoreLoadHSB = function(){
+Beep.Instrument.prototype.scoreLoadHSB = function(){
 
 	var guitar = [
 

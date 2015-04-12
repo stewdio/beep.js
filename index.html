@@ -1,58 +1,100 @@
 <!DOCTYPE html>
 <html>
+	<!--
+
+
+		Were you looking for the source code?
+
+		https://github.com/stewdio/beep.js
+
+
+	-->
 	<head>
-		<title>Beep.js</title>
+		<title>beep.js</title>
 		
 		<meta charset="utf-8">
 		<meta name="viewport"    content="width=600">
-		<meta name="description" content="Beep is a JavaScript framework for building browser-based synthesizers.">
-		<meta name="keywords"    content="Beep Beep.js Beep-js BeepJS Browser Synthesizer synth music tone generation HTML5 WebAudio WebAudioAPI JS JavaScript Stewdio Stewart Smith">
+		<meta name="description" content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
+		<meta name="keywords"    content="Beep Beep.js Beep-js BeepJS Browser Synthesizer synth music audio tone generation HTML5 WebAudio WebAudioAPI JS JavaScript Stewdio Stewart Smith">
 		<meta name="copyright"   content="Stewart Smith 2015">
 
 		<meta name="twitter:card"        content="summary">
 		<meta name="twitter:site"        content="@stewd_io">
 		<meta name="twitter:title"       content="Beep.js">		
-		<meta name="twitter:description" content="Beep is a JavaScript framework for building browser-based synthesizers.">
+		<meta name="twitter:description" content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
 		<meta name="twitter:creator"     content="Stewart Smith">		
 		<meta name="twitter:image"       content="http://beepjs.com/media/beep-poster.png">
 		<meta name="twitter:url"         content="http://beepjs.com">
 
 		<meta property="og:type"        content="website">
 		<meta property="og:title"       content="Beep.js">
-		<meta property="og:description" content="Beep is a JavaScript framework for building browser-based synthesizers.">
+		<meta property="og:description" content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
 		<meta property="og:url"         content="http://beepjs.com">
 		<meta property="og:image"       content="http://beepjs.com/media/beep-poster.png">
 				
 		<link rel="canonical" href="http://beepjs.com/">
 		<link rel="icon" type="image/png" href="media/favicon-064.png">
 		<link rel="apple-touch-icon" href="media/favicon-144.png">
-		<link rel="stylesheet" type="text/css" href="styles/base.css">
+
+		<link rel="stylesheet" type="text/css" href="beep/Beep.Trigger.css">
+		<link rel="stylesheet" type="text/css" href="beep/Beep.Instrument.css">		
+		<link rel="stylesheet" type="text/css" href="beep/Beep.Editor.css">
+		<link rel="stylesheet" type="text/css" href="demo/demo.css">
 		
-		<script charset="utf-8" src="scripts/beep.js"></script>
-		<script charset="utf-8" src="scripts/beep.notes.js"></script>
-		<script charset="utf-8" src="scripts/beep.voices.js"></script>
-		<script charset="utf-8" src="scripts/beep.triggers.js"></script>
-		<script charset="utf-8" src="scripts/beep.instruments.js"></script>
-		<script charset="utf-8" src="scripts/analytics.js"></script>
-		<script charset="utf-8" src="scripts/app.js"></script>
+		<script charset="utf-8" src="beep/Beep.js"></script>
+		<script charset="utf-8" src="beep/Beep.Note.js"></script>
+		<script charset="utf-8" src="beep/Beep.Voice.js"></script>
+		<script charset="utf-8" src="beep/Beep.Trigger.js"></script>
+		<script charset="utf-8" src="beep/Beep.Instrument.js"></script>
+		<script charset="utf-8" src="beep/Beep.Editor.js"></script>
+		<script charset="utf-8" src="demo/analytics.js"></script>
+		<script charset="utf-8" src="demo/demo.js"></script>
 	</head>
 	<body>		
 		<div id="fullscreen-container">
 			<h1>beep<span id="play-pause-container"></span></h1>
 			<div id="beep"></div>
-			<!--
+			<div class="button" id="editor-open"></div>
+			<div class="button" id="fullscreen-toggle"></div>
+			<div id="editor-container">
+				<div id="editor-menu">
+					<div>
+						beep.js editor
+						<div class="button" id="editor-apply"></div>
+						<div class="button" id="editor-close"></div>
+					</div>
+				</div>
+				<div>
+					<div id="editor-content"><textarea id="editor" spellcheck="false">window.synth = new Beep.Instrument()
+/*
+.applyVoices( function(){
 
+	this.voices.push( 
 
-				Were you looking for the source code?
+		new Beep.Voice( this.note, this.audioContext )
+		.setOscillatorType( 'sine' )
+		.setGainHigh( 0.50 ),
 
-				https://github.com/stewdio/beep.js
+		new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
+		.setOscillatorType( 'triangle' )
+		.setGainHigh( 0.20 ),
 
+		new Beep.Voice( this.note.hertz * 4, this.audioContext )
+		.setOscillatorType( 'sawtooth' )
+		.setGainHigh( 0.01 ),
 
-			-->
+		new Beep.Voice( this.note.hertz / 2, this.audioContext )
+		.setOscillatorType( 'square' )
+		.setGainHigh( 0.01 )
+	)
+})
+.addStyleClass( 'rainbow' )
+.scorePlay()
+*/</textarea></div>
+				</div>
+				<div><div id="eval-status"></div></div>
+			</div>
 		</div>
-		<div class="button" id="fullscreen-toggle"></div>
-		<!-- div class="button" id="editor-toggle"></div>
-		<div class="button" id="editor-eval"></div -->
 		<footer>
 			<div class="button" id="github"></div>
 			<div class="button" id="twitter"></div>
@@ -61,64 +103,12 @@
 			Build your own? <a target="_blank" href="https://github.com/stewdio/beep.js" title="Beep.js on GitHub">Get the code</a>.
 		</footer>
 		<div id="cache">
+			<img src="media/buttons/apply-hover.svg">
+			<img src="media/buttons/editor-close-hover.svg">
 			<img src="media/buttons/play-hover.svg">
 			<img src="media/buttons/pause.svg">
 			<img src="media/buttons/pause-hover.svg">
 			<img src="media/buttons/fullscreen-hover.svg">
 		</div>	
-		<div id="editor-container">
-			<textarea id="editor">new BEEP.Instrument()
-
-//  Uncomment out below for more fun.
-
-/*
-new BEEP.Instrument( function(){
-
-
-	//  Let’s call this our “Foundation Voice”
-	//  because it will sing the intended Note.
-
-	this.voices.push( 
-
-		new BEEP.Voice( this.note, this.audioContext )
-		.setOscillatorType( 'sine' )
-		.setGainHigh( 0.4 )
-	)
-
-
-	//  This Voice will sing a Perfect 5th above the Foundation Voice.
-
-	this.voices.push( 
-
-		new BEEP.Voice( this.note.hertz * 3 / 2, this.audioContext )
-		.setOscillatorType( 'triangle' )
-		.setGainHigh( 0.1 )
-	)
-
-
-	//  This Voice will sing 2 octaves above the Foundation Voice.
-
-	this.voices.push( 
-
-		new BEEP.Voice( this.note.hertz * 4, this.audioContext )
-		.setOscillatorType( 'sawtooth' )
-		.setGainHigh( 0.01 )
-	)
-
-
-	//  This Voice will sing 1 octave below the Foundation Voice.
-
-	this.voices.push( 
-
-		new BEEP.Voice( this.note.hertz / 2, this.audioContext )
-		.setOscillatorType( 'square' )
-		.setGainHigh( 0.01 )
-	)
-})
-.domContainer.classList.add('rainbow')
-*/
-
-</textarea>
-		</div>
 	</body>
 </html>

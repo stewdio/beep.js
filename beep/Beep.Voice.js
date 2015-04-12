@@ -14,7 +14,7 @@
 	Sending no arguments to a Voice will give you all default params
 	and results in a playable Concert A:
 
-	    var voice = new BEEP.Voice()
+	    var voice = new Beep.Voice()
 	    voice.play()
 	    voice.pause()
 
@@ -40,7 +40,7 @@
 //  so we’d like to connect this Voice to an existing one if 
 //  possible. But if need be we can create a new one here.
 
-BEEP.Voice = function( a, b ){
+Beep.Voice = function( a, b ){
 
 
 	//  Remember the ? will be validated by Note()
@@ -51,9 +51,9 @@ BEEP.Voice = function( a, b ){
 	//      ( GainNode,     Note )
 	//      ( GainNode,     ?    )
 
-	if( a instanceof BEEP.AudioContext || a instanceof GainNode ){
+	if( a instanceof Beep.AudioContext || a instanceof GainNode ){
 
-		if( a instanceof BEEP.AudioContext ){
+		if( a instanceof Beep.AudioContext ){
 
 			this.audioContext = a
 			this.destination  = a.destination
@@ -63,8 +63,8 @@ BEEP.Voice = function( a, b ){
 			this.audioContext = a.audioContext
 			this.destination  = a
 		}
-		if( b instanceof BEEP.Note ) this.note = b
-		else this.note = new BEEP.Note( b )//  Still ok if b === undefined.
+		if( b instanceof Beep.Note ) this.note = b
+		else this.note = new Beep.Note( b )//  Still ok if b === undefined.
 	}
 
 
@@ -80,9 +80,9 @@ BEEP.Voice = function( a, b ){
 
 	else {
 
-		if( a instanceof BEEP.Note ) this.note = a
-		else this.note = new BEEP.Note( a )//  Still ok if a === undefined.
-		if(  b instanceof BEEP.AudioContext ){
+		if( a instanceof Beep.Note ) this.note = a
+		else this.note = new Beep.Note( a )//  Still ok if a === undefined.
+		if(  b instanceof Beep.AudioContext ){
 
 			this.audioContext = b
 			this.destination  = b.destination
@@ -94,7 +94,7 @@ BEEP.Voice = function( a, b ){
 		}
 		else {
 
-			this.audioContext = BEEP.audioContext
+			this.audioContext = Beep.audioContext
 			this.destination  = this.audioContext.destination
 		}
 	}
@@ -134,10 +134,15 @@ BEEP.Voice = function( a, b ){
 	this.isPlaying = false
 
 
+	//  Good to know when it’s time to go home.
+
+	this.isDestroyed = false
+
+
 	//  Push a reference of this instance into BEEP’s library
 	//  so we can access and/or destroy it later.
 
-	BEEP.voices.push( this )
+	Beep.voices.push( this )
 }
 
 
@@ -146,14 +151,14 @@ BEEP.Voice = function( a, b ){
 //  Voices are *always* emitting, so “playing” a Note
 //  is really a matter of turning its amplitude up.
 
-BEEP.Voice.prototype.play = function( params ){
+Beep.Voice.prototype.play = function( params ){
 
 
 	//  Let’s create that Note.
 	//  The params will specify a frequency assignment method to use
 	//  otherwise Note() will pick a default.
 
-	if( params !== undefined ) this.note = new BEEP.Note( params )
+	if( params !== undefined ) this.note = new Beep.Note( params )
 	this.oscillator.frequency.value = this.note.hertz
 	this.gainNode.gain.value = this.gainHigh || params.gainHigh || 1
 
@@ -173,7 +178,7 @@ BEEP.Voice.prototype.play = function( params ){
 //  They are not reusable.
 //  Instead we just turn its amplitude down so we can’t hear it.
 
-BEEP.Voice.prototype.pause = function(){
+Beep.Voice.prototype.pause = function(){
 
 	this.gainNode.gain.value = 0
 	return this
@@ -183,10 +188,14 @@ BEEP.Voice.prototype.pause = function(){
 //  Or you know what? Maybe we do want to just kill it.
 //  Like sawing off the branch you’re sitting on.
 
-BEEP.Voice.prototype.destroy = function(){
+Beep.Voice.prototype.destroy = function(){
 
-	if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
-	this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
+	if( this.isDestroyed === false ) {
+
+		if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
+		this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
+		this.isDestroyed = true
+	}
 	return this
 }
 
@@ -203,7 +212,7 @@ BEEP.Voice.prototype.destroy = function(){
 //
 //     voices.push( 
 //
-// 	       new BEEP.Voice( this.note.hertz * 3 / 2, this.audioContext )
+// 	       new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
 // 	       .setOscillatorType( 'triangle' )
 // 	       .setGainHigh( 0.3 )
 //     )
@@ -213,20 +222,20 @@ BEEP.Voice.prototype.destroy = function(){
 //     without actually having getters.
 
 
-BEEP.Voice.prototype.getGainHigh = function(){
+Beep.Voice.prototype.getGainHigh = function(){
 
 	return this.gainHigh
 }
-BEEP.Voice.prototype.setGainHigh = function( normalizedNumber ){
+Beep.Voice.prototype.setGainHigh = function( normalizedNumber ){
 
 	this.gainHigh = normalizedNumber
 	return this
 }
-BEEP.Voice.prototype.getOscillatorType = function(){
+Beep.Voice.prototype.getOscillatorType = function(){
 
 	return this.oscillator.type
 }
-BEEP.Voice.prototype.setOscillatorType = function( string ){
+Beep.Voice.prototype.setOscillatorType = function( string ){
 
 	this.oscillator.type = string
 	return this

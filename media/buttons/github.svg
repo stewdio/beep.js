@@ -3,7 +3,7 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
 	<g id="github">
-		<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" stroke="none" stroke-width="20" stroke-miterlimit="10" d="
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" stroke="none" stroke-width="30" stroke-miterlimit="10" d="
 			M299.983,30.65C150.885,30.65,30,151.567,30,300.683c0,119.299,77.342,220.5,184.662,256.207c13.5,2.461,18.42-5.859,18.42-13.014
 			c0-6.41-0.227-23.406-0.355-45.939c-75.107,16.316-90.971-36.193-90.971-36.193c-12.271-31.176-29.979-39.496-29.979-39.496
 			c-24.508-16.738,1.861-16.414,1.861-16.414c27.097,1.91,41.357,27.842,41.357,27.842c24.086,41.244,63.194,29.33,78.572,22.436

@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+
+
+
+.instrument {
+
+	position: relative;
+	white-space: nowrap;
+}
+.instrument.mini {
+
+	padding-top: 8rem;
+}
+
+
+

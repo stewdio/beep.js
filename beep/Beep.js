@@ -2,9 +2,9 @@
 
 
 
-var BEEP = {
+var Beep = {
 
-	VERSION: 3,
+	VERSION: 4,
 
 
 	//  Chrome, Opera, and Firefox already provide AudioContext()
@@ -30,21 +30,28 @@ var BEEP = {
 	domContainer: null,
 
 
+	//  This will be rather useful for bypassing keyboard Event Listeners.
+	//  @@ Will come back and rename this / improve its functionality 
+	//  so that any focus on a text area stops Triggers from firing!
+
+	isEditing: false,
+
+
 	//  Destroy everything. EVERYTHING. DO IT. DO IT NOW.
 
 	destroy: function(){
 
-		while( this.voices.length ){
+		while( this.instruments.length ){
 
-			this.voices.pop().destroy()
+			this.instruments.pop().destroy()
 		}
 		while( this.triggers.length ){
 
 			this.triggers.pop().destroy()
 		}
-		while( this.instruments.length ){
+		while( this.voices.length ){
 
-			this.instruments.pop().destroy()
+			this.voices.pop().destroy()
 		}
 	},
 
@@ -54,20 +61,28 @@ var BEEP = {
 
 	eval: function(){
 
-		var code = document.getElementById( 'editor' ).value
+		var 
+		code = ';'+ document.getElementById( 'editor' ).value,
+		el = document.getElementById( 'eval-status' )
 
 		try {
 
-			eval( code )	
+			eval( code )
+			el.classList.remove( 'bad' )
+			el.classList.remove( 'ugly' )
+			el.classList.add( 'good' )
 		}
 		catch( e ){
 
 			console.log( 'OMFG', e )
+			el.classList.remove( 'good' )
+			el.classList.remove( 'ugly' )
+			el.classList.add( 'bad' )
 		}
 	},
 
 
-	//  Right now just runs BEEP.eval() but in the near future
+	//  Right now just runs Beep.eval() but in the near future
 	//  we might have some more tricks up our sleeve...
 
 	boot: function(){
@@ -93,7 +108,7 @@ var BEEP = {
 //  limited by hardware. For example, my personal laptop
 //  can only handle 6 of them at once!
 
-BEEP.audioContext = new BEEP.AudioContext()
+Beep.audioContext = new Beep.AudioContext()
 
 
 //  Once our DOM Content is ready for action
@@ -101,8 +116,8 @@ BEEP.audioContext = new BEEP.AudioContext()
 
 document.addEventListener( 'DOMContentLoaded', function(){
 
-	BEEP.domContainer = document.getElementById( 'beep' )
-	BEEP.boot()
+	Beep.domContainer = document.getElementById( 'beep' )
+	Beep.boot()
 })
 
 

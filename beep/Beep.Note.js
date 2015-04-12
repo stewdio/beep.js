@@ -55,7 +55,7 @@
 
 
 
-BEEP.Note = function( params ){
+Beep.Note = function( params ){
 
 	var that = this
  
@@ -67,7 +67,7 @@ BEEP.Note = function( params ){
 			that[ key ] = params[ key ]
 		})
 	}
-	else return BEEP.Note.EDO12( params )
+	else return Beep.Note.EDO12( params )
 }
 
 
@@ -77,7 +77,7 @@ BEEP.Note = function( params ){
 //  lettered A through G with modifier symbols for sharps and flats.
 //  Let’s build a validator for Western music:
 
-BEEP.Note.validateWestern = function( params ){
+Beep.Note.validateWestern = function( params ){
 
 	var 
 	NAMES   = [ 'A♭', 'A♮', 'B♭', 'B♮', 'C♮', 'C♯', 'D♮', 'E♭', 'E♮', 'F♮', 'F♯', 'G♮' ],
@@ -228,12 +228,12 @@ BEEP.Note.validateWestern = function( params ){
 //  -     -           -           --
 //  Does exactly what it says on the tin, man.
 
-BEEP.Note.EDO12 = function( params ){
+Beep.Note.EDO12 = function( params ){
 	
-	params = BEEP.Note.validateWestern( params )
+	params = Beep.Note.validateWestern( params )
 	params.hertz = params.A * Math.pow( Math.pow( 2, 1 / 12 ), params.pianoKeyIndex - 49 )
 	params.tuning = 'EDO12'
-	return new BEEP.Note( params )
+	return new Beep.Note( params )
 }
 
 
@@ -241,15 +241,15 @@ BEEP.Note.EDO12 = function( params ){
 //  makes for sonically gorgeous experiences
 //  ... Until you change keys!
 
-BEEP.Note.JustIntonation = function( params, key ){
+Beep.Note.JustIntonation = function( params, key ){
 
 	var 
 	that = this,
 	relationshipIndex
 
-	params = BEEP.Note.validateWestern( params )
+	params = Beep.Note.validateWestern( params )
 	params.tuning = 'JustIntonation'
-	params.key = new BEEP.Note.EDO12( key )
+	params.key = new Beep.Note.EDO12( key )
 
 
 	//  This is Ptolemy’s “Intense Diatonic Scale” which is based on 
@@ -285,7 +285,7 @@ BEEP.Note.JustIntonation = function( params, key ){
 	//  note by whole octaves.
 	
 	params.hertz = params.hertz * Math.pow( 2, params.octaveIndex - params.key.octaveIndex )
-	return new BEEP.Note( params )
+	return new Beep.Note( params )
 }
 
 

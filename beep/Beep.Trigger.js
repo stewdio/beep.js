@@ -11,7 +11,7 @@
 
 
 
-BEEP.Trigger = function(){
+Beep.Trigger = function(){
 
 	var that = this
 
@@ -24,10 +24,10 @@ BEEP.Trigger = function(){
 
 	Array.prototype.slice.call( arguments ).forEach( function( arg ){
 
-		if( arg instanceof BEEP.Instrument ) that.instrument = arg
+		if( arg instanceof Beep.Instrument ) that.instrument = arg
 		else if( arg instanceof Function ) that.createVoices = arg
-		else if( arg instanceof BEEP.Note ) that.note = arg
-		else that.note = new BEEP.Note( arg )
+		else if( arg instanceof Beep.Note ) that.note = arg
+		else that.note = new Beep.Note( arg )
 	})
 
 
@@ -42,13 +42,13 @@ BEEP.Trigger = function(){
 	//  the “global” BEEP one.
 
 	if( this.instrument ) this.audioContext = this.instrument.audioContext
-	else this.audioContext = BEEP.audioContext
+	else this.audioContext = Beep.audioContext
 
 
 	//  What if we didn’t receive anything useful as a Note?
 	//  We’ll just run with defaults.
 
-	if( this.note === undefined ) this.note = new BEEP.Note()
+	if( this.note === undefined ) this.note = new Beep.Note()
 
 
 	//  Now that we have an Audio Context we should add a buffer of Voices.
@@ -135,11 +135,11 @@ BEEP.Trigger = function(){
 	//  Push a reference of this instance into BEEP’s library
 	//  so we can access and/or destroy it later.
 
-	BEEP.triggers.push( this )
+	Beep.triggers.push( this )
 }
 
 
-BEEP.Trigger.prototype.addEventListener = function( type, action ){
+Beep.Trigger.prototype.addEventListener = function( type, action ){
 
 	this.eventListeners.push({
 
@@ -148,7 +148,7 @@ BEEP.Trigger.prototype.addEventListener = function( type, action ){
 	})
 	window.addEventListener( type, action )
 }
-BEEP.Trigger.prototype.removeEventListener = function( type, action ){
+Beep.Trigger.prototype.removeEventListener = function( type, action ){
 
 	// var i = eventListeners.length - 1
 
@@ -170,7 +170,7 @@ BEEP.Trigger.prototype.removeEventListener = function( type, action ){
 //  @@ TODO: 
 //  Does it make sense to add these listeners to instrument.domContainer instead of window?
 
-BEEP.Trigger.prototype.addTriggerChar = function( trigger ){
+Beep.Trigger.prototype.addTriggerChar = function( trigger ){
 
 	var 
 	that = this,
@@ -196,7 +196,7 @@ BEEP.Trigger.prototype.addTriggerChar = function( trigger ){
 
 			var keyCode = event.which || event.keyCode
 
-			if( keyCode === triggerCharCode && !event.metaKey && !event.ctrlKey ) that.engage( 'keydown-'+ triggerCharCode )
+			if( Beep.isEditing === false && keyCode === triggerCharCode && !event.metaKey && !event.ctrlKey ) that.engage( 'keydown-'+ triggerCharCode )
 		}
 	)
 	this.addEventListener(
@@ -223,7 +223,7 @@ BEEP.Trigger.prototype.addTriggerChar = function( trigger ){
 // “Down here, it’s our time. It’s our time down here. 
 //  That’s all over the second we ride up Troy’s bucket.”
 
-BEEP.Trigger.prototype.createVoices = function(){
+Beep.Trigger.prototype.createVoices = function(){
 
 
 	//  Let’s call this our “Foundation Voice”
@@ -231,9 +231,9 @@ BEEP.Trigger.prototype.createVoices = function(){
 
 	this.voices.push( 
 
-		new BEEP.Voice( this.note, this.audioContext )
+		new Beep.Voice( this.note, this.audioContext )
 		.setOscillatorType( 'square' )
-		.setGainHigh( 0.2 )
+		.setGainHigh( 0.05 )
 	)
 
 
@@ -241,22 +241,22 @@ BEEP.Trigger.prototype.createVoices = function(){
 
 	this.voices.push( 
 
-		new BEEP.Voice( this.note.hertz / 2, this.audioContext )
+		new Beep.Voice( this.note.hertz / 2, this.audioContext )
 		.setOscillatorType( 'sine' )
-		.setGainHigh( 0.3 )
+		.setGainHigh( 0.2 )
 	)
 }
 
 
 //  All-stop. Kill all the voices (in your head).
 
-BEEP.Trigger.prototype.destroyVoices = function(){
+Beep.Trigger.prototype.destroyVoices = function(){
 
 	var i = this.voices.length
 
 	while( i -- ){
 
-		if( this.voices[ i ] !== undefined && typeof this.voices[ i ].pause === 'function' ) this.voices[ i ].pause()
+		if( this.voices[ i ] !== undefined ) this.voices[ i ].destroy()
 		delete this.voices[ i ]
 	}
 	this.voices  = []
@@ -266,11 +266,11 @@ BEEP.Trigger.prototype.destroyVoices = function(){
 
 
 
-BEEP.Trigger.prototype.play = function(){
+Beep.Trigger.prototype.play = function(){
 
 	this.voices.forEach( function( voice ){ voice.play() })
 }
-BEEP.Trigger.prototype.pause = function(){
+Beep.Trigger.prototype.pause = function(){
 
 	this.voices.forEach( function( voice ){ voice.pause() })
 }
@@ -282,7 +282,7 @@ BEEP.Trigger.prototype.pause = function(){
 //  play() and stop() respectively
 //  with safety mechanisms and interface feedback.
 
-BEEP.Trigger.prototype.engage = function( eventType ){
+Beep.Trigger.prototype.engage = function( eventType ){
 
 	if( this.engaged === false ){
 
@@ -293,7 +293,7 @@ BEEP.Trigger.prototype.engage = function( eventType ){
 	}
 	return this
 }
-BEEP.Trigger.prototype.disengage = function( eventType ){
+Beep.Trigger.prototype.disengage = function( eventType ){
 
 	if( this.engaged === true && ( this.eventType === eventType || this.eventType === 'code' )){
 	
@@ -311,9 +311,10 @@ BEEP.Trigger.prototype.disengage = function( eventType ){
 //  it might be useful to dispose of its Triggers in 
 //  a meaningful way. 
 
-BEEP.Trigger.prototype.destroy = function(){
+Beep.Trigger.prototype.destroy = function(){
 
 	this.pause()
+	this.destroyVoices()
 	this.eventListeners.forEach( function( event ){
 
 		window.removeEventListener( event.type, event.action )

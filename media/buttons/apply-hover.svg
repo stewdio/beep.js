@@ -1,0 +1,8 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+	<g id="apply-hover">
+		<path display="inline" d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270S449.117,30,300,30z
+			 M395,345H236.213l38.033,38.033l-21.213,21.213L178.787,330l74.247-74.246l21.213,21.213L236.213,315H365V200h30V345z"/>
+		<circle display="inline" fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+</svg>
