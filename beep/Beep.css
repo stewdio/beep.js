@@ -1,0 +1,29 @@
+
+
+
+
+.beep-button {
+
+	position: relative;
+	display: inline-block;
+	border-radius: 4rem;
+	width:  4rem;
+	height: 4rem;
+	opacity: 0.2;
+	cursor: pointer;
+}
+.beep-button:hover {
+
+	opacity: 1;
+}
+.beep-button + .beep-button {
+
+	margin-left: 0.2rem;
+}
+
+
+
+
+
+
+

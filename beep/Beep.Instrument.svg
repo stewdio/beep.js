@@ -1,0 +1,29 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+	<defs>
+		<style>
+			rect, line { shape-rendering: crispEdges; }
+			svg .button { display: none; }
+			svg .button:target { display: inline; }
+		</style>
+	</defs>
+	<g class="button" id="play">
+		<polygon display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" points="235,200 235,400,415,300"/>
+		<circle display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+	<g class="button" id="play-hover">
+		<path fill="#FFFFFF" d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270S449.117,30,300,30z
+			 M220,425.493V174.507L445.887,300L220,425.493z"/>
+		<circle fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+	<g class="button" id="pause">
+		<circle display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+		<line display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" x1="240" y1="190" x2="240" y2="410"/>
+		<line display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" x1="360" y1="190" x2="360" y2="410"/>
+	</g>
+	<g class="button" id="pause-hover" display="none">
+		<path display="inline" fill="#FFFFFF" d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270
+			S449.117,30,300,30z M255,410h-30V190h30V410z M375,410h-30V190h30V410z"/>
+		<circle display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+</svg>

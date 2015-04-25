@@ -27,11 +27,11 @@
 	font-family: Ginger;
 	font-weight: 100;
 	font-style:  normal;
-	src: url( '../media/fonts/ginger-thin.eot' );
-	src: url( '../media/fonts/ginger-thin.eot?#iefix' ) format( 'embedded-opentype' ),
-		 url( '../media/fonts/ginger-thin.woff' ) format( 'woff' ),
-		 url( '../media/fonts/ginger-thin.ttf'  ) format( 'truetype' ),
-		 url( '../media/fonts/ginger-thin.svg#f37_ginger_thin' ) format( 'svg' );
+	src: url( '../demo/fonts/ginger-thin.eot' );
+	src: url( '../demo/fonts/ginger-thin.eot?#iefix' ) format( 'embedded-opentype' ),
+		 url( '../demo/fonts/ginger-thin.woff' ) format( 'woff' ),
+		 url( '../demo/fonts/ginger-thin.ttf'  ) format( 'truetype' ),
+		 url( '../demo/fonts/ginger-thin.svg#f37_ginger_thin' ) format( 'svg' );
 }
 
 
@@ -42,11 +42,11 @@
 	font-family: Ginger;
 	font-weight: normal;
 	font-style:  normal;
-	src: url( '../media/fonts/ginger-light.eot' );
-	src: url( '../media/fonts/ginger-light.eot?#iefix' ) format( 'embedded-opentype' ),
-		 url( '../media/fonts/ginger-light.woff' ) format( 'woff' ),
-		 url( '../media/fonts/ginger-light.ttf'  ) format( 'truetype' ),
-		 url( '../media/fonts/ginger-light.svg#f37_ginger_light' ) format( 'svg' );
+	src: url( '../demo/fonts/ginger-light.eot' );
+	src: url( '../demo/fonts/ginger-light.eot?#iefix' ) format( 'embedded-opentype' ),
+		 url( '../demo/fonts/ginger-light.woff' ) format( 'woff' ),
+		 url( '../demo/fonts/ginger-light.ttf'  ) format( 'truetype' ),
+		 url( '../demo/fonts/ginger-light.svg#f37_ginger_light' ) format( 'svg' );
 }
 
 
@@ -57,11 +57,11 @@
 	font-family: Ginger;
 	font-weight: bold;
 	font-style:  normal;
-	src: url( '../media/fonts/ginger-bold.eot' );
-	src: url( '../media/fonts/ginger-bold.eot?#iefix' ) format( 'embedded-opentype' ),
-		 url( '../media/fonts/ginger-bold.woff' ) format( 'woff' ),
-		 url( '../media/fonts/ginger-bold.ttf'  ) format( 'truetype' ),
-		 url( '../media/fonts/ginger-bold.svg#f37_ginger_bold' ) format( 'svg' );
+	src: url( '../demo/fonts/ginger-bold.eot' );
+	src: url( '../demo/fonts/ginger-bold.eot?#iefix' ) format( 'embedded-opentype' ),
+		 url( '../demo/fonts/ginger-bold.woff' ) format( 'woff' ),
+		 url( '../demo/fonts/ginger-bold.ttf'  ) format( 'truetype' ),
+		 url( '../demo/fonts/ginger-bold.svg#f37_ginger_bold' ) format( 'svg' );
 }
 
 
@@ -97,25 +97,20 @@ body {
 	font-family: Ginger, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	overflow: hidden;
 	text-align: center;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+}
+* {
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 a {
+	
 	color: #999;
 	text-decoration: none;
 }
 a:hover {
 
 	color: #FFF;
-}
-* {
-
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
 }
 h1 {
 	
@@ -128,83 +123,6 @@ h1 {
 	line-height: 4rem;
 	letter-spacing: -0.05rem;
 }
-.clear {
-
-	clear: both;
-}
-
-
-
-
-.button {
-
-	border-radius: 4rem;
-	width:  4rem;
-	height: 4rem;
-	background-size: 100% 100%;
-}
-.score-play-pause {
-
-	position: relative;
-	top: 4rem;
-	display: inline-block;
-	border-radius: 4rem;
-	width:  4rem;
-	height: 4rem;
-	background-image: url( ../media/buttons/play.svg );
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	cursor: pointer;
-	-webkit-animation: pulse 2s ease-in-out infinite;
-	-moz-animation:    pulse 2s ease-in-out infinite;
-	-o-animation:      pulse 2s ease-in-out infinite;
-	animation:         pulse 2s ease-in-out infinite;
-}
-@-webkit-keyframes pulse {
-
-	0%   { opacity: 1.0; }
-	50%  { opacity: 0.3; }
-	100% { opacity: 1.0; }
-}
-@-o-keyframes pulse {
-
-	0%   { opacity: 1.0; }
-	50%  { opacity: 0.3; }
-	100% { opacity: 1.0; }
-}
-@keyframes pulse {
-
-	0%   { opacity: 1.0; }
-	50%  { opacity: 0.3; }
-	100% { opacity: 1.0; }
-}
-.score-play-pause.is-playing {
-
-	background-image: url( ../media/buttons/pause.svg );
-	opacity: 0.5;
-	-webkit-animation: none;
-	-moz-animation:    none;
-	-o-animation:      none;
-	animation:         none;
-}
-.score-play-pause:hover {
-
-	background-image: url( ../media/buttons/play-hover.svg );
-	opacity: 1;
-	-webkit-animation: none;
-	-moz-animation:    none;
-	-o-animation:      none;
-	animation:         none;
-}
-.score-play-pause.is-playing:hover {
-
-	background-image: url( ../media/buttons/pause-hover.svg );
-}
-#play-pause-container .score-play-pause {
-
-	top:  0.8rem;
-	left: 0.8rem;
-}
 
 
 
@@ -214,11 +132,6 @@ h1 {
 	position: absolute;
 	top:   2rem;
 	right: 7rem;
-	background-image: url( ../media/buttons/fullscreen.svg );
-}
-#fullscreen-toggle:hover {
-
-	background-image: url( ../media/buttons/fullscreen-hover.svg );
 }
 #fullscreen-toggle-container {
 
@@ -227,7 +140,7 @@ h1 {
 :-webkit-full-screen {
 
     position: fixed;
-    top: 0;
+    top:      0;
     width:  100%;
     height: 100%;
     background: none;
@@ -244,39 +157,7 @@ footer {
 	width: 100%;
 	text-align: center;
 	font-size:   1.2rem;
-	line-height: 3rem;
-}
-.button {
-
-	position: relative;
-	display: inline-block;
-	width:  4rem;	
-	height: 4rem;
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	opacity: 0.2;
-	cursor: pointer;
-}
-.button:hover {
-
-	opacity: 1;
-}
-.button + .button {
-
-	margin-left: 0.2rem;
-}
-#github   { background-image: url( ../media/buttons/github.svg ); }
-#twitter  { background-image: url( ../media/buttons/twitter.svg ); }
-#facebook { background-image: url( ../media/buttons/facebook.svg ); }
-
-
-
-
-#cache {
-
-	width:  0;
-	height: 0;
-	overflow: hidden;
+	line-height: 3.0rem;
 }
 
 

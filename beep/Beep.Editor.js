@@ -1,174 +1,382 @@
-
 /*
 
-	This is just a rough first pass on an editor.
-	Two bits are still contained in the main Beep.js file:
-	
-	Beep.isEditing
-	Beep.eval()
 
-	Seems logical to move those into here in a future revision
-	and to also have this generate the DOM Elements required
-	so you won’t have to add anything to your own HTML.
+	Beep.editor
 
-	Soon, soon!
+
+
+
+	Requires 
+
+	  1  Beep
+
+	Sample program requires
+
+	  1  Beep
+	  2  Beep.Note
+	  3  Beep.Voice
+	  4  Beep.Trigger
+	  5  Beep.Instrument
+
 
 */
 
 
 
 
-//  Help our simple editor support TABs and so on.
-//  @@ This junk will get properly sorted in the near future,
-//  perhaps moving all editing-related bits into a separate module.
-//  You see I have to make it quick and messy and hacky first,
-//  then clean, clean, clean!
-//  @@ Test to see if we can reduce this code GREATLY by just inserting 
-//  a real TAB character?!?!? \t for the win!
-//  See also if( this === document.activeElement )...
-
-function setupEditor(){
+Beep.editor = {
 
 
-	//  Return the caret position of the Textarea.
-
-	HTMLTextAreaElement.prototype.getCaretPosition = function (){
-		
-		return this.selectionStart
-	}
+	domContainer: null,
+	domEditor: null,
 
 
-	//  Change the caret position of the Textarea.
+	toggle: function(){
+
+		if( Beep.isKeyboarding ){
+
+			Beep.editor.domContainer.classList.add( 'show' )
+			Beep.editor.domEditor.focus()
+			Beep.isKeyboarding = false
+		}
+		else {
+
+			Beep.editor.domContainer.classList.remove( 'show' )
+			Beep.isKeyboarding = true
+		}
+	},
+
+
+	saveSelection: function( containerEl ){
+
+		var
+		range,
+		preSelectionRange,
+		start = 0,
+		end   = 0
+
+		if( window.getSelection && document.createRange ){
+
+			if( window.getSelection().type !== 'None' ){
+			
+				range = window.getSelection().getRangeAt( 0 )
+				preSelectionRange = range.cloneRange()
+				preSelectionRange.selectNodeContents( containerEl )
+				preSelectionRange.setEnd( range.startContainer, range.startOffset )
+				start = preSelectionRange.toString().length
+				end   = start + range.toString().length
+			}
+		}
+		else {
+
+			range = document.selection.createRange()
+			preSelectionRange = document.body.createTextRange()
+			preSelectionRange.moveToElementText( containerEl )
+			preSelectionRange.setEndPoint( 'EndToStart', range )
+			start = preSelectionRange.text.length
+			end   = start + range.text.length
+		}
+		return { start: start, end: end }
+	},
 	
-	HTMLTextAreaElement.prototype.setCaretPosition = function( caretPosition ){
-	
-		this.selectionStart = caretPosition
-		this.selectionEnd   = caretPosition
-		this.focus()
-	}
+
+	restoreSelection: function( containerEl, savedSel ){
+
+		if( window.getSelection && document.createRange ){
+
+			var
+			charIndex  = 0, 
+			range      = document.createRange(),
+			nodeStack  = [ containerEl ],
+			node,
+			foundStart = false, 
+			stop       = false,
+			nextCharIndex,
+			i,
+			sel
+
+			range.setStart( containerEl, 0 )
+			range.collapse( true )
+			nodeStack = [ containerEl ]
+			while( !stop && ( node = nodeStack.pop() )){
+				
+				if( node.nodeType === 3 ){
+					
+					var nextCharIndex = charIndex + node.length
+
+					if( !foundStart && savedSel.start >= charIndex && savedSel.start <= nextCharIndex ){
+						
+						range.setStart( node, savedSel.start - charIndex )
+						foundStart = true
+					}
+					if( foundStart && savedSel.end >= charIndex && savedSel.end <= nextCharIndex ){
+						
+						range.setEnd( node, savedSel.end - charIndex )
+						stop = true
+					}
+					charIndex = nextCharIndex
+				} 
+				else {
+					
+					i = node.childNodes.length
+					while( i -- ){
+						
+						nodeStack.push( node.childNodes[ i ])
+					}
+				}
+			}
+			sel = window.getSelection()
+			sel.removeAllRanges()
+			sel.addRange( range )
+		}
+		else {
+
+			var textRange = document.body.createTextRange()
+	 
+			textRange.moveToElementText( containerEl )
+			textRange.collapse( true )
+			textRange.moveEnd( 'character', savedSel.end )
+			textRange.moveStart( 'character', savedSel.start )
+			textRange.select()
+		}
+	},
 
 
-	//  If the Textarea has selection then return true.
+	colorize: function(){
 
-	HTMLTextAreaElement.prototype.hasSelection = function(){
-		
-		return !( this.selectionStart === this.selectionEnd )
-	}
-
-
-	//  Return the selection text.
-
-	HTMLTextAreaElement.prototype.getSelectedText = function(){
-		
-		return this.value.substring( this.selectionStart, this.selectionEnd )
-	}
-
-
-	//  Change the selection area of the Textarea.
-
-	HTMLTextAreaElement.prototype.setSelection = function( start, end ){
-		
-		this.selectionStart = start
-		this.selectionEnd   = end
-		this.focus()
-	}
-
-
-	//  Here’s our routine for tab support!
-	//  We’ll pass this to some Event Listeners below...
-
-	function tabSupport( event ){
-		
 		var 
-		tab = '    ',
-		newCaretPosition
+		el   = Beep.editor.domContainer.querySelector( '#eval-status' ),
+		code = Beep.editor.domEditor.textContent,
+		selection = Beep.editor.saveSelection( Beep.editor.domEditor )
 		
-		if( event.keyCode === 9 ){//  Tab.
-			
-			newCaretPosition = this.getCaretPosition() + tab.length
-			this.value = 
-				this.value.substring( 0, this.getCaretPosition() ) +
-				tab +
-				this.value.substring( this.getCaretPosition(), this.value.length )
-			this.setCaretPosition( newCaretPosition )
-			event.preventDefault()
-		}
-		else if( event.keyCode === 8 ){//  Backspace.
-			
-			if( this.value.substring( this.getCaretPosition() - tab.length, this.getCaretPosition()) === tab ){//  Backspacing over a tab.
 
-				newCaretPosition = this.getCaretPosition() - tab.length + 1
-				this.value = 
-					this.value.substring( 0, this.getCaretPosition() - 3 ) +
-					this.value.substring( this.getCaretPosition(), this.value.length )
-				this.setCaretPosition( newCaretPosition )
-			}
-		}
-		else if( event.keyCode === 37 ){//  Left arrow.
-			
-			if( this.value.substring( this.getCaretPosition() - tab.length, this.getCaretPosition()) === tab ){//  Arrow over a tab.
-				
-				newCaretPosition = this.getCaretPosition() - tab.length + 1
-				this.setCaretPosition( newCaretPosition )
-			}    
-		}
-		else if( event.keyCode === 39 ){//  Right arrow.
+		//  First, update our eval-able status.
 
-			if( this.value.substring( this.getCaretPosition() + tab.length, this.getCaretPosition()) === tab ){//  Arrow over a tab.
-				
-				newCaretPosition = this.getCaretPosition() + tab.length - 1
-				this.setCaretPosition( newCaretPosition )
-			}
-		} 
-	}
+		el.classList.remove( 'good' )
+		el.classList.remove( 'bad' )
+		el.classList.add( 'ugly' )
 
+		
+		//  Next, dim the code comments.
 
-	//  Find all Textareas in this document
-	//  and add our tabSupport routine to them.
+		code = code.replace( /(?:\/\*(?:[\s\S]*?)\*\/)|(?:([\s;])+\/\/(?:.*)$)/gm, function( match, p1, offset, string ){
 
-	Array.prototype.slice.call( document.getElementsByTagName( 'textarea' )).forEach( function( textarea ){
-
-		textarea.addEventListener( 'keydown', tabSupport )
-		textarea.addEventListener( 'input', function(){
-
-			var el = document.getElementById( 'eval-status' )
-			
-			el.classList.remove( 'good' )
-			el.classList.remove( 'bad' )
-			el.classList.add( 'ugly' )
+			return '<span class="beep-commented">'+ match +'</span>'
 		})
-	})
+		Beep.editor.domEditor.innerHTML = code
+		Beep.editor.restoreSelection( Beep.editor.domEditor, selection )
+	},
+
+
+	//  My sincere apologies to Doug Crockford.
+
+	eval: function(){
+
+		var 
+		code = ';'+ this.domEditor.textContent,
+		el = document.getElementById( 'eval-status' )
+
+		try {
+
+			eval( code )
+			el.classList.remove( 'bad' )
+			el.classList.remove( 'ugly' )
+			el.classList.add( 'good' )
+		}
+		catch( e ){
+
+			console.log( 'OMFG', e )
+			el.classList.remove( 'good' )
+			el.classList.remove( 'ugly' )
+			el.classList.add( 'bad' )
+		}
+	},
+
+
+	setup: function( program ){
+
+		var 
+		that = this,
+		fullscreen = document.getElementById( 'fullscreen-container' ),
+		el
+
+
+		//  Create and attach the editor DOM bits.
+
+		this.domContainer = document.createElement( 'div' )
+		this.domContainer.setAttribute( 'id', 'editor-container' )
+		this.domContainer.innerHTML = Beep.parseMultilineString( function(){/*
+					
+			<div id="editor-menu">
+				<div>
+					Beep.editor
+					<img class="beep-button" id="editor-eval"  src="beep/Beep.editor.svg#editor-eval">
+					<img class="beep-button" id="editor-close" src="beep/Beep.editor.svg#editor-close">
+				</div>
+			</div>
+			<div><div id="eval-status"></div></div>
+			<div>
+				<div id="editor-content"><div id="editor" spellcheck="false" contenteditable="true"></div></div>
+			</div>
+		
+		*/})
+		if( fullscreen ) fullscreen.appendChild( this.domContainer )
+		else document.body.appendChild( this.domContainer )
+
+
+		//  Create and attach the button to open the editor.
+
+		el = document.createElement( 'img' )
+		el.classList.add( 'beep-button' )
+		el.setAttribute( 'id', 'editor-open' )
+		el.setAttribute( 'src', 'beep/Beep.editor.svg#editor-open' )
+		if( fullscreen ) fullscreen.appendChild( el )
+		else document.body.appendChild( el )
+
+
+		//  When a user hits the Tab key the browser is going to try to 
+		//  change what input field is in focus -- that’s the standard and
+		//  expected behavior. Except when you’re coding something. 
+		//  Then that standard behavior becomes infuriating. Let’s kill it.
+
+		this.domEditor = this.domContainer.querySelector( '#editor' )	
+		this.domEditor.addEventListener( 'keydown', function( event ){
+
+			var
+			selection,
+			program
+
+			if( event.keyCode === 9 ){
+			
+				selection = Beep.editor.saveSelection( this )				
+				this.innerHTML = 
+					this.textContent.substring( 0, selection.start ) +
+					'\t' +
+					this.textContent.substring( selection.end, this.textContent.length )
+				Beep.editor.restoreSelection( this, { start: selection.start + 1, end: selection.start + 1 })
+				Beep.editor.colorize()
+				event.preventDefault()
+				event.stopPropagation()
+			}
+			else if( event.keyCode === 13 ){
+
+				selection = Beep.editor.saveSelection( this )
+				program = this.textContent.substring( 0, selection.start )
+				if( selection.end === this.textContent.length ) program += '\n\n'
+				else program += '\n' + this.textContent.substring( selection.end, this.textContent.length )
+				this.innerHTML = program
+				Beep.editor.restoreSelection( this, { start: selection.start + 1, end: selection.start + 1 })
+				Beep.editor.colorize()
+				event.preventDefault()
+				event.stopPropagation()
+			}
+		})
+		this.domEditor.addEventListener( 'input', Beep.editor.colorize )
+
+
+		//  Editor open button.
+
+		el = document.getElementById( 'editor-open' )
+		el.addEventListener( 'mouseenter', function(){
+
+			this.setAttribute( 'src', 'beep/Beep.editor.svg#editor-open-hover' )
+		})
+		el.addEventListener( 'mouseleave', function(){
+
+			this.setAttribute( 'src', 'beep/Beep.editor.svg#editor-open' )
+		})
+		el.addEventListener( 'click', Beep.editor.toggle )
+		
+
+		//  Editor close button.
+
+		el = document.getElementById( 'editor-close' )
+		el.addEventListener( 'mouseenter', function(){
+
+			this.setAttribute( 'src', 'beep/Beep.editor.svg#editor-close-hover' )
+		})
+		el.addEventListener( 'mouseleave', function(){
+
+			this.setAttribute( 'src', 'beep/Beep.editor.svg#editor-close' )
+		})
+		el.addEventListener( 'click', Beep.editor.toggle )
+
+
+		//  Editor eval button.
+
+		el = document.getElementById( 'editor-eval' )
+		el.addEventListener( 'mouseenter', function(){
+
+			this.setAttribute( 'src', 'beep/Beep.editor.svg#editor-eval-hover' )
+		})
+		el.addEventListener( 'mouseleave', function(){
+
+			this.setAttribute( 'src', 'beep/Beep.editor.svg#editor-eval' )
+		})
+		el.addEventListener( 'click', function(){
+
+			Beep.reset()
+			Beep.editor.eval()
+		})
+
+
+		//  If a program was passed as an argument then 
+		//  load it into the editor
+		//  otherwise load up a default program.
+
+		if( typeof program !== 'string' ){
+
+			program = Beep.parseMultilineString( function(){
+
+
+/*window.synth = new Beep.Instrument()
+/+
+.applyVoices( function(){
+
+	this.voices.push( 
+
+		new Beep.Voice( this.note, this.audioContext )
+		.setOscillatorType( 'sine' )
+		.setGainHigh( 0.50 ),
+
+		new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
+		.setOscillatorType( 'triangle' )
+		.setGainHigh( 0.20 ),
+
+		new Beep.Voice( this.note.hertz * 4, this.audioContext )
+		.setOscillatorType( 'sawtooth' )
+		.setGainHigh( 0.01 ),
+
+		new Beep.Voice( this.note.hertz / 2, this.audioContext )
+		.setOscillatorType( 'square' )
+		.setGainHigh( 0.01 )
+	)
+})
+.addStyleClass( 'rainbow' )
+.scorePlay()
++/*/
+
+			})
+		}
+		this.domEditor.innerHTML = program
+		this.colorize()
+
+
+		//  Now that we have a program loaded into the editor
+		//  we should evaluate it, eh? 
+
+		this.eval()
+	}
 }
 
 
 
 
-document.addEventListener( 'DOMContentLoaded', function(){
+Beep.setupTasks.push( Beep.editor.setup.bind( Beep.editor ))
 
 
-	//  A very simple editor for warm and fuzzy Beep-ness.
 
-	setupEditor()
-	function editorToggle(){
 
-		var el = document.getElementById( 'editor-container' )
-
-		if( Beep.isEditing ){
-
-			el.classList.remove( 'show' )
-			Beep.isEditing = false
-		}
-		else {
-
-			el.classList.add( 'show' )
-			//el.getElementById( 'editor' ).focus()
-			Beep.isEditing = true
-		}
-	}
-	document.getElementById( 'editor-open' ).addEventListener( 'click', editorToggle )
-	document.getElementById( 'editor-close' ).addEventListener( 'click', editorToggle )
-	document.getElementById( 'editor-apply' ).addEventListener( 'click', Beep.reset.bind( Beep ))
-})
 
 
 

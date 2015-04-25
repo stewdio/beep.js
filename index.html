@@ -10,105 +10,69 @@
 
 	-->
 	<head>
-		<title>beep.js</title>
-		
+		<title>Beep.js</title>
 		<meta charset="utf-8">
-		<meta name="viewport"    content="width=600">
-		<meta name="description" content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
-		<meta name="keywords"    content="Beep Beep.js Beep-js BeepJS Browser Synthesizer synth music audio tone generation HTML5 WebAudio WebAudioAPI JS JavaScript Stewdio Stewart Smith">
-		<meta name="copyright"   content="Stewart Smith 2015">
+		<meta name="viewport"             content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+		<meta name="description"          content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
+		<meta name="keywords"             content="Beep Beep.js Beep-js BeepJS Browser Synthesizer synth music audio tone generation HTML5 WebAudio WebAudioAPI JS JavaScript Stewdio Stewart Smith">
+		<meta name="copyright"            content="Stewart Smith 2015">
+		<meta name="twitter:card"         content="summary">
+		<meta name="twitter:site"         content="@stewd_io">
+		<meta name="twitter:title"        content="Beep.js">		
+		<meta name="twitter:description"  content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
+		<meta name="twitter:creator"      content="Stewart Smith">		
+		<meta name="twitter:image"        content="http://beepjs.com/demo/beep-js.png">
+		<meta name="twitter:url"          content="http://beepjs.com">
+		<meta property="og:type"          content="website">
+		<meta property="og:title"         content="Beep.js">
+		<meta property="og:description"   content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
+		<meta property="og:url"           content="http://beepjs.com">
+		<meta property="og:image"         content="http://beepjs.com/demo/beep-js.png">				
+		<link rel="canonical"             href="http://beepjs.com/">
+		<link rel="icon" type="image/png" href="demo/favicons/favicon-064.png">
+		<link rel="apple-touch-icon"      href="demo/favicons/favicon-144.png">
 
-		<meta name="twitter:card"        content="summary">
-		<meta name="twitter:site"        content="@stewd_io">
-		<meta name="twitter:title"       content="Beep.js">		
-		<meta name="twitter:description" content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
-		<meta name="twitter:creator"     content="Stewart Smith">		
-		<meta name="twitter:image"       content="http://beepjs.com/media/beep-poster.png">
-		<meta name="twitter:url"         content="http://beepjs.com">
 
-		<meta property="og:type"        content="website">
-		<meta property="og:title"       content="Beep.js">
-		<meta property="og:description" content="Beep is a JavaScript toolkit for building browser-based synthesizers.">
-		<meta property="og:url"         content="http://beepjs.com">
-		<meta property="og:image"       content="http://beepjs.com/media/beep-poster.png">
-				
-		<link rel="canonical" href="http://beepjs.com/">
-		<link rel="icon" type="image/png" href="media/favicon-064.png">
-		<link rel="apple-touch-icon" href="media/favicon-144.png">
 
+
+
+
+		<!--  Beep components  -->
+
+		<link rel="stylesheet" type="text/css" href="beep/Beep.css">
 		<link rel="stylesheet" type="text/css" href="beep/Beep.Trigger.css">
-		<link rel="stylesheet" type="text/css" href="beep/Beep.Instrument.css">		
-		<link rel="stylesheet" type="text/css" href="beep/Beep.Editor.css">
-		<link rel="stylesheet" type="text/css" href="demo/demo.css">
+		<link rel="stylesheet" type="text/css" href="beep/Beep.Instrument.css">
+		<link rel="stylesheet" type="text/css" href="beep/Beep.editor.css">
 		
 		<script charset="utf-8" src="beep/Beep.js"></script>
 		<script charset="utf-8" src="beep/Beep.Note.js"></script>
-		<script charset="utf-8" src="beep/Beep.Voice.js"></script>
-		<script charset="utf-8" src="beep/Beep.Trigger.js"></script>
+		<script charset="utf-8" src="beep/Beep.Voice.js"></script>		
+		<script charset="utf-8" src="beep/Beep.Trigger.js"></script>		
 		<script charset="utf-8" src="beep/Beep.Instrument.js"></script>
-		<script charset="utf-8" src="beep/Beep.Editor.js"></script>
-		<script charset="utf-8" src="demo/analytics.js"></script>
+		<script charset="utf-8" src="beep/Beep.editor.js"></script>
+		
+
+
+
+
+
+		<link rel="stylesheet" type="text/css" href="demo/demo.css">
 		<script charset="utf-8" src="demo/demo.js"></script>
+		<script charset="utf-8" src="demo/analytics.js"></script>
 	</head>
-	<body>		
+	<body>
 		<div id="fullscreen-container">
 			<h1>beep<span id="play-pause-container"></span></h1>
 			<div id="beep"></div>
-			<div class="button" id="editor-open"></div>
-			<div class="button" id="fullscreen-toggle"></div>
-			<div id="editor-container">
-				<div id="editor-menu">
-					<div>
-						beep.js editor
-						<div class="button" id="editor-apply"></div>
-						<div class="button" id="editor-close"></div>
-					</div>
-				</div>
-				<div>
-					<div id="editor-content"><textarea id="editor" spellcheck="false">window.synth = new Beep.Instrument()
-/*
-.applyVoices( function(){
-
-	this.voices.push( 
-
-		new Beep.Voice( this.note, this.audioContext )
-		.setOscillatorType( 'sine' )
-		.setGainHigh( 0.50 ),
-
-		new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
-		.setOscillatorType( 'triangle' )
-		.setGainHigh( 0.20 ),
-
-		new Beep.Voice( this.note.hertz * 4, this.audioContext )
-		.setOscillatorType( 'sawtooth' )
-		.setGainHigh( 0.01 ),
-
-		new Beep.Voice( this.note.hertz / 2, this.audioContext )
-		.setOscillatorType( 'square' )
-		.setGainHigh( 0.01 )
-	)
-})
-.addStyleClass( 'rainbow' )
-.scorePlay()
-*/</textarea></div>
-				</div>
-				<div><div id="eval-status"></div></div>
-			</div>
+			<img class="beep-button" id="fullscreen-toggle" src="demo/demo.svg#fullscreen">
 		</div>
 		<footer>
-			<div class="button" id="github"></div>
-			<div class="button" id="twitter"></div>
-			<div class="button" id="facebook"></div>
+			<img class="beep-button" id="github"   src="demo/demo.svg#github">
+			<img class="beep-button" id="twitter"  src="demo/demo.svg#twitter">
+			<img class="beep-button" id="facebook" src="demo/demo.svg#facebook">
 			<br>
-			Build your own? <a target="_blank" href="https://github.com/stewdio/beep.js" title="Beep.js on GitHub">Get the code</a>.
-		</footer>
-		<div id="cache">
-			<img src="media/buttons/apply-hover.svg">
-			<img src="media/buttons/editor-close-hover.svg">
-			<img src="media/buttons/play-hover.svg">
-			<img src="media/buttons/pause.svg">
-			<img src="media/buttons/pause-hover.svg">
-			<img src="media/buttons/fullscreen-hover.svg">
-		</div>	
+			Build your own? 
+			<a target="_blank" href="https://github.com/stewdio/beep.js" title="Beep.js on GitHub">Get the code</a>.
+		</footer>	
 	</body>
 </html>

@@ -1,53 +1,25 @@
 /*
 
 
-	NOTES
-
-	Not sounds or oscillators, but mathematical models
-	resolving to frequencies in Hertz. Here are some examples:
-
-	new Note( '3eb' )
-	new Note.EDO12( '3eb' )
-	
-	//  {
-	//		A: 440,
-	//		hertz: 155.5634918610404,
-	//		letter: "E",
-	//		letterIndex: 4,
-	//		modifier: "♭",
-	//		name: "E♭",
-	//		nameIndex: 7,
-	//		octaveIndex: 3,
-	//		pianoKeyIndex: 31,
-	//		tuning: "EDO12"
-	//	}
+	Beep.Note
 
 
-	new Note.JustIntonation( 'C#3', 'C#2' )
 
-	//	{
-	//		A: 440,
-	//		hertz: 34.64782887210901,
-	//		key: Note.EDO12 {
-	//			A: 440,
-	//			hertz: 138.59131548843604,
-	//			letter: "C",
-	//			letterIndex: 2,
-	//			modifier: "♯",
-	//			name: "C♯",
-	//			nameIndex: 5,
-	//			octaveIndex: 3,
-	//			pianoKeyIndex: 29,
-	//			tuning: "EDO12"
-	//		},
-	//		letter: "C",
-	//		letterIndex: 2,
-	//		modifier: "♯",
-	//		name: "C♯",
-	//		nameIndex: 5,
-	//		octaveIndex: 2pianoKeyIndex: 17,
-	//		tuning: "EDO12"
-	//	}
+
+	Requires 
+
+	  1  Beep
+
+	Description
+
+	  Not sounds or oscillators, but mathematical models
+	  resolving to frequencies in Hertz.
+
+	Example uses
+
+	  note = new Beep.Note( '3eb' )
+	  note = new Beep.Note.EDO12( '3eb' )
+	  note = new Beep.Note.JustIntonation( 'C#3', 'C#2' )
 
 
 */

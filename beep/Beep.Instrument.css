@@ -15,3 +15,64 @@
 
 
 
+
+.score-play-pause {
+
+	position: relative;
+	top: 4rem;
+	display: inline-block;
+	border-radius: 4rem;
+	width:  4rem;
+	height: 4rem;
+	cursor: pointer;
+	-webkit-animation: pulse 2s ease-in-out infinite;
+	-moz-animation:    pulse 2s ease-in-out infinite;
+	-o-animation:      pulse 2s ease-in-out infinite;
+	animation:         pulse 2s ease-in-out infinite;
+}
+@-webkit-keyframes pulse {
+
+	0%   { opacity: 1.0; }
+	50%  { opacity: 0.3; }
+	100% { opacity: 1.0; }
+}
+@-o-keyframes pulse {
+
+	0%   { opacity: 1.0; }
+	50%  { opacity: 0.3; }
+	100% { opacity: 1.0; }
+}
+@keyframes pulse {
+
+	0%   { opacity: 1.0; }
+	50%  { opacity: 0.3; }
+	100% { opacity: 1.0; }
+}
+.score-play-pause.is-playing {
+
+	opacity: 0.5;
+	-webkit-animation: none;
+	-moz-animation:    none;
+	-o-animation:      none;
+	animation:         none;
+}
+.score-play-pause:hover {
+
+	opacity: 1;
+	-webkit-animation: none;
+	-moz-animation:    none;
+	-o-animation:      none;
+	animation:         none;
+}
+#play-pause-container .score-play-pause {
+
+	top:  0.8rem;
+	left: 0.8rem;
+}
+
+
+
+
+
+
+

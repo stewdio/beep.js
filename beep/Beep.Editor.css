@@ -9,11 +9,6 @@
 	position: absolute;
 	top:   2rem;
 	right: 2rem;
-	background-image: url( ../media/buttons/editor-open.svg );
-}
-#editor-open:hover {
-
-	background-image: url( ../media/buttons/editor-open-hover.svg );
 }
 
 
@@ -24,8 +19,8 @@
 	position: absolute;
 	z-index: 30;
 	top:   0;
-	/*right:  -60vw;*/
-	width:   50vw;
+/*	right:  -90vw;*/
+	width:   80vw;
 	height: 100vh;
 	box-shadow: 0 0 1rem rgba( 0, 0, 0, 0.3 );
 	text-align: left;
@@ -70,7 +65,7 @@
 	width: 100%;
 	height: 8rem;
 	padding: 1rem 0 0 2rem;
-	font-size:   1.5rem;
+	font-size:   2.0rem;
 	line-height: 6.0rem;
 	text-align: left;
 	font-family: "Cousine", "Courier New" "Courier", monospace;
@@ -81,22 +76,12 @@
 	position: absolute;
 	top:   2rem;
 	right: 2rem;
-	background-image: url( ../media/buttons/editor-close.svg );
 }
-#editor-close:hover {
-
-	background-image: url( ../media/buttons/editor-close-hover.svg );
-}
-#editor-apply {
+#editor-eval {
 
 	position: absolute;
 	top:   2rem;
 	right: 7rem;
-	background-image: url( ../media/buttons/apply.svg );
-}
-#editor-apply:hover {
-
-	background-image: url( ../media/buttons/apply-hover.svg );
 }
 
 
@@ -106,30 +91,15 @@
 
 	margin: 0;
 	padding: 0;
-	height: 100%;
 }
 #editor {
 
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	position: absolute;
 	margin: 0;
 	width:  100%;
 	height: 100%;
-
-	/*  
-
-		This was driving me absolutely insane:
-		The Textarea was set at 100% width and height, etc. but still left
-		a small gap at the bottom as if I’d set a bottom margin.
-		These next 5 lines below solved it.
-
-	*/
-	position: absolute;
-	top:    0;
-	bottom: 0;
-	left:   0;
-	right:  0;
-
 	outline: none;
 	border:  none;
 	border-radius: 0;
@@ -137,20 +107,22 @@
 	padding: 2rem;
 	color: #222;
 	font-family: Cousine, "Courier New" Courier, monospace;
-	font-size:   1.0vw;
-	line-height: 1.2vw;
+	font-size:   1.6vw;
+	line-height: 2.0vw;
 	-moz-tab-size: 4;
 	tab-size: 4;
 	white-space: pre;
 	overflow: auto;
-	resize: none;
 	overflow: auto;
 }
 #editor:focus {
 
 	background-color: #FFF;
 }
+#editor .beep-commented {
 
+	color: #999;
+}
 
 
 

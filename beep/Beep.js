@@ -1,10 +1,24 @@
+/*
+
+
+	Beep
+
+
+
+
+	Description
+
+	  A JavaScript toolkit for building browser-based synthesizers.
+
+
+*/
 
 
 
 
 var Beep = {
 
-	VERSION: 4,
+	VERSION: 5,
 
 
 	//  Chrome, Opera, and Firefox already provide AudioContext()
@@ -16,7 +30,7 @@ var Beep = {
 
 	//  We’ll keep track of Voices, Triggers, and Instruments
 	// (but not Notes because we just throw those away left and right)
-	//  so we can access and/or destroy them later even if unnamed.
+	//  so we can access and/or teardown them later even if unnamed.
 
 	voices:      [],
 	triggers:    [],
@@ -34,60 +48,55 @@ var Beep = {
 	//  @@ Will come back and rename this / improve its functionality 
 	//  so that any focus on a text area stops Triggers from firing!
 
-	isEditing: false,
+	isKeyboarding: true,
 
 
-	//  Destroy everything. EVERYTHING. DO IT. DO IT NOW.
+	//  When the system’s ready (ie. DOM content loaded, etc.)
+	//  we may need to perform some setup tasks.
 
-	destroy: function(){
+	setupTasks: [
 
-		while( this.instruments.length ){
+		function(){
 
-			this.instruments.pop().destroy()
+			if( Beep.audioContext === undefined ) Beep.audioContext = new Beep.AudioContext()
+		},
+		function(){
+
+			if( Beep.domContainer === null ) Beep.domContainer = document.getElementById( 'beep' )
 		}
-		while( this.triggers.length ){
-
-			this.triggers.pop().destroy()
-		}
-		while( this.voices.length ){
-
-			this.voices.pop().destroy()
-		}
-	},
-
-
-	//  Create a new Instrument from the code
-	//  currently in the code editor.
-
-	eval: function(){
-
-		var 
-		code = ';'+ document.getElementById( 'editor' ).value,
-		el = document.getElementById( 'eval-status' )
-
-		try {
-
-			eval( code )
-			el.classList.remove( 'bad' )
-			el.classList.remove( 'ugly' )
-			el.classList.add( 'good' )
-		}
-		catch( e ){
-
-			console.log( 'OMFG', e )
-			el.classList.remove( 'good' )
-			el.classList.remove( 'ugly' )
-			el.classList.add( 'bad' )
-		}
-	},
+	],
 
 
 	//  Right now just runs Beep.eval() but in the near future
 	//  we might have some more tricks up our sleeve...
 
-	boot: function(){
+	setup: function(){
 
-		this.eval()
+		var task
+
+		while( task = this.setupTasks.shift() ){
+
+			if( typeof task === 'function' ) task()
+		}
+	},
+
+
+	//  Teardown everything. EVERYTHING. DO IT. DO IT NOW.
+
+	teardown: function(){
+
+		while( this.instruments.length ){
+
+			this.instruments.pop().teardown()
+		}
+		while( this.triggers.length ){
+
+			this.triggers.pop().teardown()
+		}
+		while( this.voices.length ){
+
+			this.voices.pop().teardown()
+		}
 	},
 
 
@@ -96,19 +105,31 @@ var Beep = {
 
 	reset: function(){
 
-		this.destroy()
-		this.boot()
+		this.teardown()
+		this.setup()
+	},
+
+
+	//  JavaScript does not natively support multiline String literals.
+	//  Sure, you can construct a string and include a “\n” or “\r” and
+	//  ok, I admit you can do the “\” + actual line return trick in some cases
+	//  but the most reliable (and forget Internet Explorer) way is to create
+	//  a function which includes multiline *comments* (OMFG!), 
+	//  then parse the Function literal itself as a String!
+
+	parseMultilineString: function( f ){
+
+		f = f.toString()
+		
+		var 
+		begin = f.indexOf( '/*' ) + 2,
+		end   = f.indexOf( '*/', begin )
+					
+		return f.substring( begin, end ).replace( /\/\+/g, '/*' ).replace( /\+\//g, '*/' )
 	}
 }
 
 
-//  We might as well create an instance of AudioContext
-//  that we can re-use over and over if necessary.
-//  Why? Because the number of AudioContext instance is
-//  limited by hardware. For example, my personal laptop
-//  can only handle 6 of them at once!
-
-Beep.audioContext = new Beep.AudioContext()
 
 
 //  Once our DOM Content is ready for action
@@ -116,8 +137,7 @@ Beep.audioContext = new Beep.AudioContext()
 
 document.addEventListener( 'DOMContentLoaded', function(){
 
-	Beep.domContainer = document.getElementById( 'beep' )
-	Beep.boot()
+	Beep.setup()
 })
 
 

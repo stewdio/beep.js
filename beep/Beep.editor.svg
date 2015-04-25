@@ -1,0 +1,54 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px" y="0px" width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+	<defs>
+		<style>
+			rect, line { shape-rendering: crispEdges; }
+			svg .button { display: none; }
+			svg .button:target { display: inline; }
+		</style>
+	</defs>
+	<g class="button" id="editor-open">
+		<circle fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+		<g>
+			<path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="18" stroke-miterlimit="2" d="M316.62,456.76
+				c-32.76,0-51.12-18.72-51.12-51.479v-64.44c0-20.16-18-32.04-37.08-33.84v-16.92c19.08-2.16,37.08-13.32,37.08-33.48v-64.44
+				c0-32.76,18.36-51.48,51.12-51.48h9.36v15.12h-9.36c-24.84,0-34.56,12.24-34.56,36.36v64.44c0,20.521-14.76,36.72-33.84,41.76
+				c19.08,5.04,33.84,21.961,33.84,42.48v64.44c0,24.12,9.72,36.359,34.56,36.359h9.36v15.12H316.62z"/>
+		</g>
+	</g>
+	<g class="button" id="editor-open-hover">
+		<path display="inline" fill="#FFFFFF" d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270
+			S449.117,30,300,30z M329.98,159.8h-13.36c-21.706,0-30.56,9.375-30.56,32.36v64.44c0,17.953-10.341,33.713-26.602,41.797
+			c16.071,8.218,26.602,24.46,26.602,42.443v64.44c0,22.984,8.854,32.359,30.56,32.359h13.36v23.12h-13.36
+			c-35.03,0-55.12-20.222-55.12-55.479v-64.44c0-12.86-10.469-27.689-33.456-29.857l-3.625-0.342v-24.133l3.55-0.402
+			c15.468-1.751,33.53-10.529,33.53-29.506v-64.44c0-35.258,20.09-55.48,55.12-55.48h13.36V159.8z"/>
+		<circle display="inline" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+	<g class="button" id="editor-close">
+		<circle display="inline" fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+		<g display="inline">
+			<path stroke="#000000" stroke-width="18" stroke-miterlimit="2" d="M283.38,140.68c32.76,0,51.12,18.72,51.12,51.479v64.44
+				c0,20.16,18,32.04,37.08,33.84v16.92c-19.08,2.16-37.08,13.32-37.08,33.48v64.439c0,32.761-18.36,51.48-51.12,51.48h-9.36v-15.12
+				h9.36c24.84,0,34.56-12.24,34.56-36.36V340.84c0-20.521,14.76-36.72,33.84-41.76c-19.08-5.04-33.84-21.961-33.84-42.48v-64.44
+				c0-24.12-9.72-36.359-34.56-36.359h-9.36v-15.12H283.38z"/>
+		</g>
+	</g>
+	<g class="button" id="editor-close-hover">
+		<path d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270S449.117,30,300,30z M380.58,315.397
+			l-7.987,0.904c-13.421,1.52-29.093,8.858-29.093,24.538v64.439c0,37.871-22.475,60.48-60.12,60.48h-18.36v-33.12h18.36
+			c18.871,0,25.56-7.16,25.56-27.36V340.84c0-17.013,8.34-32.233,21.969-41.864c-13.503-9.828-21.969-25.395-21.969-42.376v-64.44
+			c0-20.2-6.688-27.359-25.56-27.359h-18.36v-33.12h18.36c37.646,0,60.12,22.609,60.12,60.479v64.44
+			c0,11.026,8.944,22.995,28.926,24.879l8.154,0.77V315.397z"/>
+		<circle fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+	<g class="button" id="editor-eval">
+		<circle fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+		<polyline fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="380,200 380,330 200,330"/>
+		<polyline fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" points="263.64,393.64 200,330 263.64,266.36"/>
+	</g>
+	<g class="button" id="editor-eval-hover">
+		<path display="inline" d="M300,30C150.883,30,30,150.883,30,300s120.883,270,270,270s270-120.883,270-270S449.117,30,300,30z
+			 M395,345H236.213l38.033,38.033l-21.213,21.213L178.787,330l74.247-74.246l21.213,21.213L236.213,315H365V200h30V345z"/>
+		<circle display="inline" fill="none" stroke="#000000" stroke-width="30" stroke-miterlimit="10" cx="300" cy="300" r="270"/>
+	</g>
+</svg>

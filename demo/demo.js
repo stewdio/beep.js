@@ -37,7 +37,18 @@ document.addEventListener( 'DOMContentLoaded', function(){
 			else if( el.webkitRequestFullscreen ) el.webkitRequestFullscreen()
 		}
 	}
-	if( fullscreenEnabled ) fullscreenToggleButton.addEventListener( 'click', fullscreenToggle )
+	if( fullscreenEnabled ){
+
+		fullscreenToggleButton.addEventListener( 'click', fullscreenToggle )
+		fullscreenToggleButton.addEventListener( 'mouseenter', function(){
+
+			this.setAttribute( 'src', 'demo/demo.svg#fullscreen-hover' )
+		})
+		fullscreenToggleButton.addEventListener( 'mouseleave', function(){
+
+			this.setAttribute( 'src', 'demo/demo.svg#fullscreen' )
+		})
+	}
 	else fullscreenToggleButton.style.display = 'none' 
 
 

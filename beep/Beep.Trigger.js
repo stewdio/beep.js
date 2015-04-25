@@ -1,9 +1,24 @@
 /*
 
 
-	TRIGGERS
+	Beep.Trigger
 
-	Instantly add interfaces to your Voices with mouse and keyboard events. 
+
+
+
+	Requires 
+
+	  1  Beep
+	  2  Beep.Note
+	  3  Beep.Voice
+
+	Description
+
+	  Instantly add interfaces to your Voices with mouse and keyboard events. 
+
+	Example uses
+
+	  trigger = new Beep.Trigger()
 
 
 */
@@ -133,7 +148,7 @@ Beep.Trigger = function(){
 
 
 	//  Push a reference of this instance into BEEP’s library
-	//  so we can access and/or destroy it later.
+	//  so we can access and/or teardown it later.
 
 	Beep.triggers.push( this )
 }
@@ -196,7 +211,7 @@ Beep.Trigger.prototype.addTriggerChar = function( trigger ){
 
 			var keyCode = event.which || event.keyCode
 
-			if( Beep.isEditing === false && keyCode === triggerCharCode && !event.metaKey && !event.ctrlKey ) that.engage( 'keydown-'+ triggerCharCode )
+			if( Beep.isKeyboarding && keyCode === triggerCharCode && !event.metaKey && !event.ctrlKey ) that.engage( 'keydown-'+ triggerCharCode )
 		}
 	)
 	this.addEventListener(
@@ -250,13 +265,13 @@ Beep.Trigger.prototype.createVoices = function(){
 
 //  All-stop. Kill all the voices (in your head).
 
-Beep.Trigger.prototype.destroyVoices = function(){
+Beep.Trigger.prototype.teardownVoices = function(){
 
 	var i = this.voices.length
 
 	while( i -- ){
 
-		if( this.voices[ i ] !== undefined ) this.voices[ i ].destroy()
+		if( this.voices[ i ] !== undefined ) this.voices[ i ].teardown()
 		delete this.voices[ i ]
 	}
 	this.voices  = []
@@ -311,10 +326,10 @@ Beep.Trigger.prototype.disengage = function( eventType ){
 //  it might be useful to dispose of its Triggers in 
 //  a meaningful way. 
 
-Beep.Trigger.prototype.destroy = function(){
+Beep.Trigger.prototype.teardown = function(){
 
 	this.pause()
-	this.destroyVoices()
+	this.teardownVoices()
 	this.eventListeners.forEach( function( event ){
 
 		window.removeEventListener( event.type, event.action )

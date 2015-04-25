@@ -1,13 +1,24 @@
 /*
 
 
-	INSTRUMENTS
+	Beep.Instrument
 
-	synth = new Instrument()
-	synth.play( '3C' ).play( '4G' ).play( '5C' )
-	synth.pause()
 
-	synth.buildCloseEncounters()
+
+
+	Requires 
+
+	  1  Beep
+	  2  Beep.Note
+	  3  Beep.Voice
+	  4  Beep.Trigger
+
+	Example uses
+
+	  synth = new Beep.Instrument()
+	  synth.play( '3C' ).play( '4G' ).play( '5C' )
+	  synth.pause()
+	  synth.buildCloseEncounters()
 
 
 */
@@ -17,7 +28,9 @@
 
 Beep.Instrument = function(){
 
-	var that = this
+	var 
+	that = this,
+	playPauseContainer = document.getElementById( 'play-pause-container' )
 
 	Array.prototype.slice.call( arguments ).forEach( function( arg ){
 
@@ -65,12 +78,21 @@ Beep.Instrument = function(){
 	//  And we could use a handy interface button
 	//  for playing the score we’re going to load.
 
-	var playPauseContainer = document.getElementById( 'play-pause-container' )
-
 	if( !playPauseContainer ) playPauseContainer = this.domContainer
-	this.domScorePlayPause = document.createElement( 'div' )
+	this.domScorePlayPause = document.createElement( 'img' )
 	this.domScorePlayPause.classList.add( 'score-play-pause' )
-	playPauseContainer.appendChild( this.domScorePlayPause )
+	this.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#play' )
+	playPauseContainer.appendChild( this.domScorePlayPause )	
+	this.domScorePlayPause.addEventListener( 'mouseenter', function(){
+
+		if( that.scoreIsPlaying ) that.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#pause-hover' )
+		else that.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#play-hover' )
+	})
+	this.domScorePlayPause.addEventListener( 'mouseleave', function(){
+		
+		if( that.scoreIsPlaying ) that.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#pause' )
+		else that.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#play' )
+	})
 	this.domScorePlayPause.addEventListener( 'click', function(){ that.scoreToggle() })
 	this.domScorePlayPause.addEventListener( 'touchend', function( event ){ 
 
@@ -85,7 +107,7 @@ Beep.Instrument = function(){
 
 		var keyCode = event.which || event.keyCode
 
-		if( Beep.isEditing === false ){
+		if( Beep.isKeyboarding ){
 	
 			if( keyCode === 32 ){
 
@@ -170,7 +192,7 @@ Beep.Instrument = function(){
 
 
 	//  Push a reference of this instance into BEEP’s library
-	//  so we can access and/or destroy it later.
+	//  so we can access and/or teardown it later.
 
 	Beep.instruments.push( this )
 }
@@ -192,7 +214,7 @@ Beep.Instrument.prototype.removeStyleClass = function( className ){
 }
 
 
-Beep.Instrument.prototype.destroy = function(){
+Beep.Instrument.prototype.teardown = function(){
 
 	this.unbuild()
 	this.gainNode.disconnect()
@@ -282,7 +304,7 @@ Beep.Instrument.prototype.applyVoices = function( createVoices ){
 	Object.keys( this.triggers ).forEach( function( trigger ){
 
 		trigger = that.triggers[ trigger ]
-		trigger.destroyVoices()
+		trigger.teardownVoices()
 		trigger.createVoices = createVoices
 		trigger.createVoices()
 	})
@@ -500,7 +522,7 @@ Beep.Instrument.prototype.unbuild = function(){
 
 	Object.keys( this.triggers ).forEach( function( trigger ){
 
-		that.triggers[ trigger ].destroy()
+		that.triggers[ trigger ].teardown()
 		delete that.triggers[ trigger ]
 	})
 	this.domContainer.classList.remove( 'mini' )
@@ -614,8 +636,28 @@ Beep.Instrument.prototype.scoreStop = function(){
 }
 Beep.Instrument.prototype.scoreToggle = function(){
 
-	if( this.scoreIsPlaying ) this.scoreStop()
-	else this.scorePlay()
+	var that = this
+
+	if( this.scoreIsPlaying ){
+
+		this.scoreStop()
+		this.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#play' )
+	}
+	else {
+
+		this.scorePlay()
+		this.domScorePlayPause.setAttribute( 'src', 'beep/Beep.Instrument.svg#pause' )
+	}
+
+
+	//  Combatting a Safari display bug here:
+
+	this.domScorePlayPause.style.marginRight = '1px'
+	window.setTimeout( function(){
+
+		that.domScorePlayPause.style.marginRight = '0'
+
+	})
 	return this
 }
 Beep.Instrument.prototype.scoreUnload = function(){

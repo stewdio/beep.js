@@ -1,31 +1,41 @@
 /*
 
 
-	VOICES
+	Beep.Voice
 
-	If a Note is merely a mathematical model then Voices are where
-	the rubber meets the road. Voices contain a Note and an oscillator
-	so a Voice is a thing that can actually sing!
+
+
+
+	Requires 
+
+	  1  Beep
+	  2  Beep.Note
+
+	Description
+
+	  If a Note is merely a mathematical model then Voices are where
+	  the rubber meets the road. Voices contain a Note and an oscillator
+	  so a Voice is a thing that can actually sing!
 	
-	If our Instruments were monophonic then we’d only need one voice
-	that could be re-used to play any Note.
-	But we’re polyphonic -- we can play multiple notes at once!
+	  If our Instruments were monophonic then we’d only need one voice
+	  that could be re-used to play any Note.
+	  But we’re polyphonic -- we can play multiple notes at once!
 
-	Sending no arguments to a Voice will give you all default params
-	and results in a playable Concert A:
+	  Sending no arguments to a Voice will give you all default params
+	  and results in a playable Concert A.
 
-	    var voice = new Beep.Voice()
-	    voice.play()
-	    voice.pause()
+	  The intended use here is to create a Voice, optionally passing it
+	  a Note to begin with, and then alter its Note dynamically in a loop.
+	  Example: gliding from a Concert A to one octave lower could involve
+	  creating a Voice with no Note argument, calling its play() method, 
+	  then from within a loop assign the Voice a new progressively lower
+	  Note per loop until desired. 
 
-	The intended use here is to create a Voice, optionally passing it
-	a Note to begin with, and then alter its Note dynamically in a loop.
-	Example: gliding from a Concert A to one octave lower could involve
-	creating a Voice with no Note argument, calling its play() method, 
-	then from within a loop assign the Voice a new progressively lower
-	Note per loop until desired. 
+	Example uses
 
-	new Voice( 'eb3' )
+	  voice = new Beep.Voice( 'eb3' )
+	  voice.play()
+	  voice.pause()
 
 
 */
@@ -136,11 +146,11 @@ Beep.Voice = function( a, b ){
 
 	//  Good to know when it’s time to go home.
 
-	this.isDestroyed = false
+	this.isteardowned = false
 
 
 	//  Push a reference of this instance into BEEP’s library
-	//  so we can access and/or destroy it later.
+	//  so we can access and/or teardown it later.
 
 	Beep.voices.push( this )
 }
@@ -174,7 +184,7 @@ Beep.Voice.prototype.play = function( params ){
 }
 
 
-//  We don’t want to stop() an oscillator because that would destroy it:
+//  We don’t want to stop() an oscillator because that would teardown it:
 //  They are not reusable.
 //  Instead we just turn its amplitude down so we can’t hear it.
 
@@ -188,13 +198,13 @@ Beep.Voice.prototype.pause = function(){
 //  Or you know what? Maybe we do want to just kill it.
 //  Like sawing off the branch you’re sitting on.
 
-Beep.Voice.prototype.destroy = function(){
+Beep.Voice.prototype.teardown = function(){
 
-	if( this.isDestroyed === false ) {
+	if( this.isteardowned === false ) {
 
 		if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
 		this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
-		this.isDestroyed = true
+		this.isteardowned = true
 	}
 	return this
 }
