@@ -18,7 +18,7 @@
 
 var Beep = {
 
-	VERSION: 5,
+	VERSION: 6,
 
 
 	//  Chrome, Opera, and Firefox already provide AudioContext()

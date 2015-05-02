@@ -35,7 +35,17 @@
 
 	  voice = new Beep.Voice( 'eb3' )
 	  voice.play()
-	  voice.pause()
+	  setTimeout( function(){ voice.pause() }, 500 )
+
+	  voice = new Beep.Voice( '3E♭' ) //  Equivalent to above.
+	  	.setOscillatorType( 'square' )//  For that chunky 8-bit sound.
+	  	.setAttackGain( 0.3 )         //  0 = No gain. 1 = Full gain.
+		.setAttackDuration( 0.08 )    //  Attack ramp up duration in seconds.
+		.setDecayDuration( 0.1 )      //  Decay ramp down duration in seconds.
+		.setSustainGain( 0.6 )        //  Sustain gain level; percent of attackGain.
+		.setSustainDuration( 1 )      //  Sustain duration in seconds -- normally Infinity.
+		.setReleaseDuration( 0.1 )    //  Release ramp down duration in seconds.
+		.play( '4C♯' )                //  Optionally change the Voice’s note.  
 
 
 */
@@ -116,7 +126,6 @@ Beep.Voice = function( a, b ){
 	this.gainNode = this.audioContext.createGain()
 	this.gainNode.gain.value = 0
 	this.gainNode.connect( this.destination )
-	this.gainHigh = this.note.gainHigh !== undefined ? this.note.gainHigh : 1
 
 
 	//  Create an Oscillator
@@ -128,12 +137,43 @@ Beep.Voice = function( a, b ){
 	this.oscillator.frequency.value = this.note.hertz
 
 
-	//  Right now these do nothing; just here as a stand-in for the future.
+	/*
 
-	this.duration = Infinity
-	this.attack   = 0
-	this.decay    = 0
-	this.sustain  = 0
+
+	                    D + ADSR Envelope                      
+
+	  ┌───────┬────────┬───────┬─────────────────┬─────────┐   
+	  │ Delay │ Attack │ Decay │     Sustain     │ Release │   
+	  │                                                    │  ↑
+	  │               •••                                  │   
+	  │             ••   •••                               │  G
+	  │           ••        •••                            │  A
+	  │          •             •••••••••••••••••••         │  I
+	  │         •                                 •        │  N
+	  │        •                                   •••     │   
+	  └••••••••────────┴───────┴─────────────────┴────•••••┘   
+
+	                          TIME →                           
+
+
+	ADSR stands for Attack, Decay, Sustain, and Release. These are all units
+	of duration with the exception of Sustain which instead represents gain
+	rather than time. That exception can easily become a point of confusion, 
+	particularly in this context where you may wish to script the duration of
+	Sustain! For that reason I have named these variables rather verbosely.
+	Additionally I’ve added a Delay duration. For more useful information see
+	http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope
+	
+	@@ TO-DO: Support Bezier curves?
+
+	*/
+	this.delayDuration   = 0.00
+	this.attackGain      = 0.60
+	this.attackDuration  = 0.05
+	this.decayDuration   = 0.05
+	this.sustainGain     = 0.80	
+	this.sustainDuration = Infinity
+	this.releaseDuration = 0.10
 
 
 	//  Because of “iOS reasons” we cannot begin playing a sound
@@ -146,7 +186,7 @@ Beep.Voice = function( a, b ){
 
 	//  Good to know when it’s time to go home.
 
-	this.isteardowned = false
+	this.isTorndown = false
 
 
 	//  Push a reference of this instance into BEEP’s library
@@ -163,14 +203,45 @@ Beep.Voice = function( a, b ){
 
 Beep.Voice.prototype.play = function( params ){
 
+	var 
+	that    = this,
+	timeNow = this.audioContext.currentTime,
+	gainNow = this.gainNode.gain.value
 
-	//  Let’s create that Note.
-	//  The params will specify a frequency assignment method to use
-	//  otherwise Note() will pick a default.
+
+	//  If we received some new params then let’s use those
+	//  to specify a new Note. Otherwise we’ll run with the
+	//  Note we already have.
 
 	if( params !== undefined ) this.note = new Beep.Note( params )
 	this.oscillator.frequency.value = this.note.hertz
-	this.gainNode.gain.value = this.gainHigh || params.gainHigh || 1
+
+
+	//  Cancel all your plans.
+	//  And let’s tween from the current gain value.
+
+	this.gainNode.gain.cancelScheduledValues( timeNow )
+	this.gainNode.gain.setValueAtTime( gainNow, timeNow )
+
+
+	//  Is there a Delay between when we trigger the Voice and when it Attacks?
+
+	if( this.delayDuration ) this.gainNode.gain.setValueAtTime( gainNow, timeNow + this.delayDuration )
+	
+
+	//  Now let’s schedule a ramp up to full gain for the Attack
+	//  and then down to a Sustain level after the Decay.
+
+	this.gainNode.gain.linearRampToValueAtTime( 
+
+		this.attackGain, 
+		timeNow + this.delayDuration + this.attackDuration
+	)
+	this.gainNode.gain.linearRampToValueAtTime( 
+
+		this.attackGain * this.sustainGain, 
+		timeNow + this.delayDuration + this.attackDuration + this.decayDuration
+	)
 
 
 	//  Oh, iOS. This “wait to play” shtick is for you.
@@ -180,6 +251,17 @@ Beep.Voice.prototype.play = function( params ){
 		this.isPlaying = true
 		this.oscillator.start( 0 )
 	}
+
+
+	//  Did we set a duration limit on this	Voice?
+
+	if( this.sustainDuration !== Infinity ) setTimeout( function(){
+
+		that.pause()
+
+	}, timeNow + this.delayDuration + this.attackDuration + this.sustainDuration * 1000 )
+
+
 	return this
 }
 
@@ -190,7 +272,22 @@ Beep.Voice.prototype.play = function( params ){
 
 Beep.Voice.prototype.pause = function(){
 
-	this.gainNode.gain.value = 0
+	var timeNow = this.audioContext.currentTime
+
+
+	//  Cancel all your plans.
+	//  And let’s tween from the current gain value.
+
+	this.gainNode.gain.cancelScheduledValues( timeNow )
+	this.gainNode.gain.setValueAtTime( this.gainNode.gain.value, timeNow )  
+
+
+	//  Now let’s schedule a ramp down to zero gain for the Release.
+	
+	this.gainNode.gain.linearRampToValueAtTime( 0.0001, timeNow + this.releaseDuration )
+	//this.gainNode.gain.exponentialRampToValueAtTime( 0.0001, timeNow + this.releaseDuration )
+	this.gainNode.gain.setValueAtTime( 0, timeNow + this.releaseDuration + 0.0001 )
+
 	return this
 }
 
@@ -200,11 +297,11 @@ Beep.Voice.prototype.pause = function(){
 
 Beep.Voice.prototype.teardown = function(){
 
-	if( this.isteardowned === false ) {
+	if( this.isTorndown === false ) {
 
 		if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
 		this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
-		this.isteardowned = true
+		this.isTorndown = true
 	}
 	return this
 }
@@ -224,23 +321,36 @@ Beep.Voice.prototype.teardown = function(){
 //
 // 	       new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
 // 	       .setOscillatorType( 'triangle' )
-// 	       .setGainHigh( 0.3 )
+// 	       .setAttackGain( 0.3 )
 //     )
 //
 //     As for the getters, it just felt rude to create the setters
 //    (thereby leading the expectation that getters would also exist)
 //     without actually having getters.
 
+;[
+	'delayDuration',
+	'attackGain',
+	'attackDuration',
+	'decayDuration',
+	'sustainGain',
+	'sustainDuration',
+	'releaseDuration'
 
-Beep.Voice.prototype.getGainHigh = function(){
+].forEach( function( propertyName ){
 
-	return this.gainHigh
-}
-Beep.Voice.prototype.setGainHigh = function( normalizedNumber ){
+	var propertyNameCased = propertyName.substr( 0, 1 ).toUpperCase() + propertyName.substr( 1 )
+	
+	Beep.Voice.prototype[ 'get'+ propertyNameCased ] = function(){
 
-	this.gainHigh = normalizedNumber
-	return this
-}
+		return this[ propertyName ]
+	}
+	Beep.Voice.prototype[ 'set'+ propertyNameCased ] = function( x ){
+
+		this[ propertyName ] = x
+		return this
+	}
+})
 Beep.Voice.prototype.getOscillatorType = function(){
 
 	return this.oscillator.type
