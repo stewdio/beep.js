@@ -38,14 +38,14 @@
 	  setTimeout( function(){ voice.pause() }, 500 )
 
 	  voice = new Beep.Voice( '3E♭' ) //  Equivalent to above.
-	  	.setOscillatorType( 'square' )//  For that chunky 8-bit sound.
-	  	.setAttackGain( 0.3 )         //  0 = No gain. 1 = Full gain.
-		.setAttackDuration( 0.08 )    //  Attack ramp up duration in seconds.
-		.setDecayDuration( 0.1 )      //  Decay ramp down duration in seconds.
-		.setSustainGain( 0.6 )        //  Sustain gain level; percent of attackGain.
-		.setSustainDuration( 1 )      //  Sustain duration in seconds -- normally Infinity.
-		.setReleaseDuration( 0.1 )    //  Release ramp down duration in seconds.
-		.play( '4C♯' )                //  Optionally change the Voice’s note.  
+	    .setOscillatorType( 'square' )//  For that chunky 8-bit sound.
+	    .setAttackGain( 0.3 )         //  0 = No gain. 1 = Full gain.
+	    .setAttackDuration( 0.08 )    //  Attack ramp up duration in seconds.
+	    .setDecayDuration( 0.1 )      //  Decay ramp down duration in seconds.
+	    .setSustainGain( 0.6 )        //  Sustain gain level; percent of attackGain.
+	    .setSustainDuration( 1 )      //  Sustain duration in seconds -- normally Infinity.
+	    .setReleaseDuration( 0.1 )    //  Release ramp down duration in seconds.
+	    .play( '4C♯' )                //  Optionally change the Voice’s note.  
 
 
 */
@@ -189,7 +189,7 @@ Beep.Voice = function( a, b ){
 	this.isTorndown = false
 
 
-	//  Push a reference of this instance into BEEP’s library
+	//  Push a reference of this instance into Beep’s library
 	//  so we can access and/or teardown it later.
 
 	Beep.voices.push( this )
