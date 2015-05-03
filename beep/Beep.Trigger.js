@@ -14,7 +14,8 @@
 
 	Description
 
-	  Instantly add interfaces to your Voices with mouse and keyboard events. 
+	  Instantly add interfaces to your Voices that respond to mouse, 
+	  keyboard, and MIDI events. 
 
 	Example uses
 
@@ -147,6 +148,18 @@ Beep.Trigger = function(){
 	})
 
 
+	//  Add some MIDI events.
+
+	this.midiNumber = this.note.pianoKeyIndex || null
+	if( navigator.requestMIDIAccess ){
+
+		navigator.requestMIDIAccess().then( function( midiAccess ){
+
+			 if( midiAccess.inputs.size ) that.midiInputs[ 0 ].onmidimessage = that.onMidiMessage.bind( that )
+		})
+	}
+
+
 	//  Push a reference of this instance into BEEP’s library
 	//  so we can access and/or teardown it later.
 
@@ -229,6 +242,52 @@ Beep.Trigger.prototype.addTriggerChar = function( trigger ){
 }
 
 
+//  Accept MIDI input as a trigger event.
+
+Beep.Trigger.prototype.onMidiMessage = function( event ){
+
+	var 
+	command    = event.data[ 0 ] >> 4,
+	channel    = event.data[ 0 ] & 0xF,
+	noteNumber = event.data[ 1 ],
+	velocity   = event.data[ 2 ]
+
+	if( this.midiNumber !== null && this.midiNumber === noteNumber && channel != 9 ){
+
+
+		//  Stop! 
+		//  Either we received a Stop command
+		//  or we received a Play command with zero velocity.
+
+		if( command === 8 || ( command === 9 && velocity === 0 )){
+		
+			this.disengage( 'midi' )
+		}
+
+
+		//  Play.
+
+		else if( command === 9 ){
+
+			this.voices.forEach( function( voice ){
+
+				//@@  NOT QUITE RIGHT AS WE MAY HAVE SET DIF VOICES
+				//    TO DIFF GAINS... NEED TO GIVE MORE THOUGHT!
+				voice.setAttackGain( velocity / 127 )
+			})
+			this.engage( 'midi' )
+		}
+		
+
+		//  Pitch-bend wheel.
+
+		else if( command === 14 ){
+		
+			//@@ NEED TO DETUNE each voice oscillator....
+			//(( velocity * 128 + noteNumber ) - 8192 ) / 8192
+		}
+	}
+}
 
 
 //  This is the default createVoices() function. You can easily override this 
@@ -240,25 +299,24 @@ Beep.Trigger.prototype.addTriggerChar = function( trigger ){
 
 Beep.Trigger.prototype.createVoices = function(){
 
-
-	//  Let’s call this our “Foundation Voice”
-	//  because it will sing the intended Note.
-
 	this.voices.push( 
+
+
+		//  Let’s call this our “Foundation Voice”
+		//  because it will sing the intended Note.
 
 		new Beep.Voice( this.note, this.audioContext )
-		.setOscillatorType( 'square' )
-		.setAttackGain( 0.05 )
-	)
+			.setOscillatorType( 'sine' )
+			.setAttackGain( 0.2 )
+			.setReleaseDuration( 0.2 ),
 
 
-	//  This Voice will sing 1 octave below the Foundation Voice.
-
-	this.voices.push( 
+		//  This Voice will sing 1 octave below the Foundation Voice.
 
 		new Beep.Voice( this.note.hertz / 2, this.audioContext )
-		.setOscillatorType( 'sine' )
-		.setAttackGain( 0.2 )
+			.setOscillatorType( 'square' )
+			.setAttackDuration( 0.01 )
+			.setAttackGain( 0.3 )
 	)
 }
 

@@ -168,7 +168,7 @@ Beep.Voice = function( a, b ){
 
 	*/
 	this.delayDuration   = 0.00
-	this.attackGain      = 0.60
+	this.attackGain      = 0.30
 	this.attackDuration  = 0.05
 	this.decayDuration   = 0.05
 	this.sustainGain     = 0.80	
