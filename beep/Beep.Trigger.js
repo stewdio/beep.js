@@ -150,7 +150,7 @@ Beep.Trigger = function(){
 
 	//  Add some MIDI events.
 
-	this.midiNumber = this.note.pianoKeyIndex || null
+	this.midiNumber = this.note.midiNumber
 	if( navigator.requestMIDIAccess ){
 
 		navigator.requestMIDIAccess().then( function( midiAccess ){

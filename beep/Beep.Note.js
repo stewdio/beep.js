@@ -87,7 +87,7 @@ Beep.Note.validateWestern = function( params ){
 		|| +params.octaveIndex +'' === 'NaN' ) params.octaveIndex = 4
 	params.octaveIndex = +params.octaveIndex
 	if( params.octaveIndex < 0 ) params.octaveIndex = 0
-	else if( params.octaveIndex > 7 ) params.octaveIndex = 7
+	else if( params.octaveIndex > 8 ) params.octaveIndex = 8
 
 
 	//  What’s this Note’s name?
@@ -159,19 +159,31 @@ Beep.Note.validateWestern = function( params ){
 	else params.isNatural = true
 	
 
-	//  A final cleanse. Should test if this is still necessary...
+	//  Is this cleanse here still necessary?
 
 	params = setLetterByLetterIndex( params )
 
 
-	//  Penultimate bits...	
+	//  Let’s make sure we have the .name (letter + modifier)
+	//  and the .nampleSimple (letter yes, but only a modifier
+	//  if unnatural) and set the .nameIndex appropriately.
 
 	params.name = params.letter + params.modifier
 	params.nameSimple = params.letter
 	if( params.modifier !== '♮' ) params.nameSimple += params.modifier
 	params.nameIndex = NAMES.indexOf( params.name )
+
+
+	//  Final gotcha: Let’s only allow a C Natural in the 8th octave.
+
+	if( params.octaveIndex === 8 && params.nameSimple !== 'C' ) params.octaveIndex = 7
+
+
+	//  Set the .pianoKeyIndex and then the corresponding MIDI Number.
+
 	params.pianoKeyIndex = params.octaveIndex * 12 + params.nameIndex
 	if( params.nameIndex > 3 ) params.pianoKeyIndex -= 12
+	params.midiNumber = params.pianoKeyIndex + 20
 
 
 	//  What tuning method are we supposed to use? 

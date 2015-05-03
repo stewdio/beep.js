@@ -331,28 +331,25 @@ Beep.editor = {
 
 /*window.synth = new Beep.Instrument()
 /+
-.applyVoices( function(){
+.applyVoices( function(){ this.voices.push( 
 
-	this.voices.push( 
-
-		new Beep.Voice( this.note, this.audioContext )
+	new Beep.Voice( this.note, this.audioContext )
 		.setOscillatorType( 'sine' )
 		.setAttackGain( 0.50 ),
 
-		new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
+	new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
 		.setOscillatorType( 'triangle' )
 		.setAttackGain( 0.10 )
 		.setDelayDuration( 0.05 ),
 
-		new Beep.Voice( this.note.hertz * 4, this.audioContext )
+	new Beep.Voice( this.note.hertz * 4, this.audioContext )
 		.setOscillatorType( 'sawtooth' )
 		.setAttackGain( 0.01 ),
 
-		new Beep.Voice( this.note.hertz / 2, this.audioContext )
+	new Beep.Voice( this.note.hertz / 2, this.audioContext )
 		.setOscillatorType( 'square' )
 		.setAttackGain( 0.02 )
-	)
-})
+)})
 .addStyleClass( 'rainbow' )
 .scorePlay()
 +/*/

@@ -54,6 +54,7 @@ does that __5E♭__ give you anyway? An object like this:
     isFlat: true,     //  Set if ♭. Similar: isSharp and isNatural.  
     letter: "E",      //  Explains itself, no?  
     letterIndex: 4,   //  ['ABCDEFG'].indexOf(letter).  
+    midiNumber: 75,   //  Corresponding MIDI controller keyboard code.  
     modifier: "♭",    //  Set to ♭, ♮, or ♯.   
     name: "E♭",       //  Note name. Will include ♮.   
     nameIndex: 7,     //  ['A♭','A♮','B♭','B♮','C♮'…].indexOf(name)  
