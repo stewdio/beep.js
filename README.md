@@ -171,49 +171,37 @@ method. If you’re the type of gal that likes to annihilate mosquitos using
 atom bombs then you can just overwrite `Beep.Trigger.prototype.createVoices`.
 Otherwise, why not pass a custom function during initialization like so:
 ```javascript
-var trigger = new Beep.Trigger( '2Eb', function(){
+var trigger = new Beep.Trigger( '2Eb', function(){ this.voices.push(
 
 
     //  Let’s call this our “Foundation Voice”
     //  because it will sing the intended Note.
 
-    this.voices.push( 
-
-        new Beep.Voice( this.note, this.audioContext )
+    new Beep.Voice( this.note, this.audioContext )
         .setOscillatorType( 'sine' )
-        .setGainHigh( 0.4 )
-    )
+        .setAttackGain( 0.4 ),
 
 
     //  This Voice will sing a Perfect 5th above the Foundation Voice.
 
-    this.voices.push( 
-
-        new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
+    new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
         .setOscillatorType( 'triangle' )
-        .setGainHigh( 0.1 )
-    )
+        .setAttackGain( 0.1 ),
 
 
     //  This Voice will sing 2 octaves above the Foundation Voice.
 
-    this.voices.push( 
-
-        new Beep.Voice( this.note.hertz * 4, this.audioContext )
+    new Beep.Voice( this.note.hertz * 4, this.audioContext )
         .setOscillatorType( 'sawtooth' )
-        .setGainHigh( 0.01 )
-    )
+        .setAttackGain( 0.01 ),
 
 
     //  This Voice will sing 1 octave below the Foundation Voice.
 
-    this.voices.push( 
-
-        new Beep.Voice( this.note.hertz / 2, this.audioContext )
+    new Beep.Voice( this.note.hertz / 2, this.audioContext )
         .setOscillatorType( 'square' )
-        .setGainHigh( 0.01 )
-    )
-})
+        .setAttackGain( 0.01 )
+)})
 ```
 
 __Many Triggers__  
