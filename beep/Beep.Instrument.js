@@ -11,7 +11,8 @@
 	  1  Beep
 	  2  Beep.Note
 	  3  Beep.Voice
-	  4  Beep.Trigger
+	  4  Beep.Sample
+	  5  Beep.Trigger
 
 	Example uses
 
@@ -191,7 +192,7 @@ Beep.Instrument = function(){
 	this.build()
 
 
-	//  Push a reference of this instance into BEEP’s library
+	//  Push a reference of this instance into Beep’s library
 	//  so we can access and/or teardown it later.
 
 	Beep.instruments.push( this )

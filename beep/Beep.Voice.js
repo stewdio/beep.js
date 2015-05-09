@@ -10,6 +10,7 @@
 
 	  1  Beep
 	  2  Beep.Note
+	  3  Beep.Sample
 
 	Description
 
@@ -45,7 +46,7 @@
 	    .setSustainGain( 0.6 )        //  Sustain gain level; percent of attackGain.
 	    .setSustainDuration( 1 )      //  Sustain duration in seconds -- normally Infinity.
 	    .setReleaseDuration( 0.1 )    //  Release ramp down duration in seconds.
-	    .play( '4C♯' )                //  Optionally change the Voice’s note.  
+	    .play( 0.5 )                  //  Optionally multiply the attack and sustain gains.
 
 
 */
@@ -120,21 +121,32 @@ Beep.Voice = function( a, b ){
 	}
 
 
+	//  Now that we have a handle on what the arguments were
+	//  we can run a setup() function. Why make that a separate
+	//  function? So Beep.Sample can re-use it when it inherits
+	//  Voice’s prototypes!
+
+	this.setup()
+
+
+	//  Push a reference of this instance into Beep’s library
+	//  so we can access and/or teardown it later.
+
+	Beep.voices.push( this )
+}
+
+
+
+
+Beep.Voice.prototype.setup = function(){
+
+
 	//  Create a Gain Node
 	//  for turning this voice up and down.
 
 	this.gainNode = this.audioContext.createGain()
 	this.gainNode.gain.value = 0
 	this.gainNode.connect( this.destination )
-
-
-	//  Create an Oscillator
-	//  for generating the sound.
-
-	this.oscillator = this.audioContext.createOscillator()
-	this.oscillator.connect( this.gainNode )
-	this.oscillator.type = 'sine'
-	this.oscillator.frequency.value = this.note.hertz
 
 
 	/*
@@ -168,10 +180,10 @@ Beep.Voice = function( a, b ){
 
 	*/
 	this.delayDuration   = 0.00
-	this.attackGain      = 0.30
+	this.attackGain      = 0.15//  Absolute value between 0 and 1.
 	this.attackDuration  = 0.05
 	this.decayDuration   = 0.05
-	this.sustainGain     = 0.80	
+	this.sustainGain     = 0.80//  Percetage of attackGain.
 	this.sustainDuration = Infinity
 	this.releaseDuration = 0.10
 
@@ -184,15 +196,24 @@ Beep.Voice = function( a, b ){
 	this.isPlaying = false
 
 
+	//  Create an Oscillator
+	//  for generating the sound.
+
+	this.noteEnabled = true
+	this.oscillator = this.audioContext.createOscillator()
+	this.oscillator.connect( this.gainNode )
+	this.oscillator.type = 'sine'
+	this.oscillator.frequency.value = this.note.hertz
+
+
+	//  @@  NEW FEATURE TK SOON ;)
+
+	this.sampleEnabled = false
+
+
 	//  Good to know when it’s time to go home.
 
 	this.isTorndown = false
-
-
-	//  Push a reference of this instance into Beep’s library
-	//  so we can access and/or teardown it later.
-
-	Beep.voices.push( this )
 }
 
 
@@ -201,7 +222,7 @@ Beep.Voice = function( a, b ){
 //  Voices are *always* emitting, so “playing” a Note
 //  is really a matter of turning its amplitude up.
 
-Beep.Voice.prototype.play = function( params ){
+Beep.Voice.prototype.play = function( velocity ){
 
 	var 
 	that    = this,
@@ -209,12 +230,25 @@ Beep.Voice.prototype.play = function( params ){
 	gainNow = this.gainNode.gain.value
 
 
-	//  If we received some new params then let’s use those
-	//  to specify a new Note. Otherwise we’ll run with the
-	//  Note we already have.
+	//  Optionally accept a velocity (expecting a value 0 through 1)
+	//  to be multiplied against the attack and sustain gains.
 
-	if( params !== undefined ) this.note = new Beep.Note( params )
-	this.oscillator.frequency.value = this.note.hertz
+	if( typeof velocity !== 'number' ) velocity = 0.5
+
+
+	//  Just in case we’ve changed the value of Note
+	//  since initialization.
+
+	if( this.noteEnabled ) this.oscillator.frequency.value = this.note.hertz
+
+
+	//  We might be playing a sample instead of a Note.
+
+	if( this.sampleEnabled ){
+
+		if( this.sampleResetOnPlay ) this.sample.currentTime = 0
+		this.sample.play()
+	}
 
 
 	//  Cancel all your plans.
@@ -234,12 +268,12 @@ Beep.Voice.prototype.play = function( params ){
 
 	this.gainNode.gain.linearRampToValueAtTime( 
 
-		this.attackGain, 
+		velocity * this.attackGain, 
 		timeNow + this.delayDuration + this.attackDuration
 	)
 	this.gainNode.gain.linearRampToValueAtTime( 
 
-		this.attackGain * this.sustainGain, 
+		velocity * this.attackGain * this.sustainGain, 
 		timeNow + this.delayDuration + this.attackDuration + this.decayDuration
 	)
 
@@ -249,7 +283,7 @@ Beep.Voice.prototype.play = function( params ){
 	if( this.isPlaying === false ){
 
 		this.isPlaying = true
-		this.oscillator.start( 0 )
+		if( this.noteEnabled ) this.oscillator.start( 0 )
 	}
 
 
@@ -297,10 +331,13 @@ Beep.Voice.prototype.pause = function(){
 
 Beep.Voice.prototype.teardown = function(){
 
-	if( this.isTorndown === false ) {
+	if( this.isTorndown === false ){
 
-		if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
-		this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
+		if( this.oscillator ){
+			if( this.isPlaying ) this.oscillator.stop( 0 )// Stop oscillator after 0 seconds.
+			this.oscillator.disconnect()// Disconnect oscillator so it can be picked up by browser’s garbage collector.
+		}
+		if( this.source ) this.source.disconnect()
 		this.isTorndown = true
 	}
 	return this
@@ -353,11 +390,11 @@ Beep.Voice.prototype.teardown = function(){
 })
 Beep.Voice.prototype.getOscillatorType = function(){
 
-	return this.oscillator.type
+	return this.oscillator ? this.oscillator.type : undefined
 }
 Beep.Voice.prototype.setOscillatorType = function( string ){
 
-	this.oscillator.type = string
+	if( this.oscillator ) this.oscillator.type = string
 	return this
 }
 

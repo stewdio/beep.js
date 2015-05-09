@@ -11,6 +11,7 @@
 	  1  Beep
 	  2  Beep.Note
 	  3  Beep.Voice
+	  4  Beep.Sample
 
 	Description
 
@@ -20,6 +21,10 @@
 	Example uses
 
 	  trigger = new Beep.Trigger()
+
+	Roadmap
+
+	  Add ADSR envelope editing through MIDI.
 
 
 */
@@ -148,19 +153,24 @@ Beep.Trigger = function(){
 	})
 
 
-	//  Add some MIDI events.
+	//  Add some MIDI events if the browser supports it.
+	//  Right now that means Chrome 42 behind a dev flag
+	//  and the not-yet-released Chrome 43 proper.
 
 	this.midiNumber = this.note.midiNumber
 	if( navigator.requestMIDIAccess ){
 
 		navigator.requestMIDIAccess().then( function( midiAccess ){
 
-			 if( midiAccess.inputs.size ) that.midiInputs[ 0 ].onmidimessage = that.onMidiMessage.bind( that )
+			midiAccess.inputs.forEach( function( entry ){
+
+				entry.onmidimessage = that.onMidiMessage.bind( that )
+			})
 		})
 	}
 
 
-	//  Push a reference of this instance into BEEP’s library
+	//  Push a reference of this instance into Beep’s library
 	//  so we can access and/or teardown it later.
 
 	Beep.triggers.push( this )
@@ -178,15 +188,28 @@ Beep.Trigger.prototype.addEventListener = function( type, action ){
 }
 Beep.Trigger.prototype.removeEventListener = function( type, action ){
 
-	// var i = eventListeners.length - 1
+	var i = eventListeners.length - 1
 
-	// for( i = eventListeners.length - 1; i >= 0; i -- ){
+	for( i = eventListeners.length - 1; i >= 0; i -- ){
 
-	// 	if( eventListeners[ i ].type === type && )
-	// }
+		if( eventListeners[ i ].type === type &&
+			eventListeners[ i ].action === action ){
 
-	window.removeEventListener( type, action )//@@  can we remove this shit from this.eventListeners then???
+			eventListeners.splice( i, 1 )
+		}
+	}
+	window.removeEventListener( type, action )
 }
+Beep.Trigger.prototype.removeEventListeners = function(){
+
+	var eventListener
+
+	while( eventListener = this.eventListeners.pop() ){
+
+		window.removeEventListener( eventListener.type, eventListener.action )
+	}
+}
+
 
 
 
@@ -195,8 +218,6 @@ Beep.Trigger.prototype.removeEventListener = function( type, action ){
 //  Try out the default synthesizer and see what happens when
 //  you walk the keys up an octave.
 //  Is the higher C where you expected it to be?
-//  @@ TODO: 
-//  Does it make sense to add these listeners to instrument.domContainer instead of window?
 
 Beep.Trigger.prototype.addTriggerChar = function( trigger ){
 
@@ -242,52 +263,90 @@ Beep.Trigger.prototype.addTriggerChar = function( trigger ){
 }
 
 
+
+
 //  Accept MIDI input as a trigger event.
 
 Beep.Trigger.prototype.onMidiMessage = function( event ){
 
+
+	//  MIDI data.
+	//  
+	//  Incoming message bytes are formatted like so: 
+	//  
+	//  Status  Data1  Data2
+	//  0xAB    0xCC   0xDD
+	//  
+	//     A = Command, range 0–15 (0x0–0xF).
+	//     B = Channel, range 0–15 (0x0–0xF).
+	//    CC = Note number or item, range 0–255 (0x0–0xFF).
+	//    DD = Velcity, range 0–255 (0x0–0xFF).
+	//  
+	//  For additional information see:
+	//  http://en.wikipedia.org/wiki/MIDI
+	//  http://www.gweep.net/~prefect/eng/reference/protocol/midispec.html
+
 	var 
-	command    = event.data[ 0 ] >> 4,
-	channel    = event.data[ 0 ] & 0xF,
-	noteNumber = event.data[ 1 ],
-	velocity   = event.data[ 2 ]
+	command  = event.data[ 0 ] >> 4, //  Status byte, high nibble.
+	channel  = event.data[ 0 ] & 0xF,//  Status byte, low nibble.
+	item     = event.data[ 1 ],      //  Data1 byte, often a note number.
+	velocity = event.data[ 2 ]       //  Data2 byte, often a velocity.
 
-	if( this.midiNumber !== null && this.midiNumber === noteNumber && channel != 9 ){
-
-
-		//  Stop! 
-		//  Either we received a Stop command
-		//  or we received a Play command with zero velocity.
-
-		if( command === 8 || ( command === 9 && velocity === 0 )){
+	if( Beep.verbosity >= 0.7 ){
 		
-			this.disengage( 'midi' )
-		}
+		console.log( '\nMIDI Command', command )
+		console.log( 'MIDI Channel', channel )
+		console.log( 'MIDI Item', item )
+		console.log( 'MIDI Velocity', velocity )
+	}
+	
+
+	//  Stop!
+	//  Either we received a Stop command
+	//  or we received a Play command with zero velocity.
+
+	if(( command === 0x8 || ( command === 0x9 && velocity === 0 ))
+		&& item === this.midiNumber ){
+	
+		this.disengage( 'midi' )
+	}
 
 
-		//  Play.
+	//  Play.
 
-		else if( command === 9 ){
+	else if( command === 0x9 && item === this.midiNumber ){
 
-			this.voices.forEach( function( voice ){
+		this.engage( 'midi', velocity / 127 )
+	}
 
-				//@@  NOT QUITE RIGHT AS WE MAY HAVE SET DIF VOICES
-				//    TO DIFF GAINS... NEED TO GIVE MORE THOUGHT!
-				voice.setAttackGain( velocity / 127 )
-			})
-			this.engage( 'midi' )
-		}
-		
 
-		//  Pitch-bend wheel.
+	//  Control change.
 
-		else if( command === 14 ){
-		
-			//@@ NEED TO DETUNE each voice oscillator....
-			//(( velocity * 128 + noteNumber ) - 8192 ) / 8192
-		}
+	else if( command === 0xB ){
+
+		if( item === 1 ){}//  Modulator!
+		//@@ TK: Support for ADSR knobs!
+	}
+
+
+	//  Pitch-bend wheel. 
+	//   0–63  = bend the pitch down. 
+	//  64–128 = bend the pitch up.
+	//  Oscillator detuning is done in a unit of “cents.”
+	//  There are 1200 cents per 1 octave.
+	//  Here we’re allowing the pitch wheel to 
+	//  bend down 1 octave or up 1 octave.
+
+	else if( command === 0xE ){
+	
+		this.voices.forEach( function( voice ){
+
+			if( voice.oscillator ) voice.oscillator.detune.value = ( velocity - 63 ) * 1200 / 63
+		})
 	}
 }
+
+
 
 
 //  This is the default createVoices() function. You can easily override this 
@@ -339,9 +398,14 @@ Beep.Trigger.prototype.teardownVoices = function(){
 
 
 
-Beep.Trigger.prototype.play = function(){
 
-	this.voices.forEach( function( voice ){ voice.play() })
+//  You may be tempted to call play() and pause() directly.
+//  Don’t be a fool! Thou shalt instead only call engage()
+//  and disengage(). See directly below for details.
+
+Beep.Trigger.prototype.play = function( velocity ){
+
+	this.voices.forEach( function( voice ){ voice.play( velocity ) })
 }
 Beep.Trigger.prototype.pause = function(){
 
@@ -349,20 +413,25 @@ Beep.Trigger.prototype.pause = function(){
 }
 
 
-
-
 //  Engage() and disengage() are like wrappers for 
-//  play() and stop() respectively
+//  play() and pause() respectively
 //  with safety mechanisms and interface feedback.
 
-Beep.Trigger.prototype.engage = function( eventType ){
+Beep.Trigger.prototype.engage = function( a, b ){
+
+	var eventType, velocity = 1
+
+	if( typeof a === 'string' ) eventType = a
+	else if( typeof a === 'number' ) velocity = a
+	if( typeof b === 'string' ) eventType = b
+	else if( typeof b === 'number' ) velocity = b
 
 	if( this.engaged === false ){
 
 		this.engaged = true
 		this.eventType = eventType
 		this.domContainer.classList.add( 'engaged' )
-		this.play()
+		this.play( velocity )
 	}
 	return this
 }
@@ -388,11 +457,7 @@ Beep.Trigger.prototype.teardown = function(){
 
 	this.pause()
 	this.teardownVoices()
-	this.eventListeners.forEach( function( event ){
-
-		window.removeEventListener( event.type, event.action )
-	})	
-	this.eventListeners = []
+	this.removeEventListeners()
 	this.domContainer.remove()
 }
 

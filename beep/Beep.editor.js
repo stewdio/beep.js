@@ -15,8 +15,9 @@
 	  1  Beep
 	  2  Beep.Note
 	  3  Beep.Voice
-	  4  Beep.Trigger
-	  5  Beep.Instrument
+	  4  Beep.Sample
+	  5  Beep.Trigger
+	  6  Beep.Instrument
 
 
 */
@@ -335,20 +336,20 @@ Beep.editor = {
 
 	new Beep.Voice( this.note, this.audioContext )
 		.setOscillatorType( 'sine' )
-		.setAttackGain( 0.50 ),
+		.setAttackGain( 0.8 ),
 
 	new Beep.Voice( this.note.hertz * 3 / 2, this.audioContext )
 		.setOscillatorType( 'triangle' )
-		.setAttackGain( 0.10 )
+		.setAttackGain( 0.2 )
 		.setDelayDuration( 0.05 ),
 
 	new Beep.Voice( this.note.hertz * 4, this.audioContext )
 		.setOscillatorType( 'sawtooth' )
-		.setAttackGain( 0.01 ),
+		.setAttackGain( 0.04 ),
 
 	new Beep.Voice( this.note.hertz / 2, this.audioContext )
 		.setOscillatorType( 'square' )
-		.setAttackGain( 0.02 )
+		.setAttackGain( 0.06 )
 )})
 .addStyleClass( 'rainbow' )
 .scorePlay()

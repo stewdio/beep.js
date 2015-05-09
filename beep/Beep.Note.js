@@ -21,6 +21,14 @@
 	  note = new Beep.Note.EDO12( '3eb' )
 	  note = new Beep.Note.JustIntonation( 'C#3', 'C#2' )
 
+	Roadmap
+
+	  I knew this was complicated but it’s far moreso than I realized!
+	  Need to revisit all of this in much more depth once some more 
+	  functionality and interface fixes have been completed:
+	  https://github.com/stewdio/beep.js/issues/2
+	  http://everything2.com/title/The+difference+between+tritone%252C+augmented+fourth%252C+diminished+fifth%252C+%252311+and+b5
+
 
 */
 
@@ -215,6 +223,27 @@ Beep.Note.validateWestern = function( params ){
 Beep.Note.EDO12 = function( params ){
 	
 	params = Beep.Note.validateWestern( params )
+
+
+	//  The Cent is a logarithmic unit of measure that divide
+	//  the 12-tone equal temperament octave into 12 semitones 
+	//  of 100 cents each.
+	//  http://en.wikipedia.org/wiki/Cent_(music)
+
+	//   + 0¢  UNISON
+	//   100¢  minor   2nd
+	//   200¢  MAJOR   2nd
+	//   300¢  minor   3rd
+	//   400¢  MAJOR   3rd
+	//   500¢  PERFECT 4th
+	//   600¢  tritone
+	//   700¢  PERFECT 5th
+	//   800¢  minor   6th
+	//   900¢  MAJOR   6th
+	//  1000¢  minor   7th
+	//  1100¢  MAJOR   7th
+	//  1200¢  OCTAVE
+
 	params.hertz = params.A * Math.pow( Math.pow( 2, 1 / 12 ), params.pianoKeyIndex - 49 )
 	params.tuning = 'EDO12'
 	return new Beep.Note( params )
@@ -270,6 +299,65 @@ Beep.Note.JustIntonation = function( params, key ){
 	
 	params.hertz = params.hertz * Math.pow( 2, params.octaveIndex - params.key.octaveIndex )
 	return new Beep.Note( params )
+}
+
+
+
+
+//  Does this thing look like it could be a Note?
+
+Beep.Note.seemsLegit = function( x ){
+
+	var 
+	seemsLegit    = true,
+	noteNames     = 0,
+	octaveIndexes = 0,
+	modifiers     = 0,
+	flatOrBs      = 0,
+	chr, i
+
+	if( x instanceof Beep.Note ) return true//  Is an actual Beep.Note.
+	else if( typeof x === 'number' ) return true//  Expecting this to be a Hertz value.
+	else if( typeof x === 'string' ){
+
+
+		//  Longest combo we expect is 
+		//  Note Name (1 char) + 
+		//  OctaveIndex (1 char, value 0–8) + 
+		//  Modifier (1 char, ♮♯♭#b).
+
+		if( x.length > 3 ) return false
+
+	
+		//  Here are the maximum possible outcomes:
+		//  octaves    1  1  1
+		//  noteNames  1  1  0
+		//  modifiers  1  0  1
+		//  flatOrBs   0  1  1
+
+		for( i = 0; i < x.length; i ++ ){
+
+			chr = x[ i ]
+			if( +chr + '' !== 'NaN' && +chr >= 0 && +chr <= 8 ) octaveIndexes ++			
+			else if( 'ABCDEFGHacdefgh'.indexOf( chr ) >= 0 ) noteNames ++
+			else if( '♮♯♭#'.indexOf( chr ) >= 0 ) modifiers ++
+			else if( 'b' === chr ) flatOrBs ++
+			else {
+
+				seemsLegit = false
+				break
+			}
+		}
+		//console.log( octaveIndexes, noteNames, modifiers, flatOrBs )
+		if( octaveIndexes > 1 || 
+			noteNames > 1 ||
+			modifiers > 1 ||
+			flatOrBs  > 1 ||
+			noteNames + modifiers + flatOrBs > 2 ) seemsLegit = false
+
+		return seemsLegit
+	}
+	else return false
 }
 
 

@@ -18,7 +18,14 @@
 
 var Beep = {
 
-	VERSION: 6,
+	VERSION: 7,
+
+
+	//  How much console output should we have, really?
+	//  Expecting a value between 0 and 1 inclusive
+	//  where 0 = nothing and 1 = everything possible.
+
+	verbosity: 0.5,
 
 
 	//  Chrome, Opera, and Firefox already provide AudioContext()
@@ -33,6 +40,7 @@ var Beep = {
 	//  so we can access and/or teardown them later even if unnamed.
 
 	voices:      [],
+	samples:     [],
 	triggers:    [],
 	instruments: [],
 
@@ -63,6 +71,10 @@ var Beep = {
 		function(){
 
 			if( Beep.domContainer === null ) Beep.domContainer = document.getElementById( 'beep' )
+		},
+		function(){
+
+			if( Beep.verbosity > 0 ) console.log( 'Beep', Beep.VERSION )
 		}
 	],
 
@@ -92,6 +104,10 @@ var Beep = {
 		while( this.triggers.length ){
 
 			this.triggers.pop().teardown()
+		}
+		while( this.samples.length ){
+
+			this.samples.pop().teardown()
 		}
 		while( this.voices.length ){
 
