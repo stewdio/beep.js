@@ -12,6 +12,18 @@ Tap the pulsing Play button for a
 [jaunty music lesson](http://en.wikipedia.org/wiki/Solf%C3%A8ge).
 
 
+MIDI controller support
+------------------------------------------------------------------------------
+Beep accepts input from MIDI controller keyboards via the brand new 
+[Web MIDI API](http://www.w3.org/TR/webmidi/). (Just so we’re clear, this is 
+very awesome ;) You’ll need either Chrome 42 or Chrome 43+. For Chrome 42
+you must enable the Web MIDI API manually by visiting 
+__chrome://flags/#enable-web-midi__ and clicking __Enable__. For Chrome 43 and
+later this is enabled by default. Simply plug in your modern MIDI controller 
+keyboard via USB, _then_ load up Beep. Your keys and pitch-bending wheel will 
+work just fine. And further support is coming soon!
+
+
 Hackable
 ------------------------------------------------------------------------------
 Beep is a JavaScript toolkit for building browser-based synthesizers using 
